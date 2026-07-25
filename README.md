@@ -18,17 +18,19 @@ Currently working in a NOC with responsibility for enterprise patch management (
 
 ## Projects
 
-### 1. [Home Lab SIEM Deployment](./OpenVPN_Wazuh.md)
+### 1. [Home Lab SIEM Deployment](./OpenVPN_Wazuh_Project/README.md)
 Deployment of a self-hosted OpenVPN server with ECDH-based encryption and split-tunnel configuration, monitored end-to-end by a Wazuh SIEM. Covers agent management, File Integrity Monitoring, custom detection rule authoring (rule inheritance via `if_sid`), and a real, unplanned infrastructure incident — a disk-full condition that cascaded into API failures and database corruption risk — diagnosed and resolved from first principles.
+
+See also: [OpenVPN Server Configuration](./OpenVPN_Wazuh_Project/OpenVPN-Server-Configuration.md)
 
 **Key skills:** SIEM deployment, custom detection rules, Linux troubleshooting, root cause analysis, incident response.
 
-### 2. [Simulated Network & Application-Layer Attack Detection](./Docker_Sim.md)
+### 2. [Simulated Network & Application-Layer Attack Detection](./Docker_Sim_Project/README.md)
 Extension of the lab with a Docker host running OWASP Juice Shop, used to identify and close a real visibility gap — host-based monitoring has no native insight into containerized application traffic. Covers reverse proxy log collection, a custom detection rule for web attack patterns, and investigation of a rootcheck false positive.
 
 **Key skills:** Docker deployment, SIEM visibility gap analysis, nginx reverse proxy logging, alert verification methodology.
 
-### 3. [Attack Traffic Analysis: SQL Injection & File Upload RCE](./dvwa-attack-traffic-analysis.md)
+### 3. [Attack Traffic Analysis: SQL Injection & File Upload RCE](./Docker_Sim_Project/dvwa-attack-traffic-analysis.md)
 Hands-on offensive testing against DVWA (SQL injection, file upload to remote code execution), with all traffic captured and analyzed in Wireshark. Includes a full root-cause investigation of a TCP anomaly (Duplicate ACKs) that turned out to be a client-side artifact rather than a network or security issue — and honest documentation of a partial exploitation failure (extension handling) alongside the successful RCE chain.
 
 **Key skills:** Manual web exploitation, packet analysis (Wireshark), SQL injection mechanics, detection-visibility awareness (GET vs. POST logging), root-cause investigation.
