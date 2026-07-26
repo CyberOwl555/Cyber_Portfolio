@@ -22,7 +22,7 @@ The goal was to move from "monitoring individual machines" to "monitoring a smal
 │                        │      │                        │      │  + Wazuh Agent          │
 └──────────┬─────────────┘      └───────────┬────────────┘      └───────────┬────────────┘
            │                                 │                              │
-           │        Internal Switch (192.168.137.0/24, via ICS)             │
+           │        Internal Switch (x.x.x.x/24, via ICS)             │
            └─────────────────────────────────┴──────────────────────────────┘
                                               │
                                    ┌──────────▼───────────┐
