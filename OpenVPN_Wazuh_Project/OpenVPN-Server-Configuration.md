@@ -13,7 +13,7 @@ ca /etc/openvpn/server/ca.crt
 cert /etc/openvpn/server/server.crt
 key /etc/openvpn/server/server.key
 dh none
-server 10.8.0.0 255.255.255.0
+server x.x.x.x 255.255.255.0
 ifconfig-pool-persist ipp.txt
 keepalive 10 120
 cipher AES-256-GCM
