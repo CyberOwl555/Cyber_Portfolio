@@ -36,7 +36,7 @@ The goal was to move from "monitoring individual machines" to "monitoring a smal
 
 ### 1. Network Segmentation and Reconfiguration
 
-The lab network was migrated from Hyper-V's Default Switch to a dedicated **Internal switch**, isolating all lab traffic from the home network while retaining host-to-VM connectivity. Internet access for the isolated subnet was provided via **Internet Connection Sharing (ICS)** on the Windows host, which required re-addressing the entire lab (`10.10.10.x` → `192.168.137.x` to match ICS's default range) and updating every Wazuh agent, the OpenVPN configuration, and static IP assignments across all VMs.
+The lab network was migrated from Hyper-V's Default Switch to a dedicated **Internal switch**, isolating all lab traffic from the home network while retaining host-to-VM connectivity. Internet access for the isolated subnet was provided via **Internet Connection Sharing (ICS)** on the Windows host, which required re-addressing the entire lab (`10.x.x.x` → `192.x.x.x` to match ICS's default range) and updating every Wazuh agent, the OpenVPN configuration, and static IP assignments across all VMs.
 
 This reinforced a practical lesson: network re-architecture has a cost across every dependent system (agent registration, service configs, firewall assumptions), and changes need to be rolled out and verified systematically rather than all at once.
 
