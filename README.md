@@ -40,6 +40,12 @@ A self-contained beacon simulator (Docker) used to generate realistic C2 check-i
 
 **Key skills:** Custom decoder authoring (multi-stage, regex field extraction), Wazuh frequency/timeframe correlation logic, `wazuh-logtest` for isolated rule diagnosis, systematic single-variable debugging, behavioral pattern detection vs. single-event detection.
 
+### 5. [Detecting DNS Tunneling: Decoder Engineering and Multi-Tier Alert Escalation](./DNS_Tunnelling/README.md)
+
+Simulation of DNS tunneling — encoding stolen credentials into base32-encoded DNS subdomain labels and transmitting them as genuine DNS wire-format packets using dnslib — with a three-tier Wazuh detection rule chain (individual query catch → domain-specific detection → high-volume escalation) and a two-stage custom decoder to extract structured fields. Includes Wireshark analysis confirming the tunneling signature (53-character query names, high-entropy encoded labels, repetitive same-destination query pattern), investigation of a capture artifact caused by tcpdump -i any on a containerised network, and decoder debugging via regex fix (greedy .+ → non-greedy \S+). The level 12 escalation alert surfaces the actual decoded exfiltrated data (credentials) directly in the alert's previous_output field.
+
+Key skills: DNS protocol and tunneling mechanics, two-stage decoder design, regex field extraction debugging, three-tier rule escalation (catch-all → content-specific → volume pattern), Wireshark analysis on Docker bridge networks, capture artifact identification and investigation.
+
 ## Recurring Themes Across These Projects
 
 - **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
