@@ -46,6 +46,12 @@ Simulation of DNS tunneling — encoding stolen credentials into base32-encoded 
 
 Key skills: DNS protocol and tunneling mechanics, two-stage decoder design, regex field extraction debugging, three-tier rule escalation (catch-all → content-specific → volume pattern), Wireshark analysis on Docker bridge networks, capture artifact identification and investigation.
 
+### 6. [Lateral Movement Detection: Web Shell Execution to Persistence — Attack Chain Correlation](./Lateral_Movement/README.md)
+
+Full post-exploitation attack chain simulation — initial access via web shell RCE, host/network enumeration, lateral pivot to a second container, and persistence file drop — across a multi-container Docker environment, with Wazuh detection covering each stage. Includes resolving a third instance of the recurring container log visibility gap (Apache logs volume-mounted to host filesystem), discovering and building on Wazuh's built-in web shell rule (31514, with full MITRE ATT&CK and compliance mappings) rather than duplicating its logic, and a frequency/timeframe correlation rule (level 14, mail: True) that escalates multiple web shell commands from the same source into a confirmed attack chain alert. The final alert's previous_output field shows the exact command sequence that triggered escalation. All detections fired against a live, noisy background of simultaneously running DNS tunnel and C2 beacon simulators from earlier projects.
+
+Key skills: Attack chain simulation and correlation, container log architecture (volume mounts for agent visibility), built-in rule discovery before custom authoring, frequency/timeframe correlation with same_source_ip, FIM-based persistence detection, Docker networking diagnostics, operating in a noisy multi-alert environment.
+
 ## Recurring Themes Across These Projects
 
 - **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
@@ -57,6 +63,5 @@ Key skills: DNS protocol and tunneling mechanics, two-stage decoder design, rege
 - Additional custom Wazuh rules for command-injection and XSS traffic patterns
 - Extended nginx logging to capture POST request bodies
 - Cross-host correlation between network-layer (PCAP) and host-layer (Wazuh) evidence for the same attack timeline
-- Additional vulnerable containers for lateral movement scenarios
 - More realistic beacon jitter (percentage-based, larger range) and payload size variation, to test whether the current detection rule still holds
-- DNS-tunneling detection as a follow-up to the C2 beaconing work, covering a different exfiltration/C2 channel than direct HTTP
+
