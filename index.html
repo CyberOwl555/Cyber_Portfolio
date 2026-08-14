@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CyberOwl // Home Lab Portfolio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+    :root {
+      --bg:        #0a0c0f;
+      --surface:   #111318;
+      --border:    #1e2128;
+      --line:      #2a2d35;
+      --text:      #c9cdd6;
+      --muted:     #565c6e;
+      --accent:    #00d4aa;
+      --accent2:   #7c6af7;
+      --warn:      #f0a500;
+      --danger:    #e05252;
+      --success:   #3ecf8e;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 48px 0 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,212,170,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-family: var(--mono);
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    h1 span { color: var(--accent); }
+
+    .subtitle {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 560px;
+      margin-inline: auto;
+    }
+
+    .header-meta {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .meta-pill {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+
+    .meta-pill span { color: var(--text); }
+
+    /* ── LAYOUT ── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── STAT BAR ── */
+    .stat-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat {
+      background: var(--surface);
+      padding: 20px 24px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 4px;
+    }
+
+    /* ── SECTION HEADERS ── */
+    .section {
+      padding: 56px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-child { border-bottom: none; }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── TIMELINE ── */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .project {
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .project::before {
+      content: '';
+      position: absolute;
+      left: -29px;
+      top: 20px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--surface);
+      border: 1px solid var(--muted);
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .project.open::before,
+    .project:hover::before {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .project-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      user-select: none;
+    }
+
+    .project-header:hover,
+    .project.open .project-header {
+      border-color: var(--line);
+    }
+
+    .project-num {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      padding-top: 3px;
+      min-width: 24px;
+    }
+
+    .project-title-block { flex: 1; }
+
+    .project-title {
+      font-size: 15px;
+      font-weight: 500;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      letter-spacing: 0.04em;
+    }
+
+    .tag-blue   { background: rgba(124,106,247,0.15); color: var(--accent2); }
+    .tag-green  { background: rgba(0,212,170,0.12);   color: var(--accent);  }
+    .tag-orange { background: rgba(240,165,0,0.12);   color: var(--warn);    }
+    .tag-red    { background: rgba(224,82,82,0.12);   color: var(--danger);  }
+    .tag-teal   { background: rgba(62,207,142,0.12);  color: var(--success); }
+
+    .chevron {
+      color: var(--muted);
+      font-size: 12px;
+      padding-top: 4px;
+      transition: transform 0.2s;
+    }
+
+    .project.open .chevron { transform: rotate(90deg); }
+
+    .project-body {
+      display: none;
+      padding: 20px 20px 20px 56px;
+      border: 1px solid var(--border);
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      background: rgba(17,19,24,0.6);
+    }
+
+    .project.open .project-body { display: block; }
+
+    .project-desc {
+      color: var(--text);
+      font-size: 14px;
+      margin-bottom: 16px;
+      line-height: 1.7;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .evidence-grid { grid-template-columns: 1fr; }
+    }
+
+    .evidence-block {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 12px 14px;
+    }
+
+    .evidence-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .evidence-value {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      line-height: 1.6;
+    }
+
+    .honest-note {
+      font-size: 13px;
+      color: var(--muted);
+      border-left: 2px solid var(--border);
+      padding-left: 12px;
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    /* ── ATTACK CHAIN ── */
+    .chain {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 12px 0;
+    }
+
+    .chain-step {
+      font-family: var(--mono);
+      font-size: 11px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 3px;
+      color: var(--text);
+    }
+
+    .chain-arrow {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .chain-step.highlight {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    /* ── MITRE GRID ── */
+    .mitre-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .mitre-badge {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: rgba(124,106,247,0.1);
+      border: 1px solid rgba(124,106,247,0.25);
+      color: var(--accent2);
+      padding: 3px 8px;
+      border-radius: 3px;
+    }
+
+    /* ── ARCHITECTURE ── */
+    .arch {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 28px;
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.9;
+      color: var(--muted);
+      overflow-x: auto;
+    }
+
+    .arch .node {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .arch .ip { color: var(--accent); }
+    .arch .role { color: var(--muted); }
+
+    /* ── SKILLS TABLE ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .skill-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 14px 16px;
+    }
+
+    .skill-category {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 8px;
+    }
+
+    .skill-list {
+      list-style: none;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .skill-list li {
+      padding: 2px 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .skill-list li::before {
+      content: '›';
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    /* ── EVENT IDS ── */
+    .event-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .event-table th {
+      font-family: var(--mono);
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      padding: 8px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .event-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .event-table tr:last-child td { border-bottom: none; }
+
+    .event-id {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    .event-desc { color: var(--text); }
+
+    .event-attack { color: var(--muted); font-size: 12px; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <p class="eyebrow">Home Lab Portfolio // 2026</p>
+    <h1>CYBER<span>OWL</span></h1>
+    <p class="subtitle">NOC → SOC transition. Eight projects spanning detection engineering, offensive techniques, network analysis, and Active Directory attack chains — built on real infrastructure, documented with honest outcomes.</p>
+    <div class="header-meta">
+      <span class="meta-pill">Role: <span>SOC Analyst</span></span>
+      <span class="meta-pill">Background: <span>NOC / Patch Management</span></span>
+      <span class="meta-pill">Cert target: <span>SANS SEC504 / GCIH</span></span>
+      <span class="meta-pill">GitHub: <span>CyberOwl555</span></span>
+    </div>
+  </div>
+</header>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat"><div class="stat-num">8</div><div class="stat-label">Projects</div></div>
+  <div class="stat"><div class="stat-num">6</div><div class="stat-label">Custom Rules</div></div>
+  <div class="stat"><div class="stat-num">4</div><div class="stat-label">AD Attacks</div></div>
+  <div class="stat"><div class="stat-num">52K</div><div class="stat-label">Suricata Sigs</div></div>
+  <div class="stat"><div class="stat-num">&lt;10m</div><div class="stat-label">Domain → SYSTEM</div></div>
+</div>
+
+<div class="container">
+
+  <!-- ARCHITECTURE -->
+  <section class="section">
+    <div class="section-label">Lab Architecture</div>
+    <div class="arch">
+<span class="node">Windows 11 Host</span>       <span class="ip">192.168.137.1</span>   <span class="role">// management · Wireshark · domain workstation</span>
+      │
+      ├─ <span class="node">Wazuh SIEM</span>          <span class="ip">192.168.137.10</span>  <span class="role">// Ubuntu 24.04 · manager + indexer + dashboard</span>
+      │
+      ├─ <span class="node">OpenVPN Server</span>      <span class="ip">192.168.137.20</span>  <span class="role">// Ubuntu 24.04 · secp384r1 · AES-256-GCM</span>
+      │
+      ├─ <span class="node">Docker Host</span>         <span class="ip">192.168.137.30</span>  <span class="role">// Ubuntu Minimal · DVWA · Juice Shop · simulators</span>
+      │    ├─ Juice Shop           <span class="ip">172.17.0.x</span>
+      │    ├─ DVWA                 <span class="ip">172.17.0.x</span>
+      │    ├─ C2 Beacon Sim        <span class="ip">172.18.0.x</span>      <span class="role">// c2sim-net</span>
+      │    └─ DNS Tunnel Sim       <span class="ip">172.19.0.x</span>      <span class="role">// dnstunnel-net</span>
+      │
+      ├─ <span class="node">DC01</span>                 <span class="ip">192.168.137.50</span>  <span class="role">// Windows Server 2019 Core · lab.local</span>
+      │
+      └─ <span class="node">Kali Linux</span>          <span class="ip">192.168.137.60</span>  <span class="role">// Impacket · NetExec · John</span>
+
+      Network: Hyper-V Internal Switch · ICS egress · <span class="ip">192.168.137.0/24</span>
+    </div>
+  </section>
+
+  <!-- TIMELINE -->
+  <section class="section">
+    <div class="section-label">Project Timeline</div>
+    <div class="timeline">
+
+      <!-- P1 -->
+      <div class="project" id="p1">
+        <div class="project-header" onclick="toggle('p1')">
+          <span class="project-num">01</span>
+          <div class="project-title-block">
+            <div class="project-title">Home Lab SIEM Deployment — OpenVPN + Wazuh</div>
+            <div class="project-tags">
+              <span class="tag tag-green">SIEM</span>
+              <span class="tag tag-blue">Detection Rules</span>
+              <span class="tag tag-orange">Incident Response</span>
+              <span class="tag tag-teal">FIM</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Self-hosted OpenVPN server (ECDH secp384r1, AES-256-GCM, confirmed via certificate inspection) monitored by a full Wazuh SIEM stack. Covers agent deployment, FIM with realtime monitoring, and custom rule authoring using <code>if_sid</code> inheritance to elevate severity for VPN config changes specifically.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Custom Rules</div>
+              <div class="evidence-value">100010 · OpenVPN modified (lvl 12)<br>100011 · OpenVPN deleted (lvl 13)</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Confirmed Detections</div>
+              <div class="evidence-value">5760 · SSH auth failure<br>2502 · PAM escalation (lvl 10)<br>554/553 · FIM add/delete</div>
+            </div>
+          </div>
+          <p class="honest-note">Real incident: disk-full cascaded into API failures, SQLite journal corruption risk, and a self-inflicted dashboard kill via overly broad pkill. Diagnosed layer by layer and documented fully.</p>
+        </div>
+      </div>
+
+      <!-- P2 -->
+      <div class="project" id="p2">
+        <div class="project-header" onclick="toggle('p2')">
+          <span class="project-num">02</span>
+          <div class="project-title-block">
+            <div class="project-title">Simulated Network & App-Layer Detection — Juice Shop</div>
+            <div class="project-tags">
+              <span class="tag tag-green">Visibility Gap</span>
+              <span class="tag tag-blue">nginx Proxy</span>
+              <span class="tag tag-teal">Docker</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Deployed Juice Shop in Docker and discovered host-based agents have zero visibility into containerised application traffic. Fixed by deploying nginx as a reverse proxy with logs volume-mounted to the host filesystem — the first of three container log visibility gaps resolved across the portfolio.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Visibility Gap</div>
+              <div class="evidence-value">Container app logs invisible<br>to host-based Wazuh agent</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Fix</div>
+              <div class="evidence-value">nginx reverse proxy<br>volume-mounted logs<br>localfile → agent</div>
+            </div>
+          </div>
+          <p class="honest-note">False positive investigated: rootcheck flagged /usr/bin/diff as trojaned. Verified with <code>file</code> + <code>dpkg -V</code> before dismissing — confirmed legitimate ELF binary, known legacy signature limitation.</p>
+        </div>
+      </div>
+
+      <!-- P3 -->
+      <div class="project" id="p3">
+        <div class="project-header" onclick="toggle('p3')">
+          <span class="project-num">03</span>
+          <div class="project-title-block">
+            <div class="project-title">Attack Traffic Analysis — SQLi & File Upload RCE</div>
+            <div class="project-tags">
+              <span class="tag tag-red">Offensive</span>
+              <span class="tag tag-orange">Wireshark</span>
+              <span class="tag tag-blue">PCAP Analysis</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Manual exploitation of DVWA — SQL injection (full table dump via <code>1' OR '1'='1</code>) and file upload to RCE (one-line PHP shell, <code>?cmd=id</code> → <code>uid=33(www-data)</code>). All traffic captured and analysed in Wireshark including a TCP anomaly investigation.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">SQLi Result</div>
+              <div class="evidence-value">5 users returned instead of 1<br>Full table dump confirmed</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Visibility Finding</div>
+              <div class="evidence-value">POST payloads invisible in logs<br>GET payloads fully visible<br>Detection gap documented</div>
+            </div>
+          </div>
+          <p class="honest-note">Dup ACK investigation: traced to duplicate client-side requests, not network loss. Root cause vs symptom — the actual analytical skill.</p>
+        </div>
+      </div>
+
+      <!-- P4 -->
+      <div class="project" id="p4">
+        <div class="project-header" onclick="toggle('p4')">
+          <span class="project-num">04</span>
+          <div class="project-title-block">
+            <div class="project-title">C2 Beaconing Detection — Custom Decoder Engineering</div>
+            <div class="project-tags">
+              <span class="tag tag-red">C2 Simulation</span>
+              <span class="tag tag-blue">Custom Decoder</span>
+              <span class="tag tag-green">Frequency Correlation</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Python HTTP beacon simulator (Docker) checking in every 15±3 seconds. Confirmed signature in Wireshark: 26 bytes per request, metronomic timing. Custom two-stage Wazuh decoder + frequency/timeframe correlation rule built from scratch — no default rule existed for this behaviour.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Beacon Signature</div>
+              <div class="evidence-value">26 bytes · consistent<br>~13s interval · jitter ±3s<br>Single endpoint · looping</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Detection Rules</div>
+              <div class="evidence-value">100030 · check-in (lvl 3)<br>100031 · 5+ hits/90s (lvl 12)<br>same_source_ip correlation</div>
+            </div>
+          </div>
+          <div class="mitre-grid">
+            <span class="mitre-badge">T1071.001 · Web Protocols</span>
+            <span class="mitre-badge">T1105 · Ingress Tool Transfer</span>
+          </div>
+          <p class="honest-note">Four layered failures diagnosed in sequence: timestamp format confusing pre-decoder, file silently refusing writes, greedy .+ regex consuming too much, missing srcip extraction. wazuh-logtest was the tool that found each one.</p>
+        </div>
+      </div>
+
+      <!-- P5 -->
+      <div class="project" id="p5">
+        <div class="project-header" onclick="toggle('p5')">
+          <span class="project-num">05</span>
+          <div class="project-title-block">
+            <div class="project-title">DNS Tunneling Detection — Three-Tier Escalation</div>
+            <div class="project-tags">
+              <span class="tag tag-red">DNS Exfil</span>
+              <span class="tag tag-blue">Multi-stage Decoder</span>
+              <span class="tag tag-orange">Regex Debugging</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">base32-encoded credentials transmitted as genuine DNS wire-format queries via dnslib. Level 12 alert surfaced the actual decoded exfiltrated data (<code>user=admin;pass=SuperSecr</code>) in the alert's previous_output field — the SIEM reconstructed what was being smuggled through DNS.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Wireshark Signature</div>
+              <div class="evidence-value">Name Length: 53 chars<br>Uppercase alphanumeric<br>No word structure · high entropy</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Rule Chain</div>
+              <div class="evidence-value">100040 · any query (lvl 3)<br>100041 · tunnel.local (lvl 10)<br>100042 · volume (lvl 12)</div>
+            </div>
+          </div>
+          <div class="mitre-grid">
+            <span class="mitre-badge">T1071.004 · DNS</span>
+            <span class="mitre-badge">T1048 · Exfiltration over alternative protocol</span>
+          </div>
+          <p class="honest-note">Greedy .+ regex bug: consumed src= into decoded field, breaking extraction. Fixed to \S+ — non-whitespace only. tcpdump -i any produced duplicate frames; fixed by targeting specific bridge interface.</p>
+        </div>
+      </div>
+
+      <!-- P6 -->
+      <div class="project" id="p6">
+        <div class="project-header" onclick="toggle('p6')">
+          <span class="project-num">06</span>
+          <div class="project-title-block">
+            <div class="project-title">Lateral Movement Detection — Web Shell to Persistence</div>
+            <div class="project-tags">
+              <span class="tag tag-red">Attack Chain</span>
+              <span class="tag tag-blue">Correlation Rule</span>
+              <span class="tag tag-green">Level 14</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Full post-exploitation chain across two containers — initial RCE, discovery commands, TCP pivot to Juice Shop, persistence file drop. Correlation rule escalates after 3 web shell commands from same source. Ran against a noisy background of C2 and DNS tunnel simulators simultaneously.</p>
+          <div class="chain">
+            <span class="chain-step highlight">?cmd=id</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">?cmd=cat /etc/passwd</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">TCP → Juice Shop</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">/tmp/attacker.sh</span>
+          </div>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Built-in Rule Used</div>
+              <div class="evidence-value">31514 · shell.php execution<br>MITRE T1505.003 pre-tagged<br>PCI/GDPR/NIST mapped</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Custom Escalation</div>
+              <div class="evidence-value">100053 · lvl 14 · mail:True<br>frequency=3 · timeframe=300<br>same_source_ip</div>
+            </div>
+          </div>
+          <div class="mitre-grid">
+            <span class="mitre-badge">T1505.003 · Web Shell</span>
+            <span class="mitre-badge">T1021 · Remote Services</span>
+            <span class="mitre-badge">T1059 · Command Execution</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- P7 -->
+      <div class="project" id="p7">
+        <div class="project-header" onclick="toggle('p7')">
+          <span class="project-num">07</span>
+          <div class="project-title-block">
+            <div class="project-title">Suricata Network IDS — Closing the Network Visibility Gap</div>
+            <div class="project-tags">
+              <span class="tag tag-green">Network IDS</span>
+              <span class="tag tag-blue">52K Signatures</span>
+              <span class="tag tag-teal">Cross-Detection</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Suricata deployed on the Docker host monitoring all three bridge interfaces. Immediately detected the C2 beacon via Python BaseHTTP server banner — the same activity already caught by Wazuh's log-correlation rules, providing independent corroboration from the network layer.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Interfaces Monitored</div>
+              <div class="evidence-value">docker0 · DVWA + Juice Shop<br>br-c2sim · beacon traffic<br>br-dnstunnel · DNS traffic</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">First Alert</div>
+              <div class="evidence-value">ET INFO Python BaseHTTP<br>ServerBanner · rule 2034635<br>~15s intervals · confirmed C2</div>
+            </div>
+          </div>
+          <p class="honest-note">The pivot TCP connection still generated no alert — community rules don't cover plain internal TCP connections. Documented honestly with the follow-up path: custom Suricata rule for inter-container connections.</p>
+        </div>
+      </div>
+
+      <!-- P8 -->
+      <div class="project" id="p8">
+        <div class="project-header" onclick="toggle('p8')">
+          <span class="project-num">08</span>
+          <div class="project-title-block">
+            <div class="project-title">Active Directory Attack Lab — Full Domain Compromise ⭐</div>
+            <div class="project-tags">
+              <span class="tag tag-red">Kerberoasting</span>
+              <span class="tag tag-red">Pass-the-Hash</span>
+              <span class="tag tag-red">DCSync</span>
+              <span class="tag tag-orange">SEC504</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Windows Server 2019 Core domain controller (lab.local), Kali attack machine, Windows 11 domain workstation. Complete attack chain from one unprivileged domain user account to SYSTEM on the DC in under 10 minutes. Every stage detected by Wazuh with Windows audit logging enabled.</p>
+
+          <div class="chain" style="margin-bottom:16px;">
+            <span class="chain-step">jsmith (user)</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">Kerberoast svc_sql</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">Spray → sadmin (Pwn3d!)</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">DCSync → all hashes</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">PtH → SYSTEM</span>
+          </div>
+
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Kerberoasting</div>
+              <div class="evidence-value">Event 4769<br>Encryption: 0x17 (RC4)<br>Cracked: Summer2024!</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Password Spray</div>
+              <div class="evidence-value">Event 4625 (failures)<br>Event 4624 (sadmin hit)<br>Rule 92652 fired</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">DCSync / Dump</div>
+              <div class="evidence-value">All NTLM hashes extracted<br>krbtgt captured<br>Golden Ticket potential</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Pass-the-Hash</div>
+              <div class="evidence-value">Event 4624 Type 3 · NTLM<br>psexec → nt authority\system<br>Rule 92652 fired</div>
+            </div>
+          </div>
+
+          <div class="mitre-grid">
+            <span class="mitre-badge">T1558.003 · Kerberoasting</span>
+            <span class="mitre-badge">T1110.003 · Password Spraying</span>
+            <span class="mitre-badge">T1003.002 · Credential Dumping</span>
+            <span class="mitre-badge">T1550.002 · Pass-the-Hash</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /timeline -->
+  </section>
+
+  <!-- EVENT IDS -->
+  <section class="section">
+    <div class="section-label">Key Windows Event IDs</div>
+    <table class="event-table">
+      <thead>
+        <tr>
+          <th>Event ID</th>
+          <th>Description</th>
+          <th>Attack Indicator</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="event-id">4624</td><td class="event-desc">Successful logon</td><td class="event-attack">Type 3 + NTLM from unexpected source → Pass-the-Hash</td></tr>
+        <tr><td class="event-id">4625</td><td class="event-desc">Failed logon</td><td class="event-attack">Volume from same IP across accounts → Password Spraying</td></tr>
+        <tr><td class="event-id">4662</td><td class="event-desc">AD object operation</td><td class="event-attack">DS-Replication from non-DC → DCSync</td></tr>
+        <tr><td class="event-id">4697</td><td class="event-desc">Service installed</td><td class="event-attack">Random service name in ADMIN$ → psexec</td></tr>
+        <tr><td class="event-id">4769</td><td class="event-desc">Kerberos TGS requested</td><td class="event-attack">Encryption type 0x17 (RC4) → Kerberoasting</td></tr>
+        <tr><td class="event-id">4771</td><td class="event-desc">Kerberos pre-auth failed</td><td class="event-attack">Volume across accounts → Spray via Kerberos</td></tr>
+        <tr><td class="event-id">7045</td><td class="event-desc">New service installed</td><td class="event-attack">Persistence / lateral movement</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-label">Skills Demonstrated</div>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-category">Detection Engineering</div>
+        <ul class="skill-list">
+          <li>Custom Wazuh decoders</li>
+          <li>Multi-stage regex extraction</li>
+          <li>Frequency/timeframe rules</li>
+          <li>Rule inheritance (if_sid)</li>
+          <li>wazuh-logtest debugging</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">Offensive Techniques</div>
+        <ul class="skill-list">
+          <li>Kerberoasting</li>
+          <li>Password spraying</li>
+          <li>Pass-the-Hash</li>
+          <li>DCSync / secretsdump</li>
+          <li>SQLi · RCE · web shells</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">Network Analysis</div>
+        <ul class="skill-list">
+          <li>Wireshark / tcpdump</li>
+          <li>Suricata IDS</li>
+          <li>PCAP analysis</li>
+          <li>DNS tunneling detection</li>
+          <li>C2 beaconing patterns</li>
+        </ul>
+      </div>
+      <div class="skill-card">
+        <div class="skill-category">Infrastructure</div>
+        <ul class="skill-list">
+          <li>Hyper-V / Docker</li>
+          <li>Linux Server admin</li>
+          <li>Active Directory</li>
+          <li>Windows Server Core</li>
+          <li>Network segmentation</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /container -->
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="https://github.com/CyberOwl555/Cyber_Portfolio" target="_blank">github.com/CyberOwl555/Cyber_Portfolio</a>
+      &nbsp;//&nbsp; All projects built and documented on real infrastructure &nbsp;//&nbsp; 2026
+    </p>
+  </div>
+</footer>
+
+<script>
+  function toggle(id) {
+    const el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+
+  // Open first project by default
+  document.getElementById('p8').classList.add('open');
+</script>
+
+</body>
+</html>
