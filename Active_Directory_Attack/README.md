@@ -114,8 +114,6 @@ The encryption type is the critical indicator. Modern AD environments default to
 
 **Wazuh:** Rule 92652 fired for the Kerberos ticket request event.
 
-*[Screenshot: Windows Event ID 4769 showing jsmith requesting svc_sql ticket with encryption type 0x17]*
-*[Screenshot: Kerberoast hash output and John cracking result]*
 
 ---
 
@@ -158,8 +156,6 @@ SMB  192.168.137.50  445  DC01  [-] lab.local\svc_sql:Welcome2024! STATUS_LOGON_
 
 The sadmin successful logon was automatically flagged as a possible Pass-the-Hash attack by Wazuh — an interesting false-positive-in-reverse: it's actually a password spray success, but Wazuh correctly identified the NTLM network logon pattern as suspicious regardless of the actual technique used.
 
-*[Screenshot: NetExec output showing (Pwn3d!) on sadmin]*
-*[Screenshot: Wazuh alerts showing 60122 failures and 92652 suspicious logon]*
 
 ---
 
@@ -193,7 +189,6 @@ Every domain account's NTLM hash, usable for offline cracking or direct Pass-the
 
 **The krbtgt hash significance:** With the krbtgt account's hash, an attacker can forge Kerberos tickets (Golden Ticket attack) granting persistent Domain Admin access that survives password resets and persists even if the attacker's original access is revoked.
 
-*[Screenshot: secretsdump output formatted with column showing all domain hashes]*
 
 ---
 
@@ -240,8 +235,6 @@ The combination of NTLM network logon (Type 3) from an unexpected source is the 
 
 **Wazuh:** Rule 92652 fired — "Successful Remote Logon Detected - NTLM authentication, possible pass-the-hash attack" (T1550.002, T1078.002)
 
-*[Screenshot: psexec shell showing whoami = nt authority\system]*
-*[Screenshot: Wazuh rule 92652 alert for Administrator NTLM logon from Kali]*
 
 ---
 
