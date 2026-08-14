@@ -11,10 +11,12 @@ Currently working in a NOC with responsibility for enterprise patch management (
 - **Hypervisor:** Microsoft Hyper-V
 - **Network:** Segmented Internal virtual switch with Internet Connection Sharing (ICS) for controlled internet egress
 - **Hosts:**
-  - Windows 11 (management workstation, VPN client, Wireshark analysis)
-  - Ubuntu Server 24.04 — OpenVPN server
-  - Ubuntu Server 24.04 — Wazuh SIEM (manager, indexer, dashboard)
-  - Ubuntu Server 24.04 Minimal — Docker host (vulnerable application targets)
+- Windows 11 (management workstation, VPN client, Wireshark analysis, domain workstation)
+- Ubuntu Server 24.04 — OpenVPN server
+- Ubuntu Server 24.04 — Wazuh SIEM (manager, indexer, dashboard)
+- Ubuntu Server 24.04 Minimal — Docker host (vulnerable application targets)
+- Windows Server 2019 Core — Active Directory Domain Controller (lab.local)
+- Kali Linux — Attack machine (Impacket, NetExec, John the Ripper)
 
 ## Projects
 
@@ -58,21 +60,30 @@ Key skills: Network IDS deployment and configuration, multi-interface packet cap
 
 Key skills: Attack chain simulation and correlation, container log architecture (volume mounts for agent visibility), built-in rule discovery before custom authoring, frequency/timeframe correlation with same_source_ip, FIM-based persistence detection, Docker networking diagnostics, operating in a noisy multi-alert environment.
 
+### 8. Active Directory Attack Lab: Kerberoasting, Password Spraying, Credential Dumping, and Pass-the-Hash](./Active_Directory_Attack/README.md)
+
+A purpose-built Active Directory environment (Windows Server 2019 Core domain controller, Kali Linux attack machine, domain-joined Windows 11 workstation) used to execute and detect a complete post-exploitation attack chain directly relevant to SANS SEC504. Starting with a single unprivileged domain user account, the full chain runs: Kerberoasting (svc_sql TGS hash extracted and cracked offline) → password spraying (Domain Admin sadmin compromised with zero lockouts) → credential dumping (all domain NTLM hashes extracted via DCSync including krbtgt) → Pass-the-Hash (SYSTEM shell on the DC using only the Administrator hash, no password). Every stage monitored by Wazuh with Windows audit logging enabled — Event ID 4769 with RC4 encryption type 0x17 (Kerberoasting), 4625 failures and 4624 success (password spray), 4624 Type 3 NTLM from unexpected source (Pass-the-Hash) — all firing automatically with MITRE ATT&CK tags. Total time from first attack to SYSTEM: approximately 10 minutes from one standard domain user account.
+
+Key skills: Active Directory deployment and administration (Server Core), Kerberoasting and offline hash cracking, password spraying with lockout-safe tooling (NetExec), DCSync credential dumping (Impacket secretsdump), Pass-the-Hash lateral movement (psexec), Windows audit policy configuration, Windows Security Event Log analysis (4624/4625/4769), MITRE ATT&CK mapping (T1558.003/T1110.003/T1003.002/T1550.002), PICERL incident response framework application.
+
 ## Recurring Themes Across These Projects
 
 - **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
 - **Honest limitations, not just wins.** Where something didn't fully work as expected (POST body logging gaps, file extension mitigations, false positives), that's documented explicitly rather than omitted.
 - **Detection and offense together.** Each offensive test is paired with an assessment of what a defender would (or wouldn't) see — tying attacker technique directly to detection engineering.
+- **Visibility gaps as a recurring theme. Container log visibility has come up in three separate projects and been resolved three different ways — a pattern that demonstrates genuine depth of understanding of a core SIEM      architectural constraint rather than a single lucky fix.
+- **Speed of compromise. The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — reinforcing why detection and response speed matters more than perimeter          defence alone.
 
 ## Next Steps
 
-Active Directory attack lab (Windows Server Core DC) — enumeration, Kerberoasting, Pass-the-Hash, credential dumping, with Wazuh Windows Event Log monitoring
+BloodHound/SharpHound AD enumeration — graphical attack path analysis showing shortest route to Domain Admin from any starting point
+Golden Ticket attack demonstration — using the captured krbtgt hash to forge persistent domain admin access
+Memory forensics basics using Volatility against a memory dump from the DC
+PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
 Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
-SSH honeypot (Cowrie) to capture real or simulated attacker behaviour and feed it into Wazuh
-Memory forensics basics using Volatility against a pre-made memory dump
-Incident response lifecycle documentation (PICERL framework) applied to the disk-full cascading failure incident from project 1
+SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
 
-- ## Tools and Approach
+ ## Tools and Approach
 Lab infrastructure built and managed via Hyper-V, Docker, and Ubuntu Server.
 Detection engineering performed in Wazuh 4.8.2 with Suricata 8.0.6.
 Traffic analysis via Wireshark and tcpdump. AI assistance (Claude) used
