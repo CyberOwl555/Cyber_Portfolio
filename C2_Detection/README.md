@@ -106,11 +106,6 @@ Separately, a Hyper-V host memory exhaustion issue (unrelated to this project, c
 
 **Design rationale:** Rule 100030 is intentionally low-severity (level 3) — a single check-in event is not inherently suspicious on its own and would generate excessive noise if treated as an alert-worthy event. Rule 100031 is where the actual detection value lives: it uses Wazuh's `frequency` and `timeframe` correlation to require **5 or more matching events from the same source within a 90-second window** before escalating to a high-severity (level 12) alert. This directly encodes the manually-observed timing signature from Phase 1 into an automated, reusable detection — the rule fires on the *pattern*, not the individual event.
 
-*[Screenshot: Rule 100030 firing in the Wazuh dashboard — "C2 simulator check-in observed"]*
-
-*[Screenshot: Rule 100031 firing — "Possible C2 beaconing: 5+ check-ins from same source within 90 seconds"]*
-
-*[Screenshot or terminal output: wazuh-logtest showing successful decoder match and srcip field extraction]*
 
 ## Skills Demonstrated
 
