@@ -60,7 +60,7 @@ Key skills: Network IDS deployment and configuration, multi-interface packet cap
 
 Key skills: Attack chain simulation and correlation, container log architecture (volume mounts for agent visibility), built-in rule discovery before custom authoring, frequency/timeframe correlation with same_source_ip, FIM-based persistence detection, Docker networking diagnostics, operating in a noisy multi-alert environment.
 
-### 8. Active Directory Attack Lab: Kerberoasting, Password Spraying, Credential Dumping, and Pass-the-Hash](./Active_Directory_Attack/README.md)
+### 8. [Active Directory Attack Lab: Kerberoasting, Password Spraying, Credential Dumping, and Pass-the-Hash](./Active_Directory_Attack/README.md)
 
 A purpose-built Active Directory environment (Windows Server 2019 Core domain controller, Kali Linux attack machine, domain-joined Windows 11 workstation) used to execute and detect a complete post-exploitation attack chain directly relevant to SANS SEC504. Starting with a single unprivileged domain user account, the full chain runs: Kerberoasting (svc_sql TGS hash extracted and cracked offline) → password spraying (Domain Admin sadmin compromised with zero lockouts) → credential dumping (all domain NTLM hashes extracted via DCSync including krbtgt) → Pass-the-Hash (SYSTEM shell on the DC using only the Administrator hash, no password). Every stage monitored by Wazuh with Windows audit logging enabled — Event ID 4769 with RC4 encryption type 0x17 (Kerberoasting), 4625 failures and 4624 success (password spray), 4624 Type 3 NTLM from unexpected source (Pass-the-Hash) — all firing automatically with MITRE ATT&CK tags. Total time from first attack to SYSTEM: approximately 10 minutes from one standard domain user account.
 
