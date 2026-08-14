@@ -50,6 +50,12 @@ Key skills: DNS protocol and tunneling mechanics, two-stage decoder design, rege
 
 Full post-exploitation attack chain simulation — initial access via web shell RCE, host/network enumeration, lateral pivot to a second container, and persistence file drop — across a multi-container Docker environment, with Wazuh detection covering each stage. Includes resolving a third instance of the recurring container log visibility gap (Apache logs volume-mounted to host filesystem), discovering and building on Wazuh's built-in web shell rule (31514, with full MITRE ATT&CK and compliance mappings) rather than duplicating its logic, and a frequency/timeframe correlation rule (level 14, mail: True) that escalates multiple web shell commands from the same source into a confirmed attack chain alert. The final alert's previous_output field shows the exact command sequence that triggered escalation. All detections fired against a live, noisy background of simultaneously running DNS tunnel and C2 beacon simulators from earlier projects.
 
+### 7. Suricata Network IDS: Closing the Network Visibility Gap(./Suricata/README.md)
+
+Deployment of Suricata as a network-based IDS on the Docker host, monitoring all three Docker bridge interfaces simultaneously — directly addressing the blind spot identified in project 6 where container-to-container lateral movement generated no Wazuh alert. The Emerging Threats Open ruleset (52,238 signatures) immediately detected the C2 beacon simulator via the Python BaseHTTP server response banner, providing independent network-level corroboration of the same activity already being caught by Wazuh's log-correlation rules — demonstrating the defence-in-depth value of combining host-based and network-based detection. Suricata's structured eve.json output is ingested by the existing Wazuh agent, unifying host and network alerts in a single dashboard. Includes honest documentation of what Suricata still missed (the pivot TCP connection) and why, with a follow-up path to custom rule writing.
+
+Key skills: Network IDS deployment and configuration, multi-interface packet capture (af-packet), Emerging Threats community ruleset management, eve.json Wazuh integration, host-based vs. network-based detection paradigm comparison, cross-detection corroboration (same attack caught by two independent mechanisms), scalability mapping from lab to enterprise deployment.
+
 Key skills: Attack chain simulation and correlation, container log architecture (volume mounts for agent visibility), built-in rule discovery before custom authoring, frequency/timeframe correlation with same_source_ip, FIM-based persistence detection, Docker networking diagnostics, operating in a noisy multi-alert environment.
 
 ## Recurring Themes Across These Projects
@@ -60,8 +66,17 @@ Key skills: Attack chain simulation and correlation, container log architecture 
 
 ## Next Steps
 
-- Additional custom Wazuh rules for command-injection and XSS traffic patterns
-- Extended nginx logging to capture POST request bodies
-- Cross-host correlation between network-layer (PCAP) and host-layer (Wazuh) evidence for the same attack timeline
-- More realistic beacon jitter (percentage-based, larger range) and payload size variation, to test whether the current detection rule still holds
+Active Directory attack lab (Windows Server Core DC) — enumeration, Kerberoasting, Pass-the-Hash, credential dumping, with Wazuh Windows Event Log monitoring
+Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
+SSH honeypot (Cowrie) to capture real or simulated attacker behaviour and feed it into Wazuh
+Memory forensics basics using Volatility against a pre-made memory dump
+Incident response lifecycle documentation (PICERL framework) applied to the disk-full cascading failure incident from project 1
+
+- ## Tools and Approach
+Lab infrastructure built and managed via Hyper-V, Docker, and Ubuntu Server.
+Detection engineering performed in Wazuh 4.8.2 with Suricata 8.0.6.
+Traffic analysis via Wireshark and tcpdump. AI assistance (Claude) used
+for syntax reference and debugging support during development, with all
+detection logic, troubleshooting methodology, and analysis performed
+and verified manually.
 
