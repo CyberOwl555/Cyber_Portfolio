@@ -520,8 +520,8 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat"><div class="stat-num">8</div><div class="stat-label">Projects</div></div>
-  <div class="stat"><div class="stat-num">6</div><div class="stat-label">Custom Rules</div></div>
+  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Projects</div></div>
+  <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Custom Rules</div></div>
   <div class="stat"><div class="stat-num">4</div><div class="stat-label">AD Attacks</div></div>
   <div class="stat"><div class="stat-num">52K</div><div class="stat-label">Suricata Sigs</div></div>
   <div class="stat"><div class="stat-num">&lt;10m</div><div class="stat-label">Domain → SYSTEM</div></div>
@@ -848,6 +848,43 @@
         </div>
       </div>
 
+
+      <!-- P9 -->
+      <div class="project" id="p9">
+        <div class="project-header" onclick="toggle('p9')">
+          <span class="project-num">09</span>
+          <div class="project-title-block">
+            <div class="project-title">BloodHound AD Enumeration — Attack Path Analysis</div>
+            <div class="project-tags">
+              <span class="tag tag-red">BloodHound</span>
+              <span class="tag tag-red">SharpHound</span>
+              <span class="tag tag-orange">Graph Analysis</span>
+              <span class="tag tag-blue">Attack Paths</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">BloodHound deployed against lab.local to map every AD relationship as a graph and surface attack paths automatically. SharpHound collected 97 objects in 26 seconds as jsmith (unprivileged) — full domain enumeration from one standard user account. Key finding: svc_sql had 9 reachable high-value targets and had never logged in — the exact account compromised via Kerberoasting in project 8, independently identified by BloodHound through static graph analysis.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Collection Stats</div>
+              <div class="evidence-value">97 objects · 26 seconds<br>Authenticated as jsmith<br>No special privileges needed</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Key Findings</div>
+              <div class="evidence-value">svc_sql · 9 HVT reachable<br>Last Logon: Never<br>Shortest path → DA visualised</div>
+            </div>
+          </div>
+          <div class="mitre-grid">
+            <span class="mitre-badge">T1087.002 · Domain Account Discovery</span>
+            <span class="mitre-badge">T1069.002 · Domain Groups</span>
+            <span class="mitre-badge">T1558.003 · Kerberoasting (corroborated)</span>
+          </div>
+          <p class="honest-note">SharpHound generates a burst of LDAP queries (Event ID 4662) detectable in Wazuh — modern EDR detects it by signature. Documented honestly as a noisy tool that requires evasion in real engagements.</p>
+        </div>
+      </div>
+
     </div><!-- /timeline -->
   </section>
 
@@ -895,6 +932,7 @@
           <li>Password spraying</li>
           <li>Pass-the-Hash</li>
           <li>DCSync / secretsdump</li>
+          <li>BloodHound enumeration</li>
           <li>SQLi · RCE · web shells</li>
         </ul>
       </div>
