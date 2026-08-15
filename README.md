@@ -66,6 +66,12 @@ A purpose-built Active Directory environment (Windows Server 2019 Core domain co
 
 Key skills: Active Directory deployment and administration (Server Core), Kerberoasting and offline hash cracking, password spraying with lockout-safe tooling (NetExec), DCSync credential dumping (Impacket secretsdump), Pass-the-Hash lateral movement (psexec), Windows audit policy configuration, Windows Security Event Log analysis (4624/4625/4769), MITRE ATT&CK mapping (T1558.003/T1110.003/T1003.002/T1550.002), PICERL incident response framework application.
 
+### 9. [BloodHound AD Enumeration: Attack Path Analysis](./BloodHound_Enumeration/README.md)
+BloodHound deployed against the existing lab.local Active Directory environment to map every domain relationship as a graph and surface attack paths automatically. SharpHound collected 97 objects in 26 seconds authenticated as jsmith (unprivileged standard user) — demonstrating that full domain enumeration requires only one valid credential. Key findings: svc_sql Kerberoastable account identified with 9 reachable high-value targets and Last Logon: Never (corroborating the manual Kerberoasting result from project 8 through independent graph analysis), Domain Admin membership visualised, and shortest attack path from svc_sql to Domain Admins rendered as a graph with the red highlighted route. Covers both offensive application (finding attack paths) and defensive application (eliminating paths before attackers find them).
+
+Key skills: BloodHound/SharpHound deployment and operation, AD graph-based attack path analysis, Kerberoastable account identification, graph theory applied to AD security, defensive use of attack tooling, SharpHound detection awareness (Event ID 4662, LDAP query volume).
+
+
 ## Recurring Themes Across These Projects
 
 - **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
@@ -76,8 +82,9 @@ Key skills: Active Directory deployment and administration (Server Core), Kerber
 
 ## Next Steps
 
-BloodHound/SharpHound AD enumeration — graphical attack path analysis showing shortest route to Domain Admin from any starting point
 Golden Ticket attack demonstration — using the captured krbtgt hash to forge persistent domain admin access
+ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to the lab domain to demonstrate more complex multi-hop BloodHound attack paths
+AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse, a major attack surface SEC504 covers
 Memory forensics basics using Volatility against a memory dump from the DC
 PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
 Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
