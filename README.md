@@ -82,13 +82,19 @@ Key skills: BloodHound/SharpHound deployment and operation, AD graph-based attac
 
 ## Next Steps
 
-Golden Ticket attack demonstration — using the captured krbtgt hash to forge persistent domain admin access
-ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to the lab domain to demonstrate more complex multi-hop BloodHound attack paths
-AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse, a major attack surface SEC504 covers
-Memory forensics basics using Volatility against a memory dump from the DC
-PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
-Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
-SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
+- Golden Ticket attack demonstration — using the captured krbtgt hash to forge persistent domain admin access
+
+- ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to the lab domain to demonstrate more complex multi-hop BloodHound attack paths
+
+- AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse, a major attack surface SEC504 covers
+
+- Memory forensics basics using Volatility against a memory dump from the DC
+
+- PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
+
+- Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
+
+- SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
 
  ## Tools and Approach
 Lab infrastructure built and managed via Hyper-V, Docker, and Ubuntu Server.
