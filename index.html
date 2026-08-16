@@ -977,11 +977,11 @@
         requestAnimationFrame(draw);
       }
 
-      // Mouse hover
-      canvas.addEventListener('mousemove', function(e) {
-        const rect = canvas.getBoundingClientRect();
-        const mx = e.clientX - rect.left;
-        const my = e.clientY - rect.top;
+      // Drag state
+      let dragNode = null;
+      let dragOffX = 0, dragOffY = 0;
+
+      function getNodeAt(mx, my) {
         let found = null;
         NODES.forEach(n => {
           if (nodeProgress[n.id] < 0.5) return;
@@ -990,28 +990,109 @@
           const dx = mx - p.x, dy = my - p.y;
           if (Math.sqrt(dx*dx + dy*dy) < r + 4) found = n;
         });
+        return found;
+      }
+
+      function showTip(found, mx, my) {
+        document.getElementById('nettip-name').textContent = found.label;
+        document.getElementById('nettip-ip').textContent = found.ip;
+        document.getElementById('nettip-role').innerHTML = found.role.split('/').map(s => s.trim()).join('<br>');
+        let tx = mx + 16;
+        let ty = my + 16;
+        if (tx > W - 210) tx = mx - 210;
+        if (ty > H - 80)  ty = my - 80;
+        tip.style.left = tx + 'px';
+        tip.style.top  = ty + 'px';
+        tip.style.display = 'block';
+      }
+
+      // Mouse events
+      canvas.addEventListener('mousedown', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const found = getNodeAt(mx, my);
+        if (found) {
+          dragNode = found;
+          const p = nodePos(found);
+          dragOffX = mx - p.x;
+          dragOffY = my - p.y;
+          canvas.style.cursor = 'grabbing';
+          e.preventDefault();
+        }
+      });
+
+      canvas.addEventListener('mousemove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+
+        if (dragNode) {
+          // Update node position (clamped to canvas)
+          dragNode.x = Math.max(0.05, Math.min(0.95, (mx - dragOffX) / W));
+          dragNode.y = Math.max(0.05, Math.min(0.97, (my - dragOffY) / H));
+          tip.style.display = 'none';
+          canvas.style.cursor = 'grabbing';
+          return;
+        }
+
+        const found = getNodeAt(mx, my);
         hoveredNode = found ? found.id : null;
         if (found) {
-          document.getElementById('nettip-name').textContent = found.label;
-          document.getElementById('nettip-ip').textContent = found.ip;
-          document.getElementById('nettip-role').innerHTML = found.role.split('/').map(s => s.trim()).join('<br>');
-          let tx = e.clientX - rect.left + 16;
-          let ty = e.clientY - rect.top + 16;
-          if (tx > W - 200) tx = e.clientX - rect.left - 196;
-          tip.style.left = tx + 'px';
-          tip.style.top  = ty + 'px';
-          tip.style.display = 'block';
-          canvas.style.cursor = 'pointer';
+          showTip(found, mx, my);
+          canvas.style.cursor = 'grab';
         } else {
           tip.style.display = 'none';
           canvas.style.cursor = 'default';
         }
       });
 
+      canvas.addEventListener('mouseup', function(e) {
+        if (dragNode) {
+          const rect = canvas.getBoundingClientRect();
+          const mx = e.clientX - rect.left;
+          const my = e.clientY - rect.top;
+          const found = getNodeAt(mx, my);
+          if (found) showTip(found, mx, my);
+        }
+        dragNode = null;
+        canvas.style.cursor = 'default';
+      });
+
       canvas.addEventListener('mouseleave', () => {
         tip.style.display = 'none';
         hoveredNode = null;
+        dragNode = null;
       });
+
+      // Touch support for mobile
+      canvas.addEventListener('touchstart', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const t = e.touches[0];
+        const mx = t.clientX - rect.left;
+        const my = t.clientY - rect.top;
+        const found = getNodeAt(mx, my);
+        if (found) {
+          dragNode = found;
+          const p = nodePos(found);
+          dragOffX = mx - p.x;
+          dragOffY = my - p.y;
+          e.preventDefault();
+        }
+      }, { passive: false });
+
+      canvas.addEventListener('touchmove', function(e) {
+        if (!dragNode) return;
+        const rect = canvas.getBoundingClientRect();
+        const t = e.touches[0];
+        const mx = t.clientX - rect.left;
+        const my = t.clientY - rect.top;
+        dragNode.x = Math.max(0.05, Math.min(0.95, (mx - dragOffX) / W));
+        dragNode.y = Math.max(0.05, Math.min(0.97, (my - dragOffY) / H));
+        e.preventDefault();
+      }, { passive: false });
+
+      canvas.addEventListener('touchend', () => { dragNode = null; });
 
       // Init
       resize();
