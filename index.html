@@ -24,7 +24,6 @@
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
 
     body {
@@ -44,7 +43,6 @@
       position: relative;
       overflow: hidden;
     }
-
     header::before {
       content: '';
       position: absolute;
@@ -52,7 +50,6 @@
       background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,212,170,0.06) 0%, transparent 70%);
       pointer-events: none;
     }
-
     .eyebrow {
       font-family: var(--mono);
       font-size: 11px;
@@ -61,7 +58,6 @@
       color: var(--accent);
       margin-bottom: 16px;
     }
-
     h1 {
       font-family: var(--mono);
       font-size: clamp(28px, 5vw, 52px);
@@ -70,25 +66,46 @@
       letter-spacing: -0.02em;
       line-height: 1.1;
     }
-
     h1 span { color: var(--accent); }
 
-    .subtitle {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 14px;
-      max-width: 560px;
-      margin-inline: auto;
+    /* ── TERMINAL ANIMATION ── */
+    .terminal-block {
+      margin: 24px auto 0;
+      max-width: 480px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 12px;
     }
+    .terminal-line {
+      color: var(--muted);
+      line-height: 1.9;
+      min-height: 1.9em;
+    }
+    .terminal-line .prompt { color: var(--accent); }
+    .terminal-line .output { color: var(--text); }
+    .terminal-line .ok { color: var(--success); }
+    .terminal-line .warn { color: var(--warn); }
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 13px;
+      background: var(--accent);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
 
     .header-meta {
       display: flex;
       justify-content: center;
       gap: 24px;
-      margin-top: 28px;
+      margin-top: 24px;
       flex-wrap: wrap;
     }
-
     .meta-pill {
       font-family: var(--mono);
       font-size: 11px;
@@ -98,15 +115,10 @@
       border-radius: 20px;
       letter-spacing: 0.05em;
     }
-
     .meta-pill span { color: var(--text); }
 
     /* ── LAYOUT ── */
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
 
     /* ── STAT BAR ── */
     .stat-bar {
@@ -116,13 +128,11 @@
       background: var(--border);
       border-bottom: 1px solid var(--border);
     }
-
     .stat {
       background: var(--surface);
       padding: 20px 24px;
       text-align: center;
     }
-
     .stat-num {
       font-family: var(--mono);
       font-size: 28px;
@@ -130,7 +140,6 @@
       color: var(--accent);
       line-height: 1;
     }
-
     .stat-label {
       font-size: 11px;
       color: var(--muted);
@@ -139,14 +148,9 @@
       margin-top: 4px;
     }
 
-    /* ── SECTION HEADERS ── */
-    .section {
-      padding: 56px 0;
-      border-bottom: 1px solid var(--border);
-    }
-
+    /* ── SECTIONS ── */
+    .section { padding: 56px 0; border-bottom: 1px solid var(--border); }
     .section:last-child { border-bottom: none; }
-
     .section-label {
       font-family: var(--mono);
       font-size: 11px;
@@ -158,7 +162,6 @@
       align-items: center;
       gap: 12px;
     }
-
     .section-label::after {
       content: '';
       flex: 1;
@@ -166,46 +169,217 @@
       background: var(--border);
     }
 
-    /* ── TIMELINE ── */
-    .timeline {
-      position: relative;
-      padding-left: 32px;
+    /* ── RADAR CHART ── */
+    .radar-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    @media (max-width: 640px) { .radar-wrap { grid-template-columns: 1fr; } }
+    .radar-svg { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
+    .radar-labels { list-style: none; }
+    .radar-labels li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--border);
+    }
+    .radar-labels li:last-child { border-bottom: none; }
+    .radar-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+    .radar-score {
+      margin-left: auto;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+    }
+    .radar-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .radar-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      width: 0;
+      transition: width 1.2s ease;
     }
 
+    /* ── MITRE HEATMAP ── */
+    .mitre-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 8px;
+    }
+    .mitre-tactic {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .mitre-tactic-name {
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 10px 4px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+    .mitre-techniques { padding: 6px 6px 8px; }
+    .mitre-tech {
+      font-size: 10px;
+      padding: 3px 6px;
+      border-radius: 3px;
+      margin: 2px 0;
+      display: block;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+    }
+    .mitre-tech.covered {
+      background: rgba(0,212,170,0.12);
+      border-color: rgba(0,212,170,0.3);
+      color: var(--accent);
+    }
+    .mitre-tech.partial {
+      background: rgba(240,165,0,0.1);
+      border-color: rgba(240,165,0,0.25);
+      color: var(--warn);
+    }
+    .mitre-legend {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      font-size: 12px;
+    }
+    .mitre-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+    }
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 2px;
+    }
+
+    /* ── ATTACK CHAIN VISUALISER ── */
+    .chain-vis {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .chain-step-vis {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 0;
+      cursor: pointer;
+    }
+    .chain-step-vis:hover .chain-step-label { border-color: var(--accent); }
+    .chain-step-label {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px 0 0 6px;
+      padding: 14px 16px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: border-color 0.2s;
+      position: relative;
+      z-index: 1;
+    }
+    .chain-step-label.active { border-color: var(--accent); color: var(--accent); }
+    .chain-step-num {
+      font-size: 10px;
+      color: var(--muted);
+      min-width: 16px;
+    }
+    .chain-connector {
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .chain-detail {
+      display: none;
+      padding: 16px 20px;
+      background: rgba(0,212,170,0.04);
+      border: 1px solid rgba(0,212,170,0.15);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      font-size: 13px;
+    }
+    .chain-detail.show { display: block; }
+    .chain-detail-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+    .chain-facts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .chain-fact {
+      font-family: var(--mono);
+      font-size: 10px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      border-radius: 3px;
+      color: var(--muted);
+    }
+    .chain-arrow-down {
+      text-align: left;
+      padding-left: 60px;
+      color: var(--border);
+      font-size: 18px;
+      line-height: 1;
+      margin: 2px 0;
+    }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 32px; }
     .timeline::before {
       content: '';
       position: absolute;
-      left: 7px;
-      top: 8px;
-      bottom: 8px;
+      left: 7px; top: 8px; bottom: 8px;
       width: 1px;
       background: var(--border);
     }
-
-    .project {
-      position: relative;
-      margin-bottom: 8px;
-    }
-
+    .project { position: relative; margin-bottom: 8px; }
     .project::before {
       content: '';
       position: absolute;
-      left: -29px;
-      top: 20px;
-      width: 9px;
-      height: 9px;
+      left: -29px; top: 20px;
+      width: 9px; height: 9px;
       border-radius: 50%;
       background: var(--surface);
       border: 1px solid var(--muted);
       transition: border-color 0.2s, background 0.2s;
     }
-
-    .project.open::before,
-    .project:hover::before {
+    .project.open::before, .project:hover::before {
       background: var(--accent);
       border-color: var(--accent);
     }
-
     .project-header {
       display: flex;
       align-items: flex-start;
@@ -218,59 +392,19 @@
       transition: border-color 0.2s;
       user-select: none;
     }
-
-    .project-header:hover,
-    .project.open .project-header {
-      border-color: var(--line);
-    }
-
-    .project-num {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      padding-top: 3px;
-      min-width: 24px;
-    }
-
+    .project-header:hover, .project.open .project-header { border-color: var(--line); }
+    .project-num { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 3px; min-width: 24px; }
     .project-title-block { flex: 1; }
-
-    .project-title {
-      font-size: 15px;
-      font-weight: 500;
-      color: #fff;
-      line-height: 1.3;
-    }
-
-    .project-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .tag {
-      font-family: var(--mono);
-      font-size: 10px;
-      padding: 2px 8px;
-      border-radius: 3px;
-      letter-spacing: 0.04em;
-    }
-
+    .project-title { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.3; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .tag { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
     .tag-blue   { background: rgba(124,106,247,0.15); color: var(--accent2); }
-    .tag-green  { background: rgba(0,212,170,0.12);   color: var(--accent);  }
-    .tag-orange { background: rgba(240,165,0,0.12);   color: var(--warn);    }
-    .tag-red    { background: rgba(224,82,82,0.12);   color: var(--danger);  }
+    .tag-green  { background: rgba(0,212,170,0.12);   color: var(--accent); }
+    .tag-orange { background: rgba(240,165,0,0.12);   color: var(--warn); }
+    .tag-red    { background: rgba(224,82,82,0.12);   color: var(--danger); }
     .tag-teal   { background: rgba(62,207,142,0.12);  color: var(--success); }
-
-    .chevron {
-      color: var(--muted);
-      font-size: 12px;
-      padding-top: 4px;
-      transition: transform 0.2s;
-    }
-
+    .chevron { color: var(--muted); font-size: 12px; padding-top: 4px; transition: transform 0.2s; }
     .project.open .chevron { transform: rotate(90deg); }
-
     .project-body {
       display: none;
       padding: 20px 20px 20px 56px;
@@ -279,225 +413,47 @@
       border-radius: 0 0 6px 6px;
       background: rgba(17,19,24,0.6);
     }
-
     .project.open .project-body { display: block; }
+    .project-desc { color: var(--text); font-size: 14px; margin-bottom: 16px; line-height: 1.7; }
+    .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    @media (max-width: 600px) { .evidence-grid { grid-template-columns: 1fr; } }
+    .evidence-block { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; }
+    .evidence-label { font-family: var(--mono); font-size: 10px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+    .evidence-value { font-family: var(--mono); font-size: 12px; color: var(--accent); line-height: 1.6; }
+    .honest-note { font-size: 13px; color: var(--muted); border-left: 2px solid var(--border); padding-left: 12px; margin-top: 12px; font-style: italic; }
+    .chain { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+    .chain-step { font-family: var(--mono); font-size: 11px; background: var(--bg); border: 1px solid var(--border); padding: 4px 10px; border-radius: 3px; color: var(--text); }
+    .chain-arrow { color: var(--muted); font-size: 11px; }
+    .chain-step.highlight { border-color: var(--accent); color: var(--accent); }
+    .mitre-badge-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .mitre-badge { font-family: var(--mono); font-size: 10px; background: rgba(124,106,247,0.1); border: 1px solid rgba(124,106,247,0.25); color: var(--accent2); padding: 3px 8px; border-radius: 3px; }
 
-    .project-desc {
-      color: var(--text);
-      font-size: 14px;
-      margin-bottom: 16px;
-      line-height: 1.7;
-    }
-
-    .evidence-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .evidence-grid { grid-template-columns: 1fr; }
-    }
-
-    .evidence-block {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 12px 14px;
-    }
-
-    .evidence-label {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .evidence-value {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
-      line-height: 1.6;
-    }
-
-    .honest-note {
-      font-size: 13px;
-      color: var(--muted);
-      border-left: 2px solid var(--border);
-      padding-left: 12px;
-      margin-top: 12px;
-      font-style: italic;
-    }
-
-    /* ── ATTACK CHAIN ── */
-    .chain {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 12px 0;
-    }
-
-    .chain-step {
-      font-family: var(--mono);
-      font-size: 11px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      padding: 4px 10px;
-      border-radius: 3px;
-      color: var(--text);
-    }
-
-    .chain-arrow {
-      color: var(--muted);
-      font-size: 11px;
-    }
-
-    .chain-step.highlight {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    /* ── MITRE GRID ── */
-    .mitre-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 8px;
-    }
-
-    .mitre-badge {
-      font-family: var(--mono);
-      font-size: 10px;
-      background: rgba(124,106,247,0.1);
-      border: 1px solid rgba(124,106,247,0.25);
-      color: var(--accent2);
-      padding: 3px 8px;
-      border-radius: 3px;
-    }
-
-    /* ── ARCHITECTURE ── */
-    .arch {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 28px;
-      font-family: var(--mono);
-      font-size: 12px;
-      line-height: 1.9;
-      color: var(--muted);
-      overflow-x: auto;
-    }
-
-    .arch .node {
-      color: var(--text);
-      font-weight: 600;
-    }
-
+    /* ── ARCH ── */
+    .arch { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 28px; font-family: var(--mono); font-size: 12px; line-height: 1.9; color: var(--muted); overflow-x: auto; }
+    .arch .node { color: var(--text); font-weight: 600; }
     .arch .ip { color: var(--accent); }
-    .arch .role { color: var(--muted); }
 
-    /* ── SKILLS TABLE ── */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 12px;
-    }
-
-    .skill-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 14px 16px;
-    }
-
-    .skill-category {
-      font-family: var(--mono);
-      font-size: 10px;
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 8px;
-    }
-
-    .skill-list {
-      list-style: none;
-      font-size: 13px;
-      color: var(--text);
-    }
-
-    .skill-list li {
-      padding: 2px 0;
-      display: flex;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .skill-list li::before {
-      content: '›';
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    /* ── EVENT IDS ── */
-    .event-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 13px;
-    }
-
-    .event-table th {
-      font-family: var(--mono);
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--muted);
-      padding: 8px 12px;
-      text-align: left;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .event-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      vertical-align: top;
-    }
-
+    /* ── EVENT TABLE ── */
+    .event-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .event-table th { font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .event-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
     .event-table tr:last-child td { border-bottom: none; }
-
-    .event-id {
-      font-family: var(--mono);
-      font-size: 12px;
-      color: var(--accent);
-      white-space: nowrap;
-    }
-
+    .event-id { font-family: var(--mono); font-size: 12px; color: var(--accent); white-space: nowrap; }
     .event-desc { color: var(--text); }
-
     .event-attack { color: var(--muted); font-size: 12px; }
 
+    /* ── SKILLS ── */
+    .skills-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+    .skill-card { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 14px 16px; }
+    .skill-category { font-family: var(--mono); font-size: 10px; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+    .skill-list { list-style: none; font-size: 13px; color: var(--text); }
+    .skill-list li { padding: 2px 0; display: flex; align-items: center; gap: 7px; }
+    .skill-list li::before { content: '›'; color: var(--muted); font-size: 12px; }
+
     /* ── FOOTER ── */
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 32px 0;
-      text-align: center;
-    }
-
-    footer p {
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: 0.05em;
-    }
-
-    footer a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
+    footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; }
+    footer p { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
+    footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
   </style>
 </head>
@@ -508,7 +464,16 @@
   <div class="container">
     <p class="eyebrow">Home Lab Portfolio // 2026</p>
     <h1>CYBER<span>OWL</span></h1>
-    <p class="subtitle">NOC → SOC transition. Nine projects spanning detection engineering, offensive techniques, network analysis, and Active Directory attack chains — built on real infrastructure, documented with honest outcomes.</p>
+
+    <!-- TERMINAL ANIMATION -->
+    <div class="terminal-block">
+      <div class="terminal-line" id="t1"></div>
+      <div class="terminal-line" id="t2"></div>
+      <div class="terminal-line" id="t3"></div>
+      <div class="terminal-line" id="t4"></div>
+      <div class="terminal-line" id="t5"><span class="cursor" id="cur"></span></div>
+    </div>
+
     <div class="header-meta">
       <span class="meta-pill">Role: <span>SOC Analyst</span></span>
       <span class="meta-pill">Background: <span>NOC / Patch Management</span></span>
@@ -520,34 +485,264 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Projects</div></div>
-  <div class="stat"><div class="stat-num">6+</div><div class="stat-label">Custom Rules</div></div>
-  <div class="stat"><div class="stat-num">4</div><div class="stat-label">AD Attacks</div></div>
-  <div class="stat"><div class="stat-num">52K</div><div class="stat-label">Suricata Sigs</div></div>
-  <div class="stat"><div class="stat-num">&lt;10m</div><div class="stat-label">Domain → SYSTEM</div></div>
+  <div class="stat"><div class="stat-num" data-target="9">0</div><div class="stat-label">Projects</div></div>
+  <div class="stat"><div class="stat-num" data-target="6">0</div><div class="stat-label">Custom Rules</div></div>
+  <div class="stat"><div class="stat-num" data-target="4">0</div><div class="stat-label">AD Attacks</div></div>
+  <div class="stat"><div class="stat-num" data-suffix="K" data-target="52">0</div><div class="stat-label">Suricata Sigs</div></div>
+  <div class="stat"><div class="stat-num" data-prefix="<" data-target="10" data-suffix="m">&lt;10m</div><div class="stat-label">Domain → SYSTEM</div></div>
 </div>
 
 <div class="container">
+
+  <!-- SKILLS RADAR -->
+  <section class="section">
+    <div class="section-label">Skills Coverage</div>
+    <div class="radar-wrap">
+      <svg class="radar-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#00d4aa" stop-opacity="0.15"/>
+            <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.02"/>
+          </radialGradient>
+        </defs>
+        <!-- Grid rings -->
+        <circle cx="150" cy="150" r="110" fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="82"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="55"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="27"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <!-- Axes (6 skills) -->
+        <line x1="150" y1="40"  x2="150" y2="260" stroke="#1e2128" stroke-width="1"/>
+        <line x1="55"  y1="95"  x2="245" y2="205" stroke="#1e2128" stroke-width="1"/>
+        <line x1="55"  y1="205" x2="245" y2="95"  stroke="#1e2128" stroke-width="1"/>
+        <!-- Data polygon: Detection 90, Offensive 80, Network 75, AD/Windows 85, Linux 80, IR 70 -->
+        <!-- Points calculated for 6-axis radar at given % of 110px radius -->
+        <!-- Detection(top): 90% = 99px up   → 150, 51 -->
+        <!-- Offensive(TR): 80% = 88px        → 226, 96 -->
+        <!-- Network(BR): 75% = 82.5px        → 221, 204 -->
+        <!-- AD/Windows(bot): 85% = 93.5px   → 150, 243 -->
+        <!-- Linux(BL): 80% = 88px            → 74, 204 -->
+        <!-- IR(TL): 70% = 77px               → 79, 96 -->
+        <polygon
+          points="150,51 226,96 221,204 150,243 74,204 79,96"
+          fill="url(#rg)" stroke="#00d4aa" stroke-width="2" opacity="0.9"/>
+        <!-- Dots on polygon points -->
+        <circle cx="150" cy="51"  r="4" fill="#00d4aa"/>
+        <circle cx="226" cy="96"  r="4" fill="#00d4aa"/>
+        <circle cx="221" cy="204" r="4" fill="#00d4aa"/>
+        <circle cx="150" cy="243" r="4" fill="#00d4aa"/>
+        <circle cx="74"  cy="204" r="4" fill="#00d4aa"/>
+        <circle cx="79"  cy="96"  r="4" fill="#00d4aa"/>
+        <!-- Labels -->
+        <text x="150" y="28"  text-anchor="middle" fill="#c9cdd6" font-size="11" font-family="monospace">Detection</text>
+        <text x="262" y="95"  text-anchor="start"  fill="#c9cdd6" font-size="11" font-family="monospace">Offensive</text>
+        <text x="262" y="210" text-anchor="start"  fill="#c9cdd6" font-size="11" font-family="monospace">Network</text>
+        <text x="150" y="278" text-anchor="middle" fill="#c9cdd6" font-size="11" font-family="monospace">AD/Windows</text>
+        <text x="38"  y="210" text-anchor="end"    fill="#c9cdd6" font-size="11" font-family="monospace">Linux</text>
+        <text x="38"  y="95"  text-anchor="end"    fill="#c9cdd6" font-size="11" font-family="monospace">Incident Response</text>
+      </svg>
+
+      <ul class="radar-labels">
+        <li><span class="radar-dot"></span> Detection Engineering <span class="radar-bar"><span class="radar-bar-fill" data-w="90"></span></span><span class="radar-score">90%</span></li>
+        <li><span class="radar-dot"></span> Offensive Techniques  <span class="radar-bar"><span class="radar-bar-fill" data-w="80"></span></span><span class="radar-score">80%</span></li>
+        <li><span class="radar-dot"></span> Network Analysis      <span class="radar-bar"><span class="radar-bar-fill" data-w="75"></span></span><span class="radar-score">75%</span></li>
+        <li><span class="radar-dot"></span> AD / Windows          <span class="radar-bar"><span class="radar-bar-fill" data-w="85"></span></span><span class="radar-score">85%</span></li>
+        <li><span class="radar-dot"></span> Linux Administration  <span class="radar-bar"><span class="radar-bar-fill" data-w="80"></span></span><span class="radar-score">80%</span></li>
+        <li><span class="radar-dot"></span> Incident Response     <span class="radar-bar"><span class="radar-bar-fill" data-w="70"></span></span><span class="radar-score">70%</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- MITRE HEATMAP -->
+  <section class="section">
+    <div class="section-label">MITRE ATT&CK Coverage</div>
+    <div class="mitre-legend">
+      <span class="mitre-legend-item"><span class="legend-dot" style="background:rgba(0,212,170,0.5)"></span> Demonstrated</span>
+      <span class="mitre-legend-item"><span class="legend-dot" style="background:rgba(240,165,0,0.5)"></span> Detected only</span>
+      <span class="mitre-legend-item"><span class="legend-dot" style="background:#1e2128"></span> Not covered</span>
+    </div>
+    <div class="mitre-grid">
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Initial Access</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1190 · Exploit Public App</span>
+          <span class="mitre-tech covered">T1078 · Valid Accounts</span>
+          <span class="mitre-tech">T1566 · Phishing</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Execution</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1059 · Command Interpreter</span>
+          <span class="mitre-tech covered">T1203 · Client Exploitation</span>
+          <span class="mitre-tech">T1569 · System Services</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Persistence</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1505.003 · Web Shell</span>
+          <span class="mitre-tech covered">T1136 · Create Account</span>
+          <span class="mitre-tech">T1547 · Boot Autostart</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Privilege Escalation</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1548 · Abuse Elevation</span>
+          <span class="mitre-tech partial">T1078.002 · Domain Accounts</span>
+          <span class="mitre-tech">T1134 · Token Manipulation</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Defense Evasion</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1550.002 · Pass the Hash</span>
+          <span class="mitre-tech partial">T1562 · Impair Defenses</span>
+          <span class="mitre-tech">T1070 · Indicator Removal</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Credential Access</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1558.003 · Kerberoasting</span>
+          <span class="mitre-tech covered">T1003.002 · Credential Dump</span>
+          <span class="mitre-tech covered">T1110.003 · Password Spray</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Discovery</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1087.002 · Domain Accounts</span>
+          <span class="mitre-tech covered">T1069.002 · Domain Groups</span>
+          <span class="mitre-tech covered">T1018 · Remote System Discovery</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Lateral Movement</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1021 · Remote Services</span>
+          <span class="mitre-tech covered">T1550.002 · Pass the Hash</span>
+          <span class="mitre-tech">T1534 · Internal Spearphish</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">C2</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1071.001 · Web Protocols</span>
+          <span class="mitre-tech covered">T1071.004 · DNS</span>
+          <span class="mitre-tech">T1090 · Proxy</span>
+        </div>
+      </div>
+      <div class="mitre-tactic">
+        <div class="mitre-tactic-name">Exfiltration</div>
+        <div class="mitre-techniques">
+          <span class="mitre-tech covered">T1048 · Alt Protocol</span>
+          <span class="mitre-tech partial">T1041 · C2 Channel</span>
+          <span class="mitre-tech">T1030 · Data Transfer Limits</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AD ATTACK CHAIN VISUALISER -->
+  <section class="section">
+    <div class="section-label">AD Attack Chain — Interactive</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:24px;">Click each step to see the evidence, tool used, and Wazuh detection. Full domain compromise from one standard user in &lt;10 minutes.</p>
+    <div class="chain-vis">
+
+      <div class="chain-step-vis" onclick="toggleChain('c1')">
+        <div class="chain-step-label" id="lbl-c1">
+          <span class="chain-step-num">01</span> Kerberoasting
+        </div>
+        <div class="chain-detail" id="c1">
+          <div class="chain-detail-title">jsmith → svc_sql TGS hash → cracked offline</div>
+          <p style="font-size:13px;color:var(--text);">Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account's hash — take it offline and crack it. No lockout, no noise after the initial request.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-GetUserSPNs</span>
+            <span class="chain-fact">Crack: john --format=krb5tgs</span>
+            <span class="chain-fact">Result: Summer2024!</span>
+            <span class="chain-fact">Event ID: 4769</span>
+            <span class="chain-fact">Enc type: 0x17 (RC4)</span>
+          </div>
+        </div>
+      </div>
+      <div class="chain-arrow-down">↓</div>
+
+      <div class="chain-step-vis" onclick="toggleChain('c2')">
+        <div class="chain-step-label" id="lbl-c2">
+          <span class="chain-step-num">02</span> Password Spray
+        </div>
+        <div class="chain-detail" id="c2">
+          <div class="chain-detail-title">One password × all accounts → sadmin (Pwn3d!)</div>
+          <p style="font-size:13px;color:var(--text);">One password attempt per account stays under lockout thresholds. Welcome2024! hit sadmin — a Domain Admin. One spray, zero lockouts, Domain Admin compromised.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: nxc smb</span>
+            <span class="chain-fact">Target: sadmin</span>
+            <span class="chain-fact">Result: (Pwn3d!)</span>
+            <span class="chain-fact">Event ID: 4625 + 4624</span>
+            <span class="chain-fact">Wazuh: Rule 92652</span>
+          </div>
+        </div>
+      </div>
+      <div class="chain-arrow-down">↓</div>
+
+      <div class="chain-step-vis" onclick="toggleChain('c3')">
+        <div class="chain-step-label" id="lbl-c3">
+          <span class="chain-step-num">03</span> DCSync Dump
+        </div>
+        <div class="chain-detail" id="c3">
+          <div class="chain-detail-title">sadmin → every NTLM hash in the domain</div>
+          <p style="font-size:13px;color:var(--text);">Domain Admin credentials used to impersonate DC replication and extract all hashes from NTDS.dit. Administrator hash captured. krbtgt hash captured — enabling Golden Ticket persistence.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-secretsdump</span>
+            <span class="chain-fact">Protocol: DRSUAPI replication</span>
+            <span class="chain-fact">Captured: all domain hashes</span>
+            <span class="chain-fact">Event ID: 4662</span>
+            <span class="chain-fact">krbtgt: captured</span>
+          </div>
+        </div>
+      </div>
+      <div class="chain-arrow-down">↓</div>
+
+      <div class="chain-step-vis" onclick="toggleChain('c4')">
+        <div class="chain-step-label" id="lbl-c4">
+          <span class="chain-step-num">04</span> Pass-the-Hash
+        </div>
+        <div class="chain-detail" id="c4">
+          <div class="chain-detail-title">Administrator hash → SYSTEM on DC — no password needed</div>
+          <p style="font-size:13px;color:var(--text);">NTLM authentication accepts the hash directly — no cracking needed. psexec authenticated with the hash, uploaded a service binary to ADMIN$, and returned a SYSTEM shell.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-psexec -hashes</span>
+            <span class="chain-fact">whoami: nt authority\system</span>
+            <span class="chain-fact">Event ID: 4624 Type 3 NTLM</span>
+            <span class="chain-fact">Wazuh: Rule 92652</span>
+            <span class="chain-fact">Time from start: &lt;10 min</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
 
   <!-- ARCHITECTURE -->
   <section class="section">
     <div class="section-label">Lab Architecture</div>
     <div class="arch">
-<span class="node">Windows 11 Host</span>       <span class="ip">192.168.137.1</span>   <span class="role">// management · Wireshark · domain workstation</span>
+<span class="node">Windows 11 Host</span>       <span class="ip">192.168.137.1</span>   // management · Wireshark · domain workstation
       │
-      ├─ <span class="node">Wazuh SIEM</span>          <span class="ip">192.168.137.10</span>  <span class="role">// Ubuntu 24.04 · manager + indexer + dashboard</span>
+      ├─ <span class="node">Wazuh SIEM</span>          <span class="ip">192.168.137.10</span>  // Ubuntu 24.04 · manager + indexer + dashboard
       │
-      ├─ <span class="node">OpenVPN Server</span>      <span class="ip">192.168.137.20</span>  <span class="role">// Ubuntu 24.04 · secp384r1 · AES-256-GCM</span>
+      ├─ <span class="node">OpenVPN Server</span>      <span class="ip">192.168.137.20</span>  // Ubuntu 24.04 · secp384r1 · AES-256-GCM
       │
-      ├─ <span class="node">Docker Host</span>         <span class="ip">192.168.137.30</span>  <span class="role">// Ubuntu Minimal · DVWA · Juice Shop · simulators</span>
+      ├─ <span class="node">Docker Host</span>         <span class="ip">192.168.137.30</span>  // Ubuntu Minimal · Suricata · DVWA · Juice Shop
       │    ├─ Juice Shop           <span class="ip">172.17.0.x</span>
       │    ├─ DVWA                 <span class="ip">172.17.0.x</span>
-      │    ├─ C2 Beacon Sim        <span class="ip">172.18.0.x</span>      <span class="role">// c2sim-net</span>
-      │    └─ DNS Tunnel Sim       <span class="ip">172.19.0.x</span>      <span class="role">// dnstunnel-net</span>
+      │    ├─ C2 Beacon Sim        <span class="ip">172.18.0.x</span>      // c2sim-net
+      │    └─ DNS Tunnel Sim       <span class="ip">172.19.0.x</span>      // dnstunnel-net
       │
-      ├─ <span class="node">DC01</span>                 <span class="ip">192.168.137.50</span>  <span class="role">// Windows Server 2019 Core · lab.local</span>
+      ├─ <span class="node">DC01</span>                 <span class="ip">192.168.137.50</span>  // Windows Server 2019 Core · lab.local
       │
-      └─ <span class="node">Kali Linux</span>          <span class="ip">192.168.137.60</span>  <span class="role">// Impacket · NetExec · John</span>
+      └─ <span class="node">Kali Linux</span>          <span class="ip">192.168.137.60</span>  // Impacket · NetExec · John · BloodHound
 
       Network: Hyper-V Internal Switch · ICS egress · <span class="ip">192.168.137.0/24</span>
     </div>
@@ -558,7 +753,6 @@
     <div class="section-label">Project Timeline</div>
     <div class="timeline">
 
-      <!-- P1 -->
       <div class="project" id="p1">
         <div class="project-header" onclick="toggle('p1')">
           <span class="project-num">01</span>
@@ -574,339 +768,196 @@
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Self-hosted OpenVPN server (ECDH secp384r1, AES-256-GCM, confirmed via certificate inspection) monitored by a full Wazuh SIEM stack. Covers agent deployment, FIM with realtime monitoring, and custom rule authoring using <code>if_sid</code> inheritance to elevate severity for VPN config changes specifically.</p>
+          <p class="project-desc">Self-hosted OpenVPN (ECDH secp384r1, AES-256-GCM — confirmed via certificate inspection) monitored by Wazuh. Custom rules using if_sid inheritance, realtime FIM, SSH brute-force escalation detection.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Custom Rules</div>
-              <div class="evidence-value">100010 · OpenVPN modified (lvl 12)<br>100011 · OpenVPN deleted (lvl 13)</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Confirmed Detections</div>
-              <div class="evidence-value">5760 · SSH auth failure<br>2502 · PAM escalation (lvl 10)<br>554/553 · FIM add/delete</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">Custom Rules</div><div class="evidence-value">100010 · OpenVPN modified (lvl 12)<br>100011 · OpenVPN deleted (lvl 13)</div></div>
+            <div class="evidence-block"><div class="evidence-label">Confirmed Alerts</div><div class="evidence-value">5760 · SSH failure<br>2502 · PAM escalation (lvl 10)<br>554/553 · FIM add/delete</div></div>
           </div>
-          <p class="honest-note">Real incident: disk-full cascaded into API failures, SQLite journal corruption risk, and a self-inflicted dashboard kill via overly broad pkill. Diagnosed layer by layer and documented fully.</p>
+          <p class="honest-note">Real incident: disk-full cascaded into API failures, SQLite journal corruption, and a self-inflicted dashboard kill via overly broad pkill. Diagnosed layer by layer.</p>
         </div>
       </div>
 
-      <!-- P2 -->
       <div class="project" id="p2">
         <div class="project-header" onclick="toggle('p2')">
           <span class="project-num">02</span>
           <div class="project-title-block">
             <div class="project-title">Simulated Network & App-Layer Detection — Juice Shop</div>
-            <div class="project-tags">
-              <span class="tag tag-green">Visibility Gap</span>
-              <span class="tag tag-blue">nginx Proxy</span>
-              <span class="tag tag-teal">Docker</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-green">Visibility Gap</span><span class="tag tag-blue">nginx Proxy</span><span class="tag tag-teal">Docker</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Deployed Juice Shop in Docker and discovered host-based agents have zero visibility into containerised application traffic. Fixed by deploying nginx as a reverse proxy with logs volume-mounted to the host filesystem — the first of three container log visibility gaps resolved across the portfolio.</p>
-          <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Visibility Gap</div>
-              <div class="evidence-value">Container app logs invisible<br>to host-based Wazuh agent</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Fix</div>
-              <div class="evidence-value">nginx reverse proxy<br>volume-mounted logs<br>localfile → agent</div>
-            </div>
-          </div>
-          <p class="honest-note">False positive investigated: rootcheck flagged /usr/bin/diff as trojaned. Verified with <code>file</code> + <code>dpkg -V</code> before dismissing — confirmed legitimate ELF binary, known legacy signature limitation.</p>
+          <p class="project-desc">Deployed Juice Shop in Docker and discovered host-based agents have zero visibility into containerised application traffic. Fixed via nginx reverse proxy with volume-mounted logs.</p>
+          <p class="honest-note">False positive investigated: rootcheck flagged /usr/bin/diff as trojaned. Verified with file + dpkg -V before dismissing.</p>
         </div>
       </div>
 
-      <!-- P3 -->
       <div class="project" id="p3">
         <div class="project-header" onclick="toggle('p3')">
           <span class="project-num">03</span>
           <div class="project-title-block">
             <div class="project-title">Attack Traffic Analysis — SQLi & File Upload RCE</div>
-            <div class="project-tags">
-              <span class="tag tag-red">Offensive</span>
-              <span class="tag tag-orange">Wireshark</span>
-              <span class="tag tag-blue">PCAP Analysis</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">Offensive</span><span class="tag tag-orange">Wireshark</span><span class="tag tag-blue">PCAP</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Manual exploitation of DVWA — SQL injection (full table dump via <code>1' OR '1'='1</code>) and file upload to RCE (one-line PHP shell, <code>?cmd=id</code> → <code>uid=33(www-data)</code>). All traffic captured and analysed in Wireshark including a TCP anomaly investigation.</p>
+          <p class="project-desc">Manual SQLi (full table dump via 1' OR '1'='1) and file upload RCE (?cmd=id → uid=33(www-data)). Traffic captured and analysed in Wireshark including TCP anomaly investigation.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">SQLi Result</div>
-              <div class="evidence-value">5 users returned instead of 1<br>Full table dump confirmed</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Visibility Finding</div>
-              <div class="evidence-value">POST payloads invisible in logs<br>GET payloads fully visible<br>Detection gap documented</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">SQLi Result</div><div class="evidence-value">5 users returned instead of 1<br>Full table dump confirmed</div></div>
+            <div class="evidence-block"><div class="evidence-label">Visibility Finding</div><div class="evidence-value">POST payloads invisible in logs<br>GET payloads fully visible</div></div>
           </div>
-          <p class="honest-note">Dup ACK investigation: traced to duplicate client-side requests, not network loss. Root cause vs symptom — the actual analytical skill.</p>
         </div>
       </div>
 
-      <!-- P4 -->
       <div class="project" id="p4">
         <div class="project-header" onclick="toggle('p4')">
           <span class="project-num">04</span>
           <div class="project-title-block">
             <div class="project-title">C2 Beaconing Detection — Custom Decoder Engineering</div>
-            <div class="project-tags">
-              <span class="tag tag-red">C2 Simulation</span>
-              <span class="tag tag-blue">Custom Decoder</span>
-              <span class="tag tag-green">Frequency Correlation</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">C2 Simulation</span><span class="tag tag-blue">Custom Decoder</span><span class="tag tag-green">Frequency Rule</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Python HTTP beacon simulator (Docker) checking in every 15±3 seconds. Confirmed signature in Wireshark: 26 bytes per request, metronomic timing. Custom two-stage Wazuh decoder + frequency/timeframe correlation rule built from scratch — no default rule existed for this behaviour.</p>
+          <p class="project-desc">Python HTTP beacon simulator — 26 bytes, ~13s intervals. Two-stage Wazuh decoder + frequency/timeframe correlation rule. Four layered failures diagnosed using wazuh-logtest.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Beacon Signature</div>
-              <div class="evidence-value">26 bytes · consistent<br>~13s interval · jitter ±3s<br>Single endpoint · looping</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Detection Rules</div>
-              <div class="evidence-value">100030 · check-in (lvl 3)<br>100031 · 5+ hits/90s (lvl 12)<br>same_source_ip correlation</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">Beacon Signature</div><div class="evidence-value">26 bytes · consistent<br>~13s interval · jitter ±3s</div></div>
+            <div class="evidence-block"><div class="evidence-label">Rules</div><div class="evidence-value">100030 · check-in (lvl 3)<br>100031 · 5+ hits/90s (lvl 12)</div></div>
           </div>
-          <div class="mitre-grid">
-            <span class="mitre-badge">T1071.001 · Web Protocols</span>
-            <span class="mitre-badge">T1105 · Ingress Tool Transfer</span>
-          </div>
-          <p class="honest-note">Four layered failures diagnosed in sequence: timestamp format confusing pre-decoder, file silently refusing writes, greedy .+ regex consuming too much, missing srcip extraction. wazuh-logtest was the tool that found each one.</p>
         </div>
       </div>
 
-      <!-- P5 -->
       <div class="project" id="p5">
         <div class="project-header" onclick="toggle('p5')">
           <span class="project-num">05</span>
           <div class="project-title-block">
             <div class="project-title">DNS Tunneling Detection — Three-Tier Escalation</div>
-            <div class="project-tags">
-              <span class="tag tag-red">DNS Exfil</span>
-              <span class="tag tag-blue">Multi-stage Decoder</span>
-              <span class="tag tag-orange">Regex Debugging</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">DNS Exfil</span><span class="tag tag-blue">Multi-stage Decoder</span><span class="tag tag-orange">Regex Debug</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">base32-encoded credentials transmitted as genuine DNS wire-format queries via dnslib. Level 12 alert surfaced the actual decoded exfiltrated data (<code>user=admin;pass=SuperSecr</code>) in the alert's previous_output field — the SIEM reconstructed what was being smuggled through DNS.</p>
+          <p class="project-desc">base32-encoded credentials in DNS queries via dnslib. Level 12 alert surfaced decoded data (user=admin;pass=SuperSecr) in previous_output. Wireshark: Name Length 53, high entropy labels.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Wireshark Signature</div>
-              <div class="evidence-value">Name Length: 53 chars<br>Uppercase alphanumeric<br>No word structure · high entropy</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Rule Chain</div>
-              <div class="evidence-value">100040 · any query (lvl 3)<br>100041 · tunnel.local (lvl 10)<br>100042 · volume (lvl 12)</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">Signature</div><div class="evidence-value">53-char subdomains<br>Uppercase alphanumeric<br>High entropy · no word structure</div></div>
+            <div class="evidence-block"><div class="evidence-label">Rule Chain</div><div class="evidence-value">100040 · catch-all (lvl 3)<br>100041 · tunnel.local (lvl 10)<br>100042 · volume (lvl 12)</div></div>
           </div>
-          <div class="mitre-grid">
-            <span class="mitre-badge">T1071.004 · DNS</span>
-            <span class="mitre-badge">T1048 · Exfiltration over alternative protocol</span>
-          </div>
-          <p class="honest-note">Greedy .+ regex bug: consumed src= into decoded field, breaking extraction. Fixed to \S+ — non-whitespace only. tcpdump -i any produced duplicate frames; fixed by targeting specific bridge interface.</p>
         </div>
       </div>
 
-      <!-- P6 -->
       <div class="project" id="p6">
         <div class="project-header" onclick="toggle('p6')">
           <span class="project-num">06</span>
           <div class="project-title-block">
             <div class="project-title">Lateral Movement Detection — Web Shell to Persistence</div>
-            <div class="project-tags">
-              <span class="tag tag-red">Attack Chain</span>
-              <span class="tag tag-blue">Correlation Rule</span>
-              <span class="tag tag-green">Level 14</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">Attack Chain</span><span class="tag tag-blue">Correlation</span><span class="tag tag-green">Level 14</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Full post-exploitation chain across two containers — initial RCE, discovery commands, TCP pivot to Juice Shop, persistence file drop. Correlation rule escalates after 3 web shell commands from same source. Ran against a noisy background of C2 and DNS tunnel simulators simultaneously.</p>
+          <p class="project-desc">RCE → discovery → container pivot → /tmp persistence drop. Correlation rule escalates after 3 web shell commands. Ran against live C2 and DNS tunnel background noise.</p>
           <div class="chain">
-            <span class="chain-step highlight">?cmd=id</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step">?cmd=cat /etc/passwd</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step">TCP → Juice Shop</span>
-            <span class="chain-arrow">→</span>
+            <span class="chain-step highlight">?cmd=id</span><span class="chain-arrow">→</span>
+            <span class="chain-step">discovery</span><span class="chain-arrow">→</span>
+            <span class="chain-step">TCP pivot</span><span class="chain-arrow">→</span>
             <span class="chain-step highlight">/tmp/attacker.sh</span>
           </div>
-          <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Built-in Rule Used</div>
-              <div class="evidence-value">31514 · shell.php execution<br>MITRE T1505.003 pre-tagged<br>PCI/GDPR/NIST mapped</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Custom Escalation</div>
-              <div class="evidence-value">100053 · lvl 14 · mail:True<br>frequency=3 · timeframe=300<br>same_source_ip</div>
-            </div>
-          </div>
-          <div class="mitre-grid">
+          <div class="mitre-badge-list">
             <span class="mitre-badge">T1505.003 · Web Shell</span>
             <span class="mitre-badge">T1021 · Remote Services</span>
-            <span class="mitre-badge">T1059 · Command Execution</span>
           </div>
         </div>
       </div>
 
-      <!-- P7 -->
       <div class="project" id="p7">
         <div class="project-header" onclick="toggle('p7')">
           <span class="project-num">07</span>
           <div class="project-title-block">
             <div class="project-title">Suricata Network IDS — Closing the Network Visibility Gap</div>
-            <div class="project-tags">
-              <span class="tag tag-green">Network IDS</span>
-              <span class="tag tag-blue">52K Signatures</span>
-              <span class="tag tag-teal">Cross-Detection</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-green">Network IDS</span><span class="tag tag-blue">52K Sigs</span><span class="tag tag-teal">Cross-Detection</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Suricata deployed on the Docker host monitoring all three bridge interfaces. Immediately detected the C2 beacon via Python BaseHTTP server banner — the same activity already caught by Wazuh's log-correlation rules, providing independent corroboration from the network layer.</p>
+          <p class="project-desc">Suricata on Docker host, three bridge interfaces. Immediately caught C2 beacon via Python BaseHTTP banner — same activity Wazuh caught via log correlation. Two independent mechanisms, one attack.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Interfaces Monitored</div>
-              <div class="evidence-value">docker0 · DVWA + Juice Shop<br>br-c2sim · beacon traffic<br>br-dnstunnel · DNS traffic</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">First Alert</div>
-              <div class="evidence-value">ET INFO Python BaseHTTP<br>ServerBanner · rule 2034635<br>~15s intervals · confirmed C2</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">First Alert</div><div class="evidence-value">ET INFO Python BaseHTTP<br>Rule 2034635 · ~15s cadence</div></div>
+            <div class="evidence-block"><div class="evidence-label">Interfaces</div><div class="evidence-value">docker0 · DVWA + Juice Shop<br>br-c2sim · beacon<br>br-dnstunnel · DNS</div></div>
           </div>
-          <p class="honest-note">The pivot TCP connection still generated no alert — community rules don't cover plain internal TCP connections. Documented honestly with the follow-up path: custom Suricata rule for inter-container connections.</p>
         </div>
       </div>
 
-      <!-- P8 -->
       <div class="project" id="p8">
         <div class="project-header" onclick="toggle('p8')">
           <span class="project-num">08</span>
           <div class="project-title-block">
             <div class="project-title">Active Directory Attack Lab — Full Domain Compromise ⭐</div>
-            <div class="project-tags">
-              <span class="tag tag-red">Kerberoasting</span>
-              <span class="tag tag-red">Pass-the-Hash</span>
-              <span class="tag tag-red">DCSync</span>
-              <span class="tag tag-orange">SEC504</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">Kerberoasting</span><span class="tag tag-red">PtH</span><span class="tag tag-red">DCSync</span><span class="tag tag-orange">SEC504</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">Windows Server 2019 Core domain controller (lab.local), Kali attack machine, Windows 11 domain workstation. Complete attack chain from one unprivileged domain user account to SYSTEM on the DC in under 10 minutes. Every stage detected by Wazuh with Windows audit logging enabled.</p>
-
+          <p class="project-desc">One standard domain user → SYSTEM on the DC in under 10 minutes. Every stage detected by Wazuh with full audit logging. Windows Server 2019 Core DC, Kali attack machine, domain-joined Windows 11 workstation.</p>
           <div class="chain" style="margin-bottom:16px;">
-            <span class="chain-step">jsmith (user)</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step highlight">Kerberoast svc_sql</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step highlight">Spray → sadmin (Pwn3d!)</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step highlight">DCSync → all hashes</span>
-            <span class="chain-arrow">→</span>
-            <span class="chain-step highlight">PtH → SYSTEM</span>
+            <span class="chain-step">jsmith</span><span class="chain-arrow">→</span>
+            <span class="chain-step highlight">Kerberoast</span><span class="chain-arrow">→</span>
+            <span class="chain-step highlight">Spray→sadmin</span><span class="chain-arrow">→</span>
+            <span class="chain-step highlight">DCSync</span><span class="chain-arrow">→</span>
+            <span class="chain-step highlight">PtH→SYSTEM</span>
           </div>
-
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Kerberoasting</div>
-              <div class="evidence-value">Event 4769<br>Encryption: 0x17 (RC4)<br>Cracked: Summer2024!</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Password Spray</div>
-              <div class="evidence-value">Event 4625 (failures)<br>Event 4624 (sadmin hit)<br>Rule 92652 fired</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">DCSync / Dump</div>
-              <div class="evidence-value">All NTLM hashes extracted<br>krbtgt captured<br>Golden Ticket potential</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Pass-the-Hash</div>
-              <div class="evidence-value">Event 4624 Type 3 · NTLM<br>psexec → nt authority\system<br>Rule 92652 fired</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">Kerberoasting</div><div class="evidence-value">Event 4769<br>Enc: 0x17 (RC4)<br>Cracked: Summer2024!</div></div>
+            <div class="evidence-block"><div class="evidence-label">Pass-the-Hash</div><div class="evidence-value">Event 4624 Type 3<br>NTLM from Kali<br>Rule 92652 fired</div></div>
           </div>
-
-          <div class="mitre-grid">
+          <div class="mitre-badge-list">
             <span class="mitre-badge">T1558.003 · Kerberoasting</span>
             <span class="mitre-badge">T1110.003 · Password Spraying</span>
-            <span class="mitre-badge">T1003.002 · Credential Dumping</span>
+            <span class="mitre-badge">T1003.002 · Credential Dump</span>
             <span class="mitre-badge">T1550.002 · Pass-the-Hash</span>
           </div>
         </div>
       </div>
 
-
-      <!-- P9 -->
       <div class="project" id="p9">
         <div class="project-header" onclick="toggle('p9')">
           <span class="project-num">09</span>
           <div class="project-title-block">
             <div class="project-title">BloodHound AD Enumeration — Attack Path Analysis</div>
-            <div class="project-tags">
-              <span class="tag tag-red">BloodHound</span>
-              <span class="tag tag-red">SharpHound</span>
-              <span class="tag tag-orange">Graph Analysis</span>
-              <span class="tag tag-blue">Attack Paths</span>
-            </div>
+            <div class="project-tags"><span class="tag tag-red">BloodHound</span><span class="tag tag-red">SharpHound</span><span class="tag tag-orange">Graph Analysis</span><span class="tag tag-blue">Attack Paths</span></div>
           </div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
-          <p class="project-desc">BloodHound deployed against lab.local to map every AD relationship as a graph and surface attack paths automatically. SharpHound collected 97 objects in 26 seconds as jsmith (unprivileged) — full domain enumeration from one standard user account. Key finding: svc_sql had 9 reachable high-value targets and had never logged in — the exact account compromised via Kerberoasting in project 8, independently identified by BloodHound through static graph analysis.</p>
+          <p class="project-desc">SharpHound collected 97 objects in 26 seconds as jsmith (unprivileged). svc_sql showed 9 reachable high-value targets, Last Logon: Never — independently corroborating the Kerberoasting target from project 8 via static graph analysis.</p>
           <div class="evidence-grid">
-            <div class="evidence-block">
-              <div class="evidence-label">Collection Stats</div>
-              <div class="evidence-value">97 objects · 26 seconds<br>Authenticated as jsmith<br>No special privileges needed</div>
-            </div>
-            <div class="evidence-block">
-              <div class="evidence-label">Key Findings</div>
-              <div class="evidence-value">svc_sql · 9 HVT reachable<br>Last Logon: Never<br>Shortest path → DA visualised</div>
-            </div>
+            <div class="evidence-block"><div class="evidence-label">Collection</div><div class="evidence-value">97 objects · 26 seconds<br>jsmith · no special privileges</div></div>
+            <div class="evidence-block"><div class="evidence-label">Key Finding</div><div class="evidence-value">svc_sql · 9 HVT reachable<br>Last Logon: Never<br>Shortest path → DA rendered</div></div>
           </div>
-          <div class="mitre-grid">
+          <div class="mitre-badge-list">
             <span class="mitre-badge">T1087.002 · Domain Account Discovery</span>
             <span class="mitre-badge">T1069.002 · Domain Groups</span>
-            <span class="mitre-badge">T1558.003 · Kerberoasting (corroborated)</span>
           </div>
-          <p class="honest-note">SharpHound generates a burst of LDAP queries (Event ID 4662) detectable in Wazuh — modern EDR detects it by signature. Documented honestly as a noisy tool that requires evasion in real engagements.</p>
+          <p class="honest-note">SharpHound generates detectable LDAP burst (Event 4662). Modern EDR detects it by signature — documented honestly.</p>
         </div>
       </div>
 
-    </div><!-- /timeline -->
+    </div>
   </section>
 
   <!-- EVENT IDS -->
   <section class="section">
     <div class="section-label">Key Windows Event IDs</div>
     <table class="event-table">
-      <thead>
-        <tr>
-          <th>Event ID</th>
-          <th>Description</th>
-          <th>Attack Indicator</th>
-        </tr>
-      </thead>
+      <thead><tr><th>Event ID</th><th>Description</th><th>Attack Indicator</th></tr></thead>
       <tbody>
         <tr><td class="event-id">4624</td><td class="event-desc">Successful logon</td><td class="event-attack">Type 3 + NTLM from unexpected source → Pass-the-Hash</td></tr>
         <tr><td class="event-id">4625</td><td class="event-desc">Failed logon</td><td class="event-attack">Volume from same IP across accounts → Password Spraying</td></tr>
-        <tr><td class="event-id">4662</td><td class="event-desc">AD object operation</td><td class="event-attack">DS-Replication from non-DC → DCSync</td></tr>
+        <tr><td class="event-id">4662</td><td class="event-desc">AD object operation</td><td class="event-attack">DS-Replication from non-DC → DCSync / SharpHound</td></tr>
         <tr><td class="event-id">4697</td><td class="event-desc">Service installed</td><td class="event-attack">Random service name in ADMIN$ → psexec</td></tr>
         <tr><td class="event-id">4769</td><td class="event-desc">Kerberos TGS requested</td><td class="event-attack">Encryption type 0x17 (RC4) → Kerberoasting</td></tr>
         <tr><td class="event-id">4771</td><td class="event-desc">Kerberos pre-auth failed</td><td class="event-attack">Volume across accounts → Spray via Kerberos</td></tr>
-        <tr><td class="event-id">7045</td><td class="event-desc">New service installed</td><td class="event-attack">Persistence / lateral movement</td></tr>
+        <tr><td class="event-id">7045</td><td class="event-desc">New service installed</td><td class="event-attack">Persistence / lateral movement tool</td></tr>
       </tbody>
     </table>
   </section>
@@ -959,7 +1010,7 @@
     </div>
   </section>
 
-</div><!-- /container -->
+</div>
 
 <footer>
   <div class="container">
@@ -971,12 +1022,71 @@
 </footer>
 
 <script>
+  /* ── TOGGLE PROJECTS ── */
   function toggle(id) {
-    const el = document.getElementById(id);
-    el.classList.toggle('open');
+    document.getElementById(id).classList.toggle('open');
   }
 
-  // Open first project by default
+  /* ── TOGGLE ATTACK CHAIN ── */
+  function toggleChain(id) {
+    const detail = document.getElementById(id);
+    const label  = document.getElementById('lbl-' + id);
+    const isOpen = detail.classList.contains('show');
+    // close all
+    document.querySelectorAll('.chain-detail').forEach(d => d.classList.remove('show'));
+    document.querySelectorAll('.chain-step-label').forEach(l => l.classList.remove('active'));
+    if (!isOpen) {
+      detail.classList.add('show');
+      label.classList.add('active');
+    }
+  }
+
+  /* ── TERMINAL ANIMATION ── */
+  const lines = [
+    { el: 't1', html: '<span class="prompt">❯</span> <span class="output">initialising lab environment...</span>' },
+    { el: 't2', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">9 projects loaded · 6 custom rules active</span>' },
+    { el: 't3', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">wazuh agents connected · suricata running</span>' },
+    { el: 't4', html: '<span class="prompt">❯</span> <span class="warn">!</span> <span class="output">domain compromise in &lt;10m from 1 standard user</span>' },
+  ];
+  let li = 0;
+  function typeLine() {
+    if (li >= lines.length) {
+      document.getElementById('t5').innerHTML = '<span class="prompt">❯</span> <span class="cursor"></span>';
+      return;
+    }
+    const line = lines[li];
+    document.getElementById(line.el).innerHTML = line.html;
+    li++;
+    setTimeout(typeLine, 480);
+  }
+  setTimeout(typeLine, 600);
+
+  /* ── STAT COUNTER ANIMATION ── */
+  function animateStats() {
+    document.querySelectorAll('.stat-num[data-target]').forEach(el => {
+      const target = parseInt(el.dataset.target);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      let current = 0;
+      const step = Math.ceil(target / 30);
+      const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = prefix + current + suffix;
+        if (current >= target) clearInterval(timer);
+      }, 40);
+    });
+  }
+  setTimeout(animateStats, 1200);
+
+  /* ── RADAR BAR ANIMATION ── */
+  function animateBars() {
+    document.querySelectorAll('.radar-bar-fill').forEach(el => {
+      el.style.width = el.dataset.w + '%';
+    });
+  }
+  setTimeout(animateBars, 800);
+
+  /* ── OPEN P8 BY DEFAULT ── */
   document.getElementById('p8').classList.add('open');
 </script>
 
