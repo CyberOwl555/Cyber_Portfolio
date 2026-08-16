@@ -1975,6 +1975,7 @@ window.addEventListener('scroll', function() {
   setTimeout(runSequence, 1000);
 })();
 
+<script>
 /* ── ALERT TIMELINE ── */
 (function() {
   const alerts = [
@@ -1995,11 +1996,13 @@ window.addEventListener('scroll', function() {
     {time:'10:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth possible pass-the-hash'},
     {time:'05:39:41', level:6,  lvlClass:'lvl-6',  desc:'Kerberos service ticket requested — encryption type 0x17 (RC4)'},
     {time:'05:55:08', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — sadmin NTLM possible pass-the-hash'},
-    {time:'05:56:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
+    {time:'05:56:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'}
   ];
 
   const body = document.getElementById('alert-body');
   let idx = 0;
+
+  if (!body) return;
 
   function addAlert() {
     const a = alerts[idx % alerts.length];
@@ -2012,28 +2015,28 @@ window.addEventListener('scroll', function() {
       '<span class="alert-level ' + a.lvlClass + '">' + a.level + '</span>' +
       '<span class="alert-desc">' + a.desc + '</span>';
     body.appendChild(row);
-    setTimeout(() => { row.style.opacity = '1'; }, 20);
-    // trim old rows
-   //  THE FIXED CODE
-if (body.children.length > 14) {
-    const old = body.firstChild;
-    // 1. Mark it as absolute or hidden so it doesn't mess with counting
-    old.style.pointerEvents = 'none';
-    old.style.opacity = '0';
     
-    // 2. Safely remove it from the DOM container tracking synchronously
-    old.id = "dying-node"; 
-    body.removeChild(old); 
-}
+    setTimeout(() => { row.style.opacity = '1'; }, 20);
+
+    // FIXED SYNCHRONOUS TRIMMING
+    if (body.children.length > 14) {
+      const old = body.firstChild;
+      if (old) {
+        body.removeChild(old);
+      }
+    }
+
     body.scrollTop = body.scrollHeight;
     idx++;
-    // vary speed: high severity alerts come in faster
+    
     const delay = a.level >= 12 ? 800 : a.level >= 10 ? 1200 : 1800;
     setTimeout(addAlert, delay + Math.random() * 600);
   }
 
   setTimeout(addAlert, 600);
-})();
+})(); // <-- Properly closes the function scope loop context
+</script>
+
 </script>
 
 </body>
