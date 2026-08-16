@@ -560,88 +560,147 @@
       <span class="mitre-legend-item"><span class="legend-dot" style="background:rgba(240,165,0,0.5)"></span> Detected only</span>
       <span class="mitre-legend-item"><span class="legend-dot" style="background:#1e2128"></span> Not covered</span>
     </div>
+    <!-- MITRE Popup -->
+    <div id="mitre-popup" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);" onclick="closeMitre()">
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#111318;border:1px solid #00d4aa;border-radius:10px;padding:28px 32px;max-width:480px;width:90%;box-shadow:0 0 40px rgba(0,212,170,0.2);" onclick="event.stopPropagation()">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+          <div>
+            <div id="mp-id" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#00d4aa;letter-spacing:0.1em;margin-bottom:4px;"></div>
+            <div id="mp-name" style="font-size:17px;font-weight:600;color:#fff;"></div>
+          </div>
+          <button onclick="closeMitre()" style="background:none;border:none;color:#565c6e;font-size:20px;cursor:pointer;padding:0 0 0 16px;line-height:1;">&#x2715;</button>
+        </div>
+        <div id="mp-status" style="display:inline-block;font-family:'JetBrains Mono',monospace;font-size:10px;padding:3px 10px;border-radius:12px;margin-bottom:14px;"></div>
+        <p id="mp-desc" style="font-size:13px;color:#c9cdd6;line-height:1.7;margin-bottom:16px;"></p>
+        <div id="mp-lab" style="display:none;background:rgba(0,212,170,0.06);border:1px solid rgba(0,212,170,0.2);border-radius:6px;padding:12px 14px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:#00d4aa;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">In this lab</div>
+          <p id="mp-lab-text" style="font-size:12px;color:#c9cdd6;line-height:1.6;margin:0;"></p>
+        </div>
+        <div style="margin-top:16px;font-size:11px;color:#565c6e;font-family:'JetBrains Mono',monospace;">Click outside to close</div>
+      </div>
+    </div>
+
     <div class="mitre-grid">
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Initial Access</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1190 · Exploit Public App</span>
-          <span class="mitre-tech covered">T1078 · Valid Accounts</span>
-          <span class="mitre-tech">T1566 · Phishing</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1190','Exploit Public-Facing Application','covered','Attackers exploit vulnerabilities in internet-facing services — web apps, APIs, databases. Once exploited, they gain a foothold without needing valid credentials.','Used against DVWA: SQL injection exposed the full users table, and a file upload vulnerability allowed a PHP web shell to be placed on the server, providing remote code execution as www-data.')">T1190 · Exploit Public App</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1078','Valid Accounts','covered','Attackers use legitimate credentials to avoid triggering authentication anomaly detection. Credentials can be obtained via phishing, credential stuffing, or brute force.','sadmin credentials obtained via password spraying (Welcome2024!) gave full Domain Admin access. jsmith credentials used for Kerberoasting and BloodHound enumeration — both as a low-priv starting point.')">T1078 · Valid Accounts</span>
+          <span class="mitre-tech" onclick="showMitre('T1566','Phishing','not-covered','Sending deceptive emails to trick users into revealing credentials or executing malware. The most common initial access vector in real-world breaches.','Not demonstrated in this lab — no email infrastructure was set up. A natural next step would be a GoPhish campaign against lab users.')">T1566 · Phishing</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Execution</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1059 · Command Interpreter</span>
-          <span class="mitre-tech covered">T1203 · Client Exploitation</span>
-          <span class="mitre-tech">T1569 · System Services</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1059','Command and Scripting Interpreter','covered','Attackers use built-in command interpreters (bash, PowerShell, cmd) to run malicious commands after gaining access. Hard to block since these are legitimate system tools.','Web shell execution via GET parameters (?cmd=id, ?cmd=cat+/etc/passwd) used bash inside the DVWA container. Each command visible in Apache access logs and detected by Wazuh rule 31514.')">T1059 · Command Interpreter</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1203','Exploitation for Client Execution','covered','Exploiting vulnerabilities in client-facing applications to execute attacker-controlled code. Often the bridge between initial access and full execution control.','File upload to RCE on DVWA: uploaded a PHP web shell disguised as an image, then triggered execution via the web server. Resulted in code running as uid=33 (www-data).')">T1203 · Client Exploitation</span>
+          <span class="mitre-tech" onclick="showMitre('T1569','System Services','not-covered','Creating or modifying system services to execute malicious payloads. psexec does this automatically — it uploads a binary and registers it as a Windows service.','psexec during Pass-the-Hash created a random service (Ppxk) on the DC as part of its execution chain. Detected via Event ID 7045 (service installed). Not a primary focus of this lab.')">T1569 · System Services</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Persistence</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1505.003 · Web Shell</span>
-          <span class="mitre-tech covered">T1136 · Create Account</span>
-          <span class="mitre-tech">T1547 · Boot Autostart</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1505.003','Web Shell','covered','A web shell is a script uploaded to a web server that gives an attacker persistent remote access via HTTP — hard to detect since it blends with legitimate web traffic.','PHP one-liner (&lt;?php system($_GET[cmd]); ?&gt;) uploaded to DVWAs hackable/uploads directory. Detected by Wazuh built-in rule 31514 with MITRE T1505.003 pre-tagged, and by Suricata on the network layer.')">T1505.003 · Web Shell</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1136','Create Account','covered','Creating new user accounts (local or domain) to maintain access even if the original compromise vector is closed.','Domain accounts created in lab.local for attack simulation: jsmith, sadmin (Domain Admin), svc_sql (service account). In a real attack, an adversary would add a backdoor account after DCSync.')">T1136 · Create Account</span>
+          <span class="mitre-tech" onclick="showMitre('T1547','Boot or Logon Autostart Execution','not-covered','Placing malicious code in startup locations (registry Run keys, scheduled tasks, startup folders) so it executes automatically on every boot or logon.','Not demonstrated — the persistence in this lab was limited to dropping /tmp/attacker_persistence.sh. A full persistence chain would add a scheduled task or registry Run key.')">T1547 · Boot Autostart</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Privilege Escalation</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1548 · Abuse Elevation</span>
-          <span class="mitre-tech partial">T1078.002 · Domain Accounts</span>
-          <span class="mitre-tech">T1134 · Token Manipulation</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1548','Abuse Elevation Control Mechanism','covered','Bypassing or abusing mechanisms designed to control privilege levels — UAC bypass, sudo abuse, SUID binaries on Linux.','Kerberoasting escalated from jsmith (standard user) to svc_sql credentials. Password spray then gave sadmin (Domain Admin). The full chain escalated from zero privileges to SYSTEM without ever touching a traditional privilege escalation exploit.')">T1548 · Abuse Elevation</span>
+          <span class="mitre-tech partial" onclick="showMitre('T1078.002','Valid Accounts: Domain Accounts','partial','Using compromised domain credentials to authenticate to services across the domain — the attacker looks like a legitimate user to most monitoring.','sadmin domain credentials (obtained via spray) used to authenticate to the DC for secretsdump and psexec. Wazuh flagged the NTLM network logon (Event 4624 Type 3) as suspicious despite valid credentials being used.')">T1078.002 · Domain Accounts</span>
+          <span class="mitre-tech" onclick="showMitre('T1134','Access Token Manipulation','not-covered','Stealing or forging Windows access tokens to impersonate other users or elevate privileges without proper authentication.','Not demonstrated. A natural next step after gaining SYSTEM on the DC would be to impersonate the SYSTEM token or create a new token for a specific domain user.')">T1134 · Token Manipulation</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Defense Evasion</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1550.002 · Pass the Hash</span>
-          <span class="mitre-tech partial">T1562 · Impair Defenses</span>
-          <span class="mitre-tech">T1070 · Indicator Removal</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1550.002','Use Alternate Authentication Material: Pass the Hash','covered','NTLM authentication accepts the password hash directly — the hash IS the credential. An attacker with a captured hash can authenticate as that user without ever knowing or cracking the password.','Administrator NTLM hash (captured via secretsdump) passed directly to impacket-psexec. Authenticated to DC01 and returned nt authority\system shell. Wazuh rule 92652 fired on the NTLM Type 3 network logon from Kali.')">T1550.002 · Pass the Hash</span>
+          <span class="mitre-tech partial" onclick="showMitre('T1562','Impair Defenses','partial','Disabling or modifying security tools, audit logging, or monitoring to reduce the chance of detection.','Windows Defender was disabled on specific paths (C:\Tools exclusion) to allow BloodHound and SharpHound to run. Windows Firewall was disabled on DC01 for lab connectivity. Documented honestly as a realistic attacker action.')">T1562 · Impair Defenses</span>
+          <span class="mitre-tech" onclick="showMitre('T1070','Indicator Removal','not-covered','Clearing logs, deleting files, or modifying timestamps to remove evidence of attacker activity.','Not demonstrated — all attack evidence was deliberately preserved for detection and analysis purposes. In a real engagement, clearing Windows Security logs (Event 1102) or wiping bash history would follow.')">T1070 · Indicator Removal</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Credential Access</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1558.003 · Kerberoasting</span>
-          <span class="mitre-tech covered">T1003.002 · Credential Dump</span>
-          <span class="mitre-tech covered">T1110.003 · Password Spray</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1558.003','Steal or Forge Kerberos Tickets: Kerberoasting','covered','Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account hash — take it offline and crack it. No lockout, no noise after the initial request.','impacket-GetUserSPNs as jsmith requested the TGS for svc_sql. Hash saved and cracked with John the Ripper: Summer2024! recovered. Detected by Event ID 4769 with encryption type 0x17 (RC4) — the definitive Kerberoasting fingerprint.')">T1558.003 · Kerberoasting</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1003.002','OS Credential Dumping: Security Account Manager','covered','Extracting credential material from the Windows Security Account Manager (SAM) database or Active Directory NTDS.dit — gives attackers every account hash in the domain.','impacket-secretsdump as sadmin used DRSUAPI replication to extract all domain hashes including krbtgt. Every account hash obtained: Administrator, jsmith, sadmin, svc_sql, DC01$, CJPC$.')">T1003.002 · Credential Dump</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1110.003','Brute Force: Password Spraying','covered','Trying one common password against many accounts rather than many passwords against one account — deliberately stays below lockout thresholds while maximising coverage.','nxc smb sprayed Welcome2024! across jsmith, sadmin, svc_sql. sadmin hit — Domain Admin compromised with one attempt, zero lockouts triggered. Events 4625 (failures) + 4624 (success) detected by Wazuh.')">T1110.003 · Password Spray</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Discovery</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1087.002 · Domain Accounts</span>
-          <span class="mitre-tech covered">T1069.002 · Domain Groups</span>
-          <span class="mitre-tech covered">T1018 · Remote System Discovery</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1087.002','Account Discovery: Domain Account','covered','Enumerating domain user accounts, their group memberships, and properties — gives attackers the map of who exists and what privileges they hold.','SharpHound enumerated all 97 domain objects in 26 seconds as jsmith. BloodHound rendered Domain Admin membership, identified svc_sql as Kerberoastable with 9 reachable high-value targets.')">T1087.002 · Domain Accounts</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1069.002','Permission Groups Discovery: Domain Groups','covered','Enumerating domain group memberships to understand who has elevated privileges and which groups lead to high-value targets.','BloodHound Domain Admins query showed Administrator and sadmin as members. Group membership edges visible in the attack path graph from svc_sql to Domain Admins.')">T1069.002 · Domain Groups</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1018','Remote System Discovery','covered','Identifying other systems on the network — hostnames, IPs, roles — to plan lateral movement targets.','Web shell discovery commands: ?cmd=ip+addr mapped the container network (172.17.0.x range). BloodHound collected computer objects (DC01, CJPC) with their roles and connectivity.')">T1018 · Remote System Discovery</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Lateral Movement</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1021 · Remote Services</span>
-          <span class="mitre-tech covered">T1550.002 · Pass the Hash</span>
-          <span class="mitre-tech">T1534 · Internal Spearphish</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1021','Remote Services','covered','Using legitimate remote access services (SMB, WinRM, SSH, RDP) to move from one compromised host to another — hard to block since these services are required for normal operations.','psexec used SMB (port 445) and ADMIN$ share to upload an execution binary and create a service on DC01. TCP connection from DVWA container to Juice Shop (port 3000) demonstrated container-to-container pivot.')">T1021 · Remote Services</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1550.002','Use Alternate Authentication: Pass the Hash','covered','See Defense Evasion section — PtH is both an evasion technique (no password needed) and a lateral movement technique (authenticate to remote systems using only the hash).','Administrator hash used to authenticate to DC01 from Kali (192.168.137.60 to 192.168.137.50). Event 4624 Logon Type 3 from an unexpected Linux source was the detection signal.')">T1550.002 · Pass the Hash</span>
+          <span class="mitre-tech" onclick="showMitre('T1534','Internal Spearphishing','not-covered','Sending phishing messages from an already-compromised internal account to other users — more trusted than external phishing since it comes from a known sender.','Not demonstrated. With sadmin compromised, sending internal phishing to other domain users would be a realistic next step.')">T1534 · Internal Spearphish</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">C2</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1071.001 · Web Protocols</span>
-          <span class="mitre-tech covered">T1071.004 · DNS</span>
-          <span class="mitre-tech">T1090 · Proxy</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1071.001','Application Layer Protocol: Web Protocols','covered','Using HTTP/HTTPS for command and control traffic — blends with normal web traffic and is rarely blocked at the perimeter.','C2 beacon simulator sent HTTP GET requests to the server every 15 seconds (±3s jitter). Wazuh detected via timing correlation (rule 100031, 5+ check-ins/90s). Suricata independently detected the Python BaseHTTP server banner (rule 2034635).')">T1071.001 · Web Protocols</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1071.004','Application Layer Protocol: DNS','covered','Encoding C2 data into DNS queries — exploits the fact that DNS is almost never blocked at the perimeter, making it an ideal covert channel.','dnslib used to transmit base32-encoded credentials as DNS subdomain labels (e.g. HN2G623FNY6WK6KKNBREOY3JJ5UUUSKVPJETCTTJ.tunnel.local). Wazuh rule 100042 fired after 10+ queries in 60 seconds. Decoded credentials visible in previous_output.')">T1071.004 · DNS</span>
+          <span class="mitre-tech" onclick="showMitre('T1090','Proxy','not-covered','Routing C2 traffic through intermediate systems to obscure the true C2 server location — commonly used to avoid IP-based blocklists and attribution.','Not demonstrated. A natural extension would be routing the C2 beacon traffic through the OpenVPN server or a cloud proxy to simulate domain fronting.')">T1090 · Proxy</span>
         </div>
       </div>
       <div class="mitre-tactic">
         <div class="mitre-tactic-name">Exfiltration</div>
         <div class="mitre-techniques">
-          <span class="mitre-tech covered">T1048 · Alt Protocol</span>
-          <span class="mitre-tech partial">T1041 · C2 Channel</span>
-          <span class="mitre-tech">T1030 · Data Transfer Limits</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1048','Exfiltration Over Alternative Protocol','covered','Sending stolen data out of the network using a protocol other than the primary C2 channel — DNS, ICMP, or other allowed protocols that may have less scrutiny than HTTP.','DNS tunneling simulator encoded credentials (user=admin;pass=SuperSecret123;host=internal-db-01;token=eyJhbGc...) into DNS queries. The SIEM alert literally contained the decoded stolen data in its previous_output field.')">T1048 · Alt Protocol</span>
+          <span class="mitre-tech partial" onclick="showMitre('T1041','Exfiltration Over C2 Channel','partial','Sending stolen data back through the same channel used for C2 — simpler than alternative protocols but more detectable since C2 traffic is already under scrutiny.','The C2 beacon simulator demonstrated the communication channel. Actual data exfiltration over the C2 channel was not implemented — the beacon only sent check-in signals, not stolen data payloads.')">T1041 · C2 Channel</span>
+          <span class="mitre-tech" onclick="showMitre('T1030','Data Transfer Size Limits','not-covered','Splitting exfiltrated data into smaller chunks to avoid triggering volume-based detection rules — real tunneling tools do this automatically.','The DNS tunnel simulator did chunk data into 40-character base32 labels per query, which is the real-world approach. A dedicated size-limit detection rule was not implemented.')">T1030 · Data Transfer Limits</span>
         </div>
       </div>
     </div>
+
+    <script>
+    function showMitre(id, name, status, desc, lab) {
+      document.getElementById('mp-id').textContent = id;
+      document.getElementById('mp-name').textContent = name;
+      document.getElementById('mp-desc').textContent = desc;
+      const statusEl = document.getElementById('mp-status');
+      if (status === 'covered') {
+        statusEl.textContent = 'Demonstrated in lab';
+        statusEl.style.background = 'rgba(0,212,170,0.15)';
+        statusEl.style.color = '#00d4aa';
+        statusEl.style.border = '1px solid rgba(0,212,170,0.3)';
+      } else if (status === 'partial') {
+        statusEl.textContent = 'Partially covered';
+        statusEl.style.background = 'rgba(240,165,0,0.12)';
+        statusEl.style.color = '#f0a500';
+        statusEl.style.border = '1px solid rgba(240,165,0,0.3)';
+      } else {
+        statusEl.textContent = 'Not covered';
+        statusEl.style.background = 'rgba(86,92,110,0.15)';
+        statusEl.style.color = '#565c6e';
+        statusEl.style.border = '1px solid #2a2d35';
+      }
+      const labEl = document.getElementById('mp-lab');
+      if (lab && status !== 'not-covered') {
+        document.getElementById('mp-lab-text').textContent = lab;
+        labEl.style.display = 'block';
+      } else {
+        labEl.style.display = 'none';
+      }
+      document.getElementById('mitre-popup').style.display = 'block';
+    }
+    function closeMitre() {
+      document.getElementById('mitre-popup').style.display = 'none';
+    }
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeMitre();
+    });
+    </script>
   </section>
 
   <!-- AD ATTACK CHAIN VISUALISER -->
