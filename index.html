@@ -727,25 +727,298 @@
   <!-- ARCHITECTURE -->
   <section class="section">
     <div class="section-label">Lab Architecture</div>
-    <div class="arch">
-<span class="node">Windows 11 Host</span>       <span class="ip">192.168.137.1</span>   // management · Wireshark · domain workstation
-      │
-      ├─ <span class="node">Wazuh SIEM</span>          <span class="ip">192.168.137.10</span>  // Ubuntu 24.04 · manager + indexer + dashboard
-      │
-      ├─ <span class="node">OpenVPN Server</span>      <span class="ip">192.168.137.20</span>  // Ubuntu 24.04 · secp384r1 · AES-256-GCM
-      │
-      ├─ <span class="node">Docker Host</span>         <span class="ip">192.168.137.30</span>  // Ubuntu Minimal · Suricata · DVWA · Juice Shop
-      │    ├─ Juice Shop           <span class="ip">172.17.0.x</span>
-      │    ├─ DVWA                 <span class="ip">172.17.0.x</span>
-      │    ├─ C2 Beacon Sim        <span class="ip">172.18.0.x</span>      // c2sim-net
-      │    └─ DNS Tunnel Sim       <span class="ip">172.19.0.x</span>      // dnstunnel-net
-      │
-      ├─ <span class="node">DC01</span>                 <span class="ip">192.168.137.50</span>  // Windows Server 2019 Core · lab.local
-      │
-      └─ <span class="node">Kali Linux</span>          <span class="ip">192.168.137.60</span>  // Impacket · NetExec · John · BloodHound
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;margin-top:-12px;">Hover over any node to see details. Watch the network build.</p>
 
-      Network: Hyper-V Internal Switch · ICS egress · <span class="ip">192.168.137.0/24</span>
+    <div style="position:relative;width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <canvas id="netmap" style="width:100%;display:block;"></canvas>
+
+      <!-- Tooltip -->
+      <div id="nettip" style="display:none;position:absolute;pointer-events:none;background:#0a0c0f;border:1px solid #00d4aa;border-radius:6px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#c9cdd6;min-width:180px;box-shadow:0 0 20px rgba(0,212,170,0.15);">
+        <div id="nettip-name" style="color:#00d4aa;font-weight:700;margin-bottom:4px;font-size:12px;"></div>
+        <div id="nettip-ip" style="color:#565c6e;margin-bottom:2px;"></div>
+        <div id="nettip-role" style="color:#c9cdd6;font-size:10px;line-height:1.5;"></div>
+      </div>
     </div>
+
+    <script>
+    (function() {
+      const canvas = document.getElementById('netmap');
+      const ctx = canvas.getContext('2d');
+      const tip = document.getElementById('nettip');
+
+      // ── Node definitions (positions as % of canvas) ──
+      const NODES = [
+        { id:'win11',  label:'Windows 11',   ip:'192.168.137.1',  role:'Management / Wireshark / Domain Workstation',  x:0.50, y:0.12, color:'#7c6af7', icon:'WIN11',  delay:0    },
+        { id:'wazuh',  label:'Wazuh SIEM',   ip:'192.168.137.10', role:'Ubuntu 24.04 / Manager + Indexer + Dashboard', x:0.18, y:0.38, color:'#00d4aa', icon:'SIEM',   delay:300  },
+        { id:'vpn',    label:'OpenVPN',       ip:'192.168.137.20', role:'Ubuntu 24.04 / secp384r1 / AES-256-GCM',       x:0.82, y:0.38, color:'#3ecf8e', icon:'VPN',    delay:500  },
+        { id:'docker', label:'Docker Host',   ip:'192.168.137.30', role:'Ubuntu Minimal / Suricata / DVWA / Juice Shop', x:0.35, y:0.62, color:'#f0a500', icon:'DOCK',   delay:700  },
+        { id:'dc01',   label:'DC01',          ip:'192.168.137.50', role:'Windows Server 2019 Core / lab.local domain',  x:0.65, y:0.62, color:'#7c6af7', icon:'DC',     delay:900  },
+        { id:'kali',   label:'Kali Linux',    ip:'192.168.137.60', role:'Attack Machine / Impacket / NetExec / BloodHound', x:0.50, y:0.88, color:'#e05252', icon:'KALI',   delay:1100 },
+        { id:'dvwa',   label:'DVWA',          ip:'172.17.0.x',     role:'Damn Vulnerable Web App / SQLi + RCE target',  x:0.14, y:0.82, color:'#f0a500', icon:'DVWA',   delay:1300, sub_of:'docker', r:18 },
+        { id:'juice',  label:'Juice Shop',    ip:'172.17.0.x',     role:'OWASP Juice Shop / Lateral pivot target',      x:0.26, y:0.82, color:'#f0a500', icon:'JUICE',  delay:1400, sub_of:'docker', r:18 },
+        { id:'c2sim',  label:'C2 Sim',        ip:'172.18.0.x',     role:'C2 Beacon Simulator / HTTP / c2sim-net',       x:0.20, y:0.95, color:'#e05252', icon:'C2',     delay:1500, sub_of:'docker', r:18 },
+        { id:'dns',    label:'DNS Tunnel',     ip:'172.19.0.x',     role:'DNS Tunnel Simulator / base32 / dnstunnel-net', x:0.32, y:0.95, color:'#e05252', icon:'DNS',    delay:1600, sub_of:'docker', r:18 },
+      ];
+
+      // ── Edge definitions ──
+      const EDGES = [
+        { from:'win11', to:'wazuh',  label:'agent/1514',  color:'#00d4aa', flow:true,  delay:1700 },
+        { from:'win11', to:'vpn',    label:'ECDH/1194',   color:'#3ecf8e', flow:false, delay:1800 },
+        { from:'win11', to:'docker', label:'SSH/8082',    color:'#f0a500', flow:false, delay:1900 },
+        { from:'win11', to:'dc01',   label:'LDAP/445',    color:'#7c6af7', flow:true,  delay:2000 },
+        { from:'win11', to:'kali',   label:'SSH/22',      color:'#e05252', flow:false, delay:2100 },
+        { from:'docker', to:'wazuh', label:'agent/1514',  color:'#00d4aa', flow:true,  delay:2200 },
+        { from:'dc01',  to:'wazuh',  label:'agent/1514',  color:'#00d4aa', flow:true,  delay:2300 },
+        { from:'kali',  to:'dc01',   label:'attack path', color:'#e05252', flow:true,  dash:true, delay:2400 },
+        { from:'docker', to:'dvwa',  label:'',            color:'#f0a500', flow:false, delay:2500 },
+        { from:'docker', to:'juice', label:'',            color:'#f0a500', flow:false, delay:2550 },
+        { from:'docker', to:'c2sim', label:'',            color:'#e05252', flow:false, delay:2600 },
+        { from:'docker', to:'dns',   label:'',            color:'#e05252', flow:false, delay:2650 },
+        { from:'dvwa',  to:'juice',  label:'pivot',       color:'#e05252', flow:true,  dash:true, delay:2700 },
+      ];
+
+      // State
+      let nodeProgress = {};  // id → 0..1
+      let edgeProgress = {};  // index → 0..1
+      let packets = [];
+      let hoveredNode = null;
+      let animStart = null;
+      let W, H, DPR;
+
+      function resize() {
+        DPR = window.devicePixelRatio || 1;
+        W = canvas.offsetWidth;
+        H = Math.max(420, W * 0.65);
+        canvas.style.height = H + 'px';
+        canvas.width  = W * DPR;
+        canvas.height = H * DPR;
+        ctx.scale(DPR, DPR);
+      }
+
+      function nodePos(n) {
+        return { x: n.x * W, y: n.y * H };
+      }
+
+      function nodeRadius(n) {
+        return (n.r || 28) * Math.min(W / 900, 1.2);
+      }
+
+      function drawGrid() {
+        ctx.strokeStyle = 'rgba(30,33,40,0.8)';
+        ctx.lineWidth = 1;
+        const step = 40;
+        for (let x = 0; x < W; x += step) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+        }
+        for (let y = 0; y < H; y += step) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+        }
+      }
+
+      function drawEdge(edge, progress, now) {
+        const fn = NODES.find(n => n.id === edge.from);
+        const tn = NODES.find(n => n.id === edge.to);
+        if (!fn || !tn) return;
+        const fp = nodePos(fn), tp = nodePos(tn);
+        const fr = nodeRadius(fn), tr = nodeRadius(tn);
+
+        // Direction vector
+        const dx = tp.x - fp.x, dy = tp.y - fp.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        const ux = dx/dist, uy = dy/dist;
+        const sx = fp.x + ux*fr, sy = fp.y + uy*fr;
+        const ex = tp.x - ux*tr, ey = tp.y - uy*tr;
+
+        // Current endpoint based on progress
+        const cx = sx + (ex-sx)*progress;
+        const cy = sy + (ey-sy)*progress;
+
+        ctx.save();
+        ctx.strokeStyle = edge.color;
+        ctx.lineWidth = edge.dash ? 1.5 : 1.5;
+        ctx.globalAlpha = 0.5;
+        if (edge.dash) {
+          ctx.setLineDash([6, 4]);
+        }
+        ctx.beginPath();
+        ctx.moveTo(sx, sy);
+        ctx.lineTo(cx, cy);
+        ctx.stroke();
+        ctx.restore();
+
+        // Edge label (midpoint)
+        if (progress > 0.9 && edge.label) {
+          const mx = (sx+ex)/2, my = (sy+ey)/2;
+          ctx.save();
+          ctx.font = `${Math.max(9, Math.min(11, W/90))}px 'JetBrains Mono', monospace`;
+          ctx.fillStyle = edge.color;
+          ctx.globalAlpha = 0.6;
+          ctx.textAlign = 'center';
+          ctx.fillText(edge.label, mx, my - 5);
+          ctx.restore();
+        }
+
+        // Animated packet dots along edge
+        if (edge.flow && progress >= 1) {
+          const t = ((now / 1200) % 1);
+          const px = sx + (ex-sx)*t;
+          const py = sy + (ey-sy)*t;
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(px, py, 3, 0, Math.PI*2);
+          ctx.fillStyle = edge.color;
+          ctx.globalAlpha = 0.9;
+          ctx.fill();
+          // Trail
+          ctx.beginPath();
+          const t2 = Math.max(0, t - 0.08);
+          ctx.arc(sx + (ex-sx)*t2, sy + (ey-sy)*t2, 2, 0, Math.PI*2);
+          ctx.globalAlpha = 0.3;
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function drawNode(node, progress, now) {
+        const p = nodePos(node);
+        const r = nodeRadius(node);
+        const isHovered = hoveredNode === node.id;
+
+        ctx.save();
+        ctx.globalAlpha = progress;
+
+        // Outer glow ring (pulse)
+        const pulse = 0.5 + 0.5 * Math.sin(now / 800 + node.x * 10);
+        if (isHovered || node.color === '#00d4aa') {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, r + 8 + pulse * 4, 0, Math.PI*2);
+          ctx.strokeStyle = node.color;
+          ctx.lineWidth = 1;
+          ctx.globalAlpha = progress * 0.2;
+          ctx.stroke();
+        }
+
+        ctx.globalAlpha = progress;
+
+        // Node circle
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+        grad.addColorStop(0, node.color + '33');
+        grad.addColorStop(1, '#111318');
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+        ctx.strokeStyle = isHovered ? '#fff' : node.color;
+        ctx.lineWidth = isHovered ? 2 : 1.5;
+        ctx.stroke();
+
+        // Icon (text label)
+        const iconSize = Math.max(8, Math.min(11, r * 0.45));
+        ctx.font = `700 ${iconSize}px 'JetBrains Mono', monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = node.color;
+        ctx.fillText(node.icon, p.x, p.y - 1);
+
+        // Label below
+        const labelSize = Math.max(9, Math.min(11, W / 90));
+        ctx.font = `600 ${labelSize}px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = isHovered ? '#fff' : node.color;
+        ctx.textBaseline = 'top';
+        ctx.fillText(node.label, p.x, p.y + r + 4);
+
+        // IP below label
+        if (!node.sub_of) {
+          ctx.font = `${labelSize - 1}px 'JetBrains Mono', monospace`;
+          ctx.fillStyle = '#565c6e';
+          ctx.fillText(node.ip, p.x, p.y + r + 4 + labelSize + 2);
+        }
+
+        ctx.restore();
+      }
+
+      function draw(timestamp) {
+        if (!animStart) animStart = timestamp;
+        const elapsed = timestamp - animStart;
+
+        ctx.clearRect(0, 0, W, H);
+        drawGrid();
+
+        // Update node progress
+        NODES.forEach(n => {
+          const t = Math.max(0, elapsed - n.delay);
+          nodeProgress[n.id] = Math.min(1, t / 400);
+        });
+
+        // Update edge progress
+        EDGES.forEach((e, i) => {
+          const t = Math.max(0, elapsed - e.delay);
+          edgeProgress[i] = Math.min(1, t / 600);
+        });
+
+        // Draw edges first (behind nodes)
+        EDGES.forEach((e, i) => {
+          if (edgeProgress[i] > 0) drawEdge(e, edgeProgress[i], timestamp);
+        });
+
+        // Draw nodes
+        NODES.forEach(n => {
+          if (nodeProgress[n.id] > 0) drawNode(n, nodeProgress[n.id], timestamp);
+        });
+
+        // Network label
+        ctx.save();
+        ctx.font = `10px 'JetBrains Mono', monospace`;
+        ctx.fillStyle = '#2a2d35';
+        ctx.textAlign = 'left';
+        ctx.fillText('Hyper-V Internal Switch  //  192.168.137.0/24  //  ICS egress', 12, H - 12);
+        ctx.restore();
+
+        requestAnimationFrame(draw);
+      }
+
+      // Mouse hover
+      canvas.addEventListener('mousemove', function(e) {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        let found = null;
+        NODES.forEach(n => {
+          if (nodeProgress[n.id] < 0.5) return;
+          const p = nodePos(n);
+          const r = nodeRadius(n);
+          const dx = mx - p.x, dy = my - p.y;
+          if (Math.sqrt(dx*dx + dy*dy) < r + 4) found = n;
+        });
+        hoveredNode = found ? found.id : null;
+        if (found) {
+          document.getElementById('nettip-name').textContent = found.label;
+          document.getElementById('nettip-ip').textContent = found.ip;
+          document.getElementById('nettip-role').innerHTML = found.role.split('/').map(s => s.trim()).join('<br>');
+          let tx = e.clientX - rect.left + 16;
+          let ty = e.clientY - rect.top + 16;
+          if (tx > W - 200) tx = e.clientX - rect.left - 196;
+          tip.style.left = tx + 'px';
+          tip.style.top  = ty + 'px';
+          tip.style.display = 'block';
+          canvas.style.cursor = 'pointer';
+        } else {
+          tip.style.display = 'none';
+          canvas.style.cursor = 'default';
+        }
+      });
+
+      canvas.addEventListener('mouseleave', () => {
+        tip.style.display = 'none';
+        hoveredNode = null;
+      });
+
+      // Init
+      resize();
+      window.addEventListener('resize', () => { resize(); });
+      requestAnimationFrame(draw);
+    })();
+    </script>
   </section>
 
   <!-- TIMELINE -->
