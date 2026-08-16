@@ -1975,202 +1975,7 @@ window.addEventListener('scroll', function() {
   setTimeout(runSequence, 1000);
 })();
 
-<script>
-  </div> <!-- This closes your layout's grid structure columns -->
-</section> <!-- This closes your Live Lab Activity section -->
-
-})(); // This cleanly closes the terminal simulation function
-</script> <!-- 🌟 FIXES THE ERROR: Closes the active script zone so HTML can run safely -->
-
-<!-- ── INCIDENT RESPONSE PLAYBOOKS (CLEAN HTML SPACE) ── -->
-<section class="container" style="margin-top: 20px; margin-bottom: 40px;">
-  <div class="playbook-container" style="border: 1px solid var(--border); padding: 24px; background: var(--surface); border-radius: 8px;">
-    <h3 style="font-family: var(--mono); color: var(--accent); margin-bottom: 20px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em;">
-      ⚡ Incident Response Playbooks (SANS Framework Alignment)
-    </h3>
-
-    <!-- PLAYBOOK 1: KERBEROASTING -->
-    <details class="pb-card" style="margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg); border-radius: 4px;">
-      <summary style="padding: 14px; font-family: var(--mono); cursor: pointer; color: var(--warn); font-weight: 600; user-select: none; font-size: 13px;">
-        🔹 PHASE 01: Kerberoasting Triage (Account: svc_sql)
-      </summary>
-      <div class="pb-content" style="padding: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); line-height: 1.6;">
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">1. Identification:</p>
-        <ul style="list-style: square; margin-left: 20px; margin-bottom: 14px; color: var(--text);">
-          <li>Flag unusual Event ID 4769 service ticket requests.</li>
-          <li>Isolate insecure weak RC4 encryption ticket structures (0x17).</li>
-          <li>Identify source workstation parsing SPNs via LDAP activity.</li>
-        </ul>
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">2. Containment & Eradication:</p>
-        <ul style="list-style: square; margin-left: 20px; color: var(--text);">
-          <li>Enforce rapid password rotation loop policies for svc_sql.</li>
-          <li>Upgrade Active Directory service account encryption standards to AES-256.</li>
-          <li>Revoke target user tokens and sessions globally across controllers.</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- PLAYBOOK 2: PASSWORD SPRAY -->
-    <details class="pb-card" style="margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg); border-radius: 4px;">
-      <summary style="padding: 14px; font-family: var(--mono); cursor: pointer; color: var(--warn); font-weight: 600; user-select: none; font-size: 13px;">
-        🔹 PHASE 02: Password Spray Detection (Account: sadmin)
-      </summary>
-      <div class="pb-content" style="padding: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); line-height: 1.6;">
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">1. Identification:</p>
-        <ul style="list-style: square; margin-left: 20px; margin-bottom: 14px; color: var(--text);">
-          <li>Catch systemic authentication spikes across unique service accounts.</li>
-          <li>Correlate distributed Event ID 4625 login verification errors.</li>
-          <li>Validate matching alert trends targeting Wazuh Rule 92652 configurations.</li>
-        </ul>
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">2. Containment & Eradication:</p>
-        <ul style="list-style: square; margin-left: 20px; color: var(--text);">
-          <li>Block malicious source attacker IP blocks at edge interfaces instantly.</li>
-          <li>Lock down compromised high-tier sadmin account validation states.</li>
-          <li>Enforce immediate cloud/on-prem MFA baseline enrollment steps.</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- PLAYBOOK 3: DCSYNC DUMP -->
-    <details class="pb-card" style="margin-bottom: 12px; border: 1px solid var(--border); background: var(--bg); border-radius: 4px;">
-      <summary style="padding: 14px; font-family: var(--mono); cursor: pointer; color: var(--danger); font-weight: 600; user-select: none; font-size: 13px;">
-        ⚠️ PHASE 03: Critical DCSync Extraction (Protocol: DRSUAPI)
-      </summary>
-      <div class="pb-content" style="padding: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); line-height: 1.6;">
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">1. Identification:</p>
-        <ul style="list-style: square; margin-left: 20px; margin-bottom: 14px; color: var(--text);">
-          <li>Audit rogue Event ID 4662 system configuration updates.</li>
-          <li>Isolate dynamic replication calls originating from non-DC assets.</li>
-          <li>Track network-level DRSUAPI replication stream abnormalities.</li>
-        </ul>
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">2. Containment & Eradication:</p>
-        <ul style="list-style: square; margin-left: 20px; color: var(--text);">
-          <li>Sever targeted host interfaces from primary infrastructure switchports.</li>
-          <li>Initiate two-stage credential reset workflows for the krbtgt account.</li>
-          <li>Invalidate active domain Kerberos tickets to purge persistence keys.</li>
-        </ul>
-      </div>
-    </details>
-
-    <!-- PLAYBOOK 4: PASS-THE-HASH -->
-    <details class="pb-card" style="margin-bottom: 0; border: 1px solid var(--border); background: var(--bg); border-radius: 4px;">
-      <summary style="padding: 14px; font-family: var(--mono); cursor: pointer; color: var(--danger); font-weight: 600; user-select: none; font-size: 13px;">
-        ⚠️ PHASE 04: Pass-the-Hash / SYSTEM Escalation
-      </summary>
-      <div class="pb-content" style="padding: 16px; border-top: 1px solid var(--border); font-size: 13px; color: var(--text); line-height: 1.6;">
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">1. Identification:</p>
-        <ul style="list-style: square; margin-left: 20px; margin-bottom: 14px; color: var(--text);">
-          <li>Flag high-risk Local/Remote Event ID 4624 Type 3 network logons.</li>
-          <li>Isolate concurrent administrative session connections across system tools.</li>
-          <li>Monitor for rogue service installations via Event ID 4697 logs.</li>
-        </ul>
-        <p style="margin-bottom: 8px; font-weight: bold; color: #fff; font-family: var(--mono);">2. Containment & Eradication:</p>
-        <ul style="list-style: square; margin-left: 20px; color: var(--text);">
-          <li>Isolate compromise targets from main domain structures.</li>
-          <li>Purge malicious persistent remote execution tasks from server contexts.</li>
-          <li>Rotate master enterprise directory infrastructure passwords securely.</li>
-        </ul>
-      </div>
-    </details>
-  </div>
-</section>
-
-<!-- ── FOOTER STYLE AREA ── -->
-<footer>
-  <div class="container" style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: center; padding: 20px 0;">
-    ://github.com // All projects built and documented on real infrastructure // 2026
-  </div>
-</footer>
-
-<!-- ── NEW ISOLATED SCRIPT ZONE FOR TIMELINE LOOP ── -->
-<script>
-<!-- ── RE-ALIGNED FULL ARCHITECTURE ENGINE SCRIPTS ── -->
-<script>
-/* ── COMMAND FEED SIMULATOR (KALI COMMANDS) ── */
-(function() {
-  const sequences = [
-    [
-      { t: 'prompt', txt: 'nmap -sV -sC -p- 10.0.0.5' },
-      { t: 'output', txt: 'Starting Nmap 7.94 ( https://nmap.org ) at 2026-08-16 08:32 BST' },
-      { t: 'warn', txt: 'Nmap scan report for DC01.local (10.0.0.5)' },
-      { t: 'output', txt: 'PORT     STATE SERVICE       VERSION' },
-      { t: 'output', txt: '80/tcp   open  http          Microsoft IIS httpd 10.0' },
-      { t: 'output', txt: '88/tcp   open  kerberos-sec  Microsoft Windows Kerberos' },
-      { t: 'output', txt: '389/tcp  open  ldap          Microsoft Windows Active Directory LDAP' },
-      { t: 'output', txt: '445/tcp  open  microsoft-ds  Windows Server 2022 Standard 20348 microsoft-ds' },
-      { t: 'success', txt: 'Nmap done: 1 IP address (1 host up) scanned in 12.45 seconds' }
-    ],
-    [
-      { t: 'prompt', txt: 'python3 impacket-GetUserSPNs.js local.domain/jsmith:Password123 -dc-ip 10.0.0.5 -request' },
-      { t: 'output', txt: 'Impacket v0.11.0 - Copyright 2023 Fortra' },
-      { t: 'output', txt: 'ServicePrincipalName  Name     Memberof  PasswordLastSet' },
-      { t: 'warn', txt: 'MSSQLSvc/sql.local:1433 svc_sql  DB_Admins 2024-01-12 11:04:22' },
-      { t: 'danger', txt: '$krb5tgs$23$*svc_sql$LOCAL.DOMAIN$MSSQLSvc/sql.local:1433*...ba7c041e127f3' },
-      { t: 'success', txt: 'Extracted 1 Kerberoastable TGS ticket successfully.' }
-    ],
-    [
-      { t: 'prompt', txt: 'crackmapexec smb 10.0.0.0/24 -u users.txt -p common_pass.txt' },
-      { t: 'output', txt: 'SMB         10.0.0.5        445    DC01             [*] Windows Server 2022 Standard 20348' },
-      { t: 'danger', txt: 'SMB         10.0.0.5        445    DC01             [-] local.domain\\jsmith:Password123 STATUS_LOGON_FAILURE' },
-      { t: 'success', txt: 'SMB         10.0.0.5        445    DC01             [+] local.domain\\sadmin:Spring2026! (Pwn3d!)' }
-    ],
-    [
-      { t: 'prompt', txt: 'python3 impacket-secretsdump.js local.domain/sadmin:Spring2026!@10.0.0.5 -just-dc-ntlm' },
-      { t: 'output', txt: 'Impacket v0.11.0 - Copyright 2023 Fortra' },
-      { t: 'output', txt: '[*] Dumping Domain Credentials (sam hash alignment) via DRSUAPI' },
-      { t: 'warn', txt: 'Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::' },
-      { t: 'danger', txt: 'krbtgt:502:aad3b435b51404eeaad3b435b51404ee:8a4b27ee412e6931b14a52c08ea019a1:::' },
-      { t: 'success', txt: 'DCSync completed successfully. 2 hashes dumped.' }
-    ]
-  ];
-
-  let seqIdx = 0;
-  let lineIdx = 0;
-  const body = document.getElementById('cmd-body');
-
-  if (!body) return;
-
-  function addLine(type, text) {
-    const div = document.createElement('div');
-    div.className = 'cmd-line ' + type;
-    if (type === 'prompt') div.innerHTML = '❯ ';
-    body.appendChild(div);
-    while (body.children.length > 13) body.removeChild(body.firstChild);
-    body.scrollTop = body.scrollHeight;
-    return div;
-  }
-
-  function typeChar(el, text, i, cb) {
-    if (i >= text.length) { cb && cb(); return; }
-    el.textContent = (el.className.includes('prompt') ? '❯ ' : '') + text.slice(0, i + 1);
-    const speed = el.className.includes('prompt') ? 28 : 4;
-    setTimeout(() => typeChar(el, text, i + 1, cb), speed + Math.random() * 10);
-  }
-
-  function runSequence() {
-    const seq = sequences[seqIdx % sequences.length];
-    if (lineIdx >= seq.length) {
-      seqIdx++;
-      lineIdx = 0;
-      setTimeout(() => {
-        addLine('output', '');
-        runSequence();
-      }, 1800);
-      return;
-    }
-    const item = seq[lineIdx];
-    const el = addLine(item.t, '');
-    typeChar(el, item.txt, 0, () => {
-      lineIdx++;
-      const delay = item.t === 'prompt' ? 400 : 120;
-      setTimeout(runSequence, delay);
-    });
-  }
-
-  setTimeout(runSequence, 1000);
-})(); // <-- Cleanly isolates and seals the Kali script pipeline
-
-/* ── ALERT TIMELINE (WAZUH ALERTS) ── */
+/* ── ALERT TIMELINE ── */
 (function() {
   const alerts = [
     {time:'08:44:24', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
@@ -2212,6 +2017,7 @@ window.addEventListener('scroll', function() {
     
     setTimeout(() => { row.style.opacity = '1'; }, 20);
 
+    // FIXED SYNCHRONOUS TRIMMING
     if (body.children.length > 14) {
       const old = body.firstChild;
       if (old) {
@@ -2227,15 +2033,9 @@ window.addEventListener('scroll', function() {
   }
 
   setTimeout(addAlert, 600);
-})();
+})(); // <-- Properly closes the function scope loop context
 </script>
-</body>
-</html>
-
-
-
-
-
 </script>
+
 </body>
 </html>
