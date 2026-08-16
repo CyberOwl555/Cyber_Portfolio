@@ -2014,11 +2014,17 @@ window.addEventListener('scroll', function() {
     body.appendChild(row);
     setTimeout(() => { row.style.opacity = '1'; }, 20);
     // trim old rows
-    while (body.children.length > 14) {
-      const old = body.firstChild;
-      old.style.opacity = '0';
-      setTimeout(() => { if(old.parentNode) old.parentNode.removeChild(old); }, 400);
-    }
+   //  THE FIXED CODE
+if (body.children.length > 14) {
+    const old = body.firstChild;
+    // 1. Mark it as absolute or hidden so it doesn't mess with counting
+    old.style.pointerEvents = 'none';
+    old.style.opacity = '0';
+    
+    // 2. Safely remove it from the DOM container tracking synchronously
+    old.id = "dying-node"; 
+    body.removeChild(old); 
+}
     body.scrollTop = body.scrollHeight;
     idx++;
     // vary speed: high severity alerts come in faster
