@@ -2084,7 +2084,93 @@ window.addEventListener('scroll', function() {
 
 <!-- ── NEW ISOLATED SCRIPT ZONE FOR TIMELINE LOOP ── -->
 <script>
-/* ── ALERT TIMELINE ── */
+<!-- ── RE-ALIGNED FULL ARCHITECTURE ENGINE SCRIPTS ── -->
+<script>
+/* ── COMMAND FEED SIMULATOR (KALI COMMANDS) ── */
+(function() {
+  const sequences = [
+    [
+      { t: 'prompt', txt: 'nmap -sV -sC -p- 10.0.0.5' },
+      { t: 'output', txt: 'Starting Nmap 7.94 ( https://nmap.org ) at 2026-08-16 08:32 BST' },
+      { t: 'warn', txt: 'Nmap scan report for DC01.local (10.0.0.5)' },
+      { t: 'output', txt: 'PORT     STATE SERVICE       VERSION' },
+      { t: 'output', txt: '80/tcp   open  http          Microsoft IIS httpd 10.0' },
+      { t: 'output', txt: '88/tcp   open  kerberos-sec  Microsoft Windows Kerberos' },
+      { t: 'output', txt: '389/tcp  open  ldap          Microsoft Windows Active Directory LDAP' },
+      { t: 'output', txt: '445/tcp  open  microsoft-ds  Windows Server 2022 Standard 20348 microsoft-ds' },
+      { t: 'success', txt: 'Nmap done: 1 IP address (1 host up) scanned in 12.45 seconds' }
+    ],
+    [
+      { t: 'prompt', txt: 'python3 impacket-GetUserSPNs.js local.domain/jsmith:Password123 -dc-ip 10.0.0.5 -request' },
+      { t: 'output', txt: 'Impacket v0.11.0 - Copyright 2023 Fortra' },
+      { t: 'output', txt: 'ServicePrincipalName  Name     Memberof  PasswordLastSet' },
+      { t: 'warn', txt: 'MSSQLSvc/sql.local:1433 svc_sql  DB_Admins 2024-01-12 11:04:22' },
+      { t: 'danger', txt: '$krb5tgs$23$*svc_sql$LOCAL.DOMAIN$MSSQLSvc/sql.local:1433*...ba7c041e127f3' },
+      { t: 'success', txt: 'Extracted 1 Kerberoastable TGS ticket successfully.' }
+    ],
+    [
+      { t: 'prompt', txt: 'crackmapexec smb 10.0.0.0/24 -u users.txt -p common_pass.txt' },
+      { t: 'output', txt: 'SMB         10.0.0.5        445    DC01             [*] Windows Server 2022 Standard 20348' },
+      { t: 'danger', txt: 'SMB         10.0.0.5        445    DC01             [-] local.domain\\jsmith:Password123 STATUS_LOGON_FAILURE' },
+      { t: 'success', txt: 'SMB         10.0.0.5        445    DC01             [+] local.domain\\sadmin:Spring2026! (Pwn3d!)' }
+    ],
+    [
+      { t: 'prompt', txt: 'python3 impacket-secretsdump.js local.domain/sadmin:Spring2026!@10.0.0.5 -just-dc-ntlm' },
+      { t: 'output', txt: 'Impacket v0.11.0 - Copyright 2023 Fortra' },
+      { t: 'output', txt: '[*] Dumping Domain Credentials (sam hash alignment) via DRSUAPI' },
+      { t: 'warn', txt: 'Administrator:500:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::' },
+      { t: 'danger', txt: 'krbtgt:502:aad3b435b51404eeaad3b435b51404ee:8a4b27ee412e6931b14a52c08ea019a1:::' },
+      { t: 'success', txt: 'DCSync completed successfully. 2 hashes dumped.' }
+    ]
+  ];
+
+  let seqIdx = 0;
+  let lineIdx = 0;
+  const body = document.getElementById('cmd-body');
+
+  if (!body) return;
+
+  function addLine(type, text) {
+    const div = document.createElement('div');
+    div.className = 'cmd-line ' + type;
+    if (type === 'prompt') div.innerHTML = '❯ ';
+    body.appendChild(div);
+    while (body.children.length > 13) body.removeChild(body.firstChild);
+    body.scrollTop = body.scrollHeight;
+    return div;
+  }
+
+  function typeChar(el, text, i, cb) {
+    if (i >= text.length) { cb && cb(); return; }
+    el.textContent = (el.className.includes('prompt') ? '❯ ' : '') + text.slice(0, i + 1);
+    const speed = el.className.includes('prompt') ? 28 : 4;
+    setTimeout(() => typeChar(el, text, i + 1, cb), speed + Math.random() * 10);
+  }
+
+  function runSequence() {
+    const seq = sequences[seqIdx % sequences.length];
+    if (lineIdx >= seq.length) {
+      seqIdx++;
+      lineIdx = 0;
+      setTimeout(() => {
+        addLine('output', '');
+        runSequence();
+      }, 1800);
+      return;
+    }
+    const item = seq[lineIdx];
+    const el = addLine(item.t, '');
+    typeChar(el, item.txt, 0, () => {
+      lineIdx++;
+      const delay = item.t === 'prompt' ? 400 : 120;
+      setTimeout(runSequence, delay);
+    });
+  }
+
+  setTimeout(runSequence, 1000);
+})(); // <-- Cleanly isolates and seals the Kali script pipeline
+
+/* ── ALERT TIMELINE (WAZUH ALERTS) ── */
 (function() {
   const alerts = [
     {time:'08:44:24', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
@@ -2125,7 +2211,7 @@ window.addEventListener('scroll', function() {
     body.appendChild(row);
     
     setTimeout(() => { row.style.opacity = '1'; }, 20);
-        // FIXES MEMORY LEAK BY REPLACING THE INFINITE WHILE LOOP WITH SYNCHRONOUS TRIMMING
+
     if (body.children.length > 14) {
       const old = body.firstChild;
       if (old) {
@@ -2136,14 +2222,15 @@ window.addEventListener('scroll', function() {
     body.scrollTop = body.scrollHeight;
     idx++;
     
-    // Vary speed: high severity alerts come in faster
     const delay = a.level >= 12 ? 800 : a.level >= 10 ? 1200 : 1800;
     setTimeout(addAlert, delay + Math.random() * 600);
   }
 
-  // Initial trigger delay for log parsing simulator
   setTimeout(addAlert, 600);
-})(); // <-- Properly closes the function scope loop context
+})();
+</script>
+</body>
+</html>
 
 
 
