@@ -1979,8 +1979,11 @@ window.addEventListener('scroll', function() {
   </div> <!-- This closes your layout's grid structure columns -->
 </section> <!-- This closes your Live Lab Activity section -->
 
+})(); // This cleanly closes the terminal simulation function
+</script> <!-- 🌟 FIXES THE ERROR: Closes the active script zone so HTML can run safely -->
+
 <!-- ── INCIDENT RESPONSE PLAYBOOKS (CLEAN HTML SPACE) ── -->
-<section class="container" style="margin-top: -20px; margin-bottom: 40px;">
+<section class="container" style="margin-top: 20px; margin-bottom: 40px;">
   <div class="playbook-container" style="border: 1px solid var(--border); padding: 24px; background: var(--surface); border-radius: 8px;">
     <h3 style="font-family: var(--mono); color: var(--accent); margin-bottom: 20px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.1em;">
       ⚡ Incident Response Playbooks (SANS Framework Alignment)
@@ -2074,12 +2077,12 @@ window.addEventListener('scroll', function() {
 
 <!-- ── FOOTER STYLE AREA ── -->
 <footer>
-  <div class="container" style="font-family: var(--mono); font-size: 12px; color: var(--muted);">
+  <div class="container" style="font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: center; padding: 20px 0;">
     ://github.com // All projects built and documented on real infrastructure // 2026
   </div>
 </footer>
 
-<!-- ── CLEANED UP SCRIPT ZONE (NO ACCIDENTAL HTML CLOSURES) ── -->
+<!-- ── NEW ISOLATED SCRIPT ZONE FOR TIMELINE LOOP ── -->
 <script>
 /* ── ALERT TIMELINE ── */
 (function() {
@@ -2122,6 +2125,26 @@ window.addEventListener('scroll', function() {
     body.appendChild(row);
     
     setTimeout(() => { row.style.opacity = '1'; }, 20);
+        // FIXES MEMORY LEAK BY REPLACING THE INFINITE WHILE LOOP WITH SYNCHRONOUS TRIMMING
+    if (body.children.length > 14) {
+      const old = body.firstChild;
+      if (old) {
+        body.removeChild(old);
+      }
+    }
+
+    body.scrollTop = body.scrollHeight;
+    idx++;
+    
+    // Vary speed: high severity alerts come in faster
+    const delay = a.level >= 12 ? 800 : a.level >= 10 ? 1200 : 1800;
+    setTimeout(addAlert, delay + Math.random() * 600);
+  }
+
+  // Initial trigger delay for log parsing simulator
+  setTimeout(addAlert, 600);
+})(); // <-- Properly closes the function scope loop context
+
 
 
 
