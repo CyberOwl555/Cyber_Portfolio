@@ -432,9 +432,25 @@
     }
     .project-header:hover, .project.open .project-header { border-color: var(--line); }
     .project-num { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 3px; min-width: 24px; }
-    .project-title-block { flex: 1; }
+    /* flex-basis 0% on title-block means it has no size of its own to defend when the
+       row runs out of room -- the auto-basis preview text (unconstrained width) ends up
+       absorbing almost none of the required shrinkage while title-block gets almost all
+       of it, collapsing the title into a 5-6 line sliver. min-width gives title-block an
+       actual claim to defend before the preview (capped below) gives up any more space. */
+    .project-title-block { flex: 1 1 240px; min-width: 200px; }
     .project-title { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.3; }
     .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .project-preview {
+      flex: 0 1 220px;
+      max-width: 220px;
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--muted);
+      font-family: var(--mono);
+      line-height: 1.5;
+      letter-spacing: 0.02em;
+    }
+    @media (max-width: 700px) { .project-preview { display: none; } }
     .tag { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
     .tag-blue   { background: rgba(124,106,247,0.15); color: var(--accent2); }
     .tag-green  { background: rgba(0,212,170,0.12);   color: var(--accent); }
@@ -1536,7 +1552,7 @@
               <span class="tag tag-teal">FIM</span>
             </div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">War story: disk-full → cascading API failures → SQLite corruption → self-inflicted dashboard kill. Diagnosed live.</div>
+            <div class="project-preview">War story: disk-full → cascading API failures → SQLite corruption → self-inflicted dashboard kill. Diagnosed live.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1556,7 +1572,7 @@
             <div class="project-title">Simulated Network & App-Layer Detection — Juice Shop</div>
             <div class="project-tags"><span class="tag tag-green">Visibility Gap</span><span class="tag tag-blue">nginx Proxy</span><span class="tag tag-teal">Docker</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Found: host agents have zero visibility into containers. Fixed via nginx reverse proxy + volume-mounted logs.</div>
+            <div class="project-preview">Found: host agents have zero visibility into containers. Fixed via nginx reverse proxy + volume-mounted logs.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1572,7 +1588,7 @@
             <div class="project-title">Attack Traffic Analysis — SQLi & File Upload RCE</div>
             <div class="project-tags"><span class="tag tag-red">Offensive</span><span class="tag tag-orange">Wireshark</span><span class="tag tag-blue">PCAP</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Manual SQLi returned full 5-user table dump. PHP shell uploaded → ?cmd=id → uid=33(www-data) confirmed.</div>
+            <div class="project-preview">Manual SQLi returned full 5-user table dump. PHP shell uploaded → ?cmd=id → uid=33(www-data) confirmed.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1591,7 +1607,7 @@
             <div class="project-title">C2 Beaconing Detection — Custom Decoder Engineering</div>
             <div class="project-tags"><span class="tag tag-red">C2 Simulation</span><span class="tag tag-blue">Custom Decoder</span><span class="tag tag-green">Frequency Rule</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">4 compounding failures diagnosed in sequence. wazuh-logtest isolated each layer. Rule 100031 fires on pattern, not events.</div>
+            <div class="project-preview">4 compounding failures diagnosed in sequence. wazuh-logtest isolated each layer. Rule 100031 fires on pattern, not events.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1610,7 +1626,7 @@
             <div class="project-title">DNS Tunneling Detection — Three-Tier Escalation</div>
             <div class="project-tags"><span class="tag tag-red">DNS Exfil</span><span class="tag tag-blue">Multi-stage Decoder</span><span class="tag tag-orange">Regex Debug</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Level 12 alert surfaced decoded credentials (user=admin;pass=SuperSecr) directly in previous_output field.</div>
+            <div class="project-preview">Level 12 alert surfaced decoded credentials (user=admin;pass=SuperSecr) directly in previous_output field.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1629,7 +1645,7 @@
             <div class="project-title">Lateral Movement Detection — Web Shell to Persistence</div>
             <div class="project-tags"><span class="tag tag-red">Attack Chain</span><span class="tag tag-blue">Correlation</span><span class="tag tag-green">Level 14</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Rule 100053 level 14 fired after 3 web shell commands. previous_output showed exact ?cmd= sequence that triggered it.</div>
+            <div class="project-preview">Rule 100053 level 14 fired after 3 web shell commands. previous_output showed exact ?cmd= sequence that triggered it.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1654,7 +1670,7 @@
             <div class="project-title">Suricata Network IDS — Closing the Network Visibility Gap</div>
             <div class="project-tags"><span class="tag tag-green">Network IDS</span><span class="tag tag-blue">52K Sigs</span><span class="tag tag-teal">Cross-Detection</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Suricata immediately caught C2 beacon via Python ServerBanner — same attack, two independent detection mechanisms.</div>
+            <div class="project-preview">Suricata immediately caught C2 beacon via Python ServerBanner — same attack, two independent detection mechanisms.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1673,7 +1689,7 @@
             <div class="project-title">Active Directory Attack Lab — Full Domain Compromise ⭐</div>
             <div class="project-tags"><span class="tag tag-red">Kerberoasting</span><span class="tag tag-red">PtH</span><span class="tag tag-red">DCSync</span><span class="tag tag-orange">SEC504</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">jsmith → Kerberoast svc_sql → spray sadmin (Pwn3d!) → DCSync all hashes → psexec SYSTEM. Under 10 minutes.</div>
+            <div class="project-preview">jsmith → Kerberoast svc_sql → spray sadmin (Pwn3d!) → DCSync all hashes → psexec SYSTEM. Under 10 minutes.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1705,7 +1721,7 @@
             <div class="project-title">BloodHound AD Enumeration — Attack Path Analysis</div>
             <div class="project-tags"><span class="tag tag-red">BloodHound</span><span class="tag tag-red">SharpHound</span><span class="tag tag-orange">Graph Analysis</span><span class="tag tag-blue">Attack Paths</span></div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">svc_sql: 9 reachable high-value targets, Last Logon: Never. BloodHound independently confirmed the Kerberoasting target.</div>
+            <div class="project-preview">svc_sql: 9 reachable high-value targets, Last Logon: Never. BloodHound independently confirmed the Kerberoasting target.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1735,7 +1751,7 @@
               <span class="tag tag-blue">Detection Gap</span>
             </div>
           </div>
-            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Forged offline — zero DC contact. 10-year validity. Wazuh caught psexec service install but NOT the forged ticket itself.</div>
+            <div class="project-preview">Forged offline — zero DC contact. 10-year validity. Wazuh caught psexec service install but NOT the forged ticket itself.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
