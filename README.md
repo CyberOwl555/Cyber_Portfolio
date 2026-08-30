@@ -71,6 +71,11 @@ BloodHound deployed against the existing lab.local Active Directory environment 
 
 Key skills: BloodHound/SharpHound deployment and operation, AD graph-based attack path analysis, Kerberoastable account identification, graph theory applied to AD security, defensive use of attack tooling, SharpHound detection awareness (Event ID 4662, LDAP query volume).
 
+### 10. [Golden Ticket Attack: Forging Persistent Domain Admin Access](./Golden_Ticket/README.md)
+
+The natural conclusion to the AD attack chain — using the krbtgt hash captured during DCSync in project 8 to forge a Kerberos Golden Ticket entirely offline (zero DC contact during forgery), then authenticating to DC01 with the forged ticket and obtaining a SYSTEM shell. Demonstrates the most dangerous AD persistence technique: Golden Tickets survive account password resets, disabled accounts, and most standard IR procedures — the only remediation is resetting the krbtgt password twice. Wazuh caught the psexec service installation consequence (Event 7045, rule 92650, MITRE T1021.002 + T1569.002) but not the Golden Ticket authentication itself — an honest and important detection gap documented in full, with realistic production detection approaches discussed.
+
+Key skills: Golden Ticket forgery (Impacket ticketer), Kerberos ticket cache manipulation (KRB5CCNAME/.ccache), offline credential exploitation, post-exploitation access verification, detection gap analysis, understanding of Kerberos TGT signing and PAC structure. MITRE T1558.001 (Golden Ticket).
 
 ## Recurring Themes Across These Projects
 
