@@ -305,7 +305,7 @@
     }
     .chain-step-vis {
       display: grid;
-      grid-template-columns: 140px 1fr;
+      grid-template-columns: 170px 1fr;
       gap: 0;
       cursor: pointer;
     }
@@ -567,6 +567,7 @@
   <canvas id="matrix-canvas"></canvas>
   <div class="container" style="position:relative;z-index:1;">
     <p class="eyebrow">Home Lab Portfolio // 2026</p>
+    <a href="https://github.com/CyberOwl555/Cyber_Portfolio" target="_blank" style="display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:11px;color:#00d4aa;border:1px solid rgba(0,212,170,0.4);text-decoration:none;padding:5px 14px;border-radius:4px;margin-bottom:16px;letter-spacing:0.05em;" onmouseover="this.style.background='rgba(0,212,170,0.1)'" onmouseout="this.style.background='transparent'">&#128279; github.com/CyberOwl555/Cyber_Portfolio</a>
     <svg width="82" height="92" viewBox="0 0 82 92" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 8px;display:block;">
       <defs>
         <style>
@@ -788,40 +789,38 @@
             <stop offset="100%" stop-color="#00d4aa" stop-opacity="0.02"/>
           </radialGradient>
         </defs>
-        <!-- Grid rings -->
-        <circle cx="150" cy="150" r="110" fill="none" stroke="#1e2128" stroke-width="1"/>
-        <circle cx="150" cy="150" r="82"  fill="none" stroke="#1e2128" stroke-width="1"/>
-        <circle cx="150" cy="150" r="55"  fill="none" stroke="#1e2128" stroke-width="1"/>
-        <circle cx="150" cy="150" r="27"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <!-- Grid rings — radius reduced to 85px for label clearance -->
+        <circle cx="150" cy="150" r="85"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="64"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="43"  fill="none" stroke="#1e2128" stroke-width="1"/>
+        <circle cx="150" cy="150" r="21"  fill="none" stroke="#1e2128" stroke-width="1"/>
         <!-- Axes (6 skills) -->
-        <line x1="150" y1="40"  x2="150" y2="260" stroke="#1e2128" stroke-width="1"/>
-        <line x1="55"  y1="95"  x2="245" y2="205" stroke="#1e2128" stroke-width="1"/>
-        <line x1="55"  y1="205" x2="245" y2="95"  stroke="#1e2128" stroke-width="1"/>
-        <!-- Data polygon: Detection 90, Offensive 80, Network 75, AD/Windows 85, Linux 80, IR 70 -->
-        <!-- Points calculated for 6-axis radar at given % of 110px radius -->
-        <!-- Detection(top): 90% = 99px up   → 150, 51 -->
-        <!-- Offensive(TR): 80% = 88px        → 226, 96 -->
-        <!-- Network(BR): 75% = 82.5px        → 221, 204 -->
-        <!-- AD/Windows(bot): 85% = 93.5px   → 150, 243 -->
-        <!-- Linux(BL): 80% = 88px            → 74, 204 -->
-        <!-- IR(TL): 70% = 77px               → 79, 96 -->
+        <line x1="150" y1="55"  x2="150" y2="245" stroke="#1e2128" stroke-width="1"/>
+        <line x1="76"  y1="107" x2="224" y2="193" stroke="#1e2128" stroke-width="1"/>
+        <line x1="76"  y1="193" x2="224" y2="107" stroke="#1e2128" stroke-width="1"/>
+        <!-- Data polygon at 85px max radius:
+             Detection 90%=76.5 → 150,73
+             Offensive 80%=68   → 209,116
+             Network   75%=64   → 205,184
+             AD/Win    85%=72   → 150,222
+             Linux     80%=68   → 91,184
+             IR        70%=60   → 97,120  -->
         <polygon
-          points="150,51 226,96 221,204 150,243 74,204 79,96"
+          points="150,73 209,116 205,184 150,222 91,184 97,120"
           fill="url(#rg)" stroke="#00d4aa" stroke-width="2" opacity="0.9"/>
-        <!-- Dots on polygon points -->
-        <circle cx="150" cy="51"  r="4" fill="#00d4aa"/>
-        <circle cx="226" cy="96"  r="4" fill="#00d4aa"/>
-        <circle cx="221" cy="204" r="4" fill="#00d4aa"/>
-        <circle cx="150" cy="243" r="4" fill="#00d4aa"/>
-        <circle cx="74"  cy="204" r="4" fill="#00d4aa"/>
-        <circle cx="79"  cy="96"  r="4" fill="#00d4aa"/>
-        <!-- Labels -->
-        <text x="150" y="28"  text-anchor="middle" fill="#c9cdd6" font-size="11" font-family="monospace">Detection</text>
-        <text x="262" y="95"  text-anchor="start"  fill="#c9cdd6" font-size="11" font-family="monospace">Offensive</text>
-        <text x="262" y="210" text-anchor="start"  fill="#c9cdd6" font-size="11" font-family="monospace">Network</text>
-        <text x="150" y="278" text-anchor="middle" fill="#c9cdd6" font-size="11" font-family="monospace">AD/Windows</text>
-        <text x="38"  y="210" text-anchor="end"    fill="#c9cdd6" font-size="11" font-family="monospace">Linux</text>
-        <text x="38"  y="95"  text-anchor="end"    fill="#c9cdd6" font-size="11" font-family="monospace">Incident Response</text>
+        <circle cx="150" cy="73"  r="4" fill="#00d4aa"/>
+        <circle cx="209" cy="116" r="4" fill="#00d4aa"/>
+        <circle cx="205" cy="184" r="4" fill="#00d4aa"/>
+        <circle cx="150" cy="222" r="4" fill="#00d4aa"/>
+        <circle cx="91"  cy="184" r="4" fill="#00d4aa"/>
+        <circle cx="97"  cy="120" r="4" fill="#00d4aa"/>
+        <!-- Labels with extra inset -->
+        <text x="150" y="48"  text-anchor="middle" fill="#c9cdd6" font-size="10" font-family="monospace">Detection</text>
+        <text x="226" y="113" text-anchor="start"  fill="#c9cdd6" font-size="10" font-family="monospace">Offensive</text>
+        <text x="226" y="190" text-anchor="start"  fill="#c9cdd6" font-size="10" font-family="monospace">Network</text>
+        <text x="150" y="264" text-anchor="middle" fill="#c9cdd6" font-size="10" font-family="monospace">AD/Windows</text>
+        <text x="74"  y="190" text-anchor="end"    fill="#c9cdd6" font-size="10" font-family="monospace">Linux</text>
+        <text x="74"  y="113" text-anchor="end"    fill="#c9cdd6" font-size="10" font-family="monospace">IR</text>
       </svg>
 
       <ul class="radar-labels">
@@ -1099,8 +1098,8 @@
         { id:'kali',   label:'Kali Linux',    ip:'192.168.137.60', role:'Attack Machine / Impacket / NetExec / BloodHound', x:0.50, y:0.88, color:'#e05252', icon:'KALI',   delay:1100 },
         { id:'dvwa',   label:'DVWA',          ip:'172.17.0.x',     role:'Damn Vulnerable Web App / SQLi + RCE target',  x:0.14, y:0.82, color:'#f0a500', icon:'DVWA',   delay:1300, sub_of:'docker', r:18 },
         { id:'juice',  label:'Juice Shop',    ip:'172.17.0.x',     role:'OWASP Juice Shop / Lateral pivot target',      x:0.26, y:0.82, color:'#f0a500', icon:'JUICE',  delay:1400, sub_of:'docker', r:18 },
-        { id:'c2sim',  label:'C2 Sim',        ip:'172.18.0.x',     role:'C2 Beacon Simulator / HTTP / c2sim-net',       x:0.20, y:0.95, color:'#e05252', icon:'C2',     delay:1500, sub_of:'docker', r:18 },
-        { id:'dns',    label:'DNS Tunnel',     ip:'172.19.0.x',     role:'DNS Tunnel Simulator / base32 / dnstunnel-net', x:0.32, y:0.95, color:'#e05252', icon:'DNS',    delay:1600, sub_of:'docker', r:18 },
+        { id:'c2sim',  label:'C2 Sim',        ip:'172.18.0.x',     role:'C2 Beacon Simulator / HTTP / c2sim-net',       x:0.20, y:0.90, color:'#e05252', icon:'C2',     delay:1500, sub_of:'docker', r:18 },
+        { id:'dns',    label:'DNS Tunnel',     ip:'172.19.0.x',     role:'DNS Tunnel Simulator / base32 / dnstunnel-net', x:0.32, y:0.90, color:'#e05252', icon:'DNS',    delay:1600, sub_of:'docker', r:18 },
       ];
 
       // ── Edge definitions ──
@@ -1510,6 +1509,7 @@
               <span class="tag tag-teal">FIM</span>
             </div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">War story: disk-full → cascading API failures → SQLite corruption → self-inflicted dashboard kill. Diagnosed live.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1529,6 +1529,7 @@
             <div class="project-title">Simulated Network & App-Layer Detection — Juice Shop</div>
             <div class="project-tags"><span class="tag tag-green">Visibility Gap</span><span class="tag tag-blue">nginx Proxy</span><span class="tag tag-teal">Docker</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Found: host agents have zero visibility into containers. Fixed via nginx reverse proxy + volume-mounted logs.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1544,6 +1545,7 @@
             <div class="project-title">Attack Traffic Analysis — SQLi & File Upload RCE</div>
             <div class="project-tags"><span class="tag tag-red">Offensive</span><span class="tag tag-orange">Wireshark</span><span class="tag tag-blue">PCAP</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Manual SQLi returned full 5-user table dump. PHP shell uploaded → ?cmd=id → uid=33(www-data) confirmed.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1562,6 +1564,7 @@
             <div class="project-title">C2 Beaconing Detection — Custom Decoder Engineering</div>
             <div class="project-tags"><span class="tag tag-red">C2 Simulation</span><span class="tag tag-blue">Custom Decoder</span><span class="tag tag-green">Frequency Rule</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">4 compounding failures diagnosed in sequence. wazuh-logtest isolated each layer. Rule 100031 fires on pattern, not events.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1580,6 +1583,7 @@
             <div class="project-title">DNS Tunneling Detection — Three-Tier Escalation</div>
             <div class="project-tags"><span class="tag tag-red">DNS Exfil</span><span class="tag tag-blue">Multi-stage Decoder</span><span class="tag tag-orange">Regex Debug</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Level 12 alert surfaced decoded credentials (user=admin;pass=SuperSecr) directly in previous_output field.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1598,6 +1602,7 @@
             <div class="project-title">Lateral Movement Detection — Web Shell to Persistence</div>
             <div class="project-tags"><span class="tag tag-red">Attack Chain</span><span class="tag tag-blue">Correlation</span><span class="tag tag-green">Level 14</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Rule 100053 level 14 fired after 3 web shell commands. previous_output showed exact ?cmd= sequence that triggered it.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1622,6 +1627,7 @@
             <div class="project-title">Suricata Network IDS — Closing the Network Visibility Gap</div>
             <div class="project-tags"><span class="tag tag-green">Network IDS</span><span class="tag tag-blue">52K Sigs</span><span class="tag tag-teal">Cross-Detection</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Suricata immediately caught C2 beacon via Python ServerBanner — same attack, two independent detection mechanisms.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1640,6 +1646,7 @@
             <div class="project-title">Active Directory Attack Lab — Full Domain Compromise ⭐</div>
             <div class="project-tags"><span class="tag tag-red">Kerberoasting</span><span class="tag tag-red">PtH</span><span class="tag tag-red">DCSync</span><span class="tag tag-orange">SEC504</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">jsmith → Kerberoast svc_sql → spray sadmin (Pwn3d!) → DCSync all hashes → psexec SYSTEM. Under 10 minutes.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1671,6 +1678,7 @@
             <div class="project-title">BloodHound AD Enumeration — Attack Path Analysis</div>
             <div class="project-tags"><span class="tag tag-red">BloodHound</span><span class="tag tag-red">SharpHound</span><span class="tag tag-orange">Graph Analysis</span><span class="tag tag-blue">Attack Paths</span></div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">svc_sql: 9 reachable high-value targets, Last Logon: Never. BloodHound independently confirmed the Kerberoasting target.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1700,6 +1708,7 @@
               <span class="tag tag-blue">Detection Gap</span>
             </div>
           </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Forged offline — zero DC contact. 10-year validity. Wazuh caught psexec service install but NOT the forged ticket itself.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1869,6 +1878,10 @@
 
   /* ── OPEN P8 BY DEFAULT ── */
   document.getElementById('p8').classList.add('open');
+  var c1d = document.getElementById('c1');
+  var c1l = document.getElementById('lbl-c1');
+  if (c1d) c1d.classList.add('show');
+  if (c1l) c1l.classList.add('active');
 </script>
 
 <script>
