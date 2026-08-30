@@ -77,29 +77,30 @@ The natural conclusion to the AD attack chain — using the krbtgt hash captured
 
 Key skills: Golden Ticket forgery (Impacket ticketer), Kerberos ticket cache manipulation (KRB5CCNAME/.ccache), offline credential exploitation, post-exploitation access verification, detection gap analysis, understanding of Kerberos TGT signing and PAC structure. MITRE T1558.001 (Golden Ticket).
 
-## Recurring Themes Across These Projects
+Recurring Themes Across These Projects
 
-- **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
-- **Honest limitations, not just wins.** Where something didn't fully work as expected (POST body logging gaps, file extension mitigations, false positives), that's documented explicitly rather than omitted.
-- **Detection and offense together.** Each offensive test is paired with an assessment of what a defender would (or wouldn't) see — tying attacker technique directly to detection engineering.
-- **Visibility gaps as a recurring theme. Container log visibility has come up in three separate projects and been resolved three different ways — a pattern that demonstrates genuine depth of understanding of a core SIEM      architectural constraint rather than a single lucky fix.
-- **Speed of compromise. The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — reinforcing why detection and response speed matters more than perimeter          defence alone.
+-Real incidents, not staged ones. The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
 
-## Next Steps
+-Honest limitations, not just wins. Where something didn't fully work as expected (POST body logging gaps, file extension mitigations, false positives, incomplete cross-technique correlation), that's documented explicitly rather than omitted.
 
-- Golden Ticket attack demonstration — using the captured krbtgt hash to forge persistent domain admin access
+-Detection and offense together. Each offensive test is paired with an assessment of what a defender would (or wouldn't) see — tying attacker technique directly to detection engineering.
+Visibility gaps as a recurring theme. 
 
-- ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to the lab domain to demonstrate more complex multi-hop BloodHound attack paths
+-Container log visibility has come up in three separate projects and been resolved three different ways — a pattern that demonstrates genuine depth of understanding of a core SIEM architectural constraint rather than a single lucky fix.
 
-- AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse, a major attack surface SEC504 covers
+-Speed of compromise. The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — and the Golden Ticket project extends this to show how persistence can survive most standard remediation attempts.
 
-- Memory forensics basics using Volatility against a memory dump from the DC
+Next Steps
 
-- PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
-
-- Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
-
-- SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
+-PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
+-ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to demonstrate multi-hop BloodHound attack paths
+-AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse
+-SOAR integration — automated response playbooks triggered by existing Wazuh rules (Shuffle or TheHive + Cortex)
+-Memory forensics with Volatility
+-Memory forensics basics using Volatility against a memory dump from the DC
+-PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
+-Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
+-SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
 
  ## Tools and Approach
 Lab infrastructure built and managed via Hyper-V, Docker, and Ubuntu Server.
