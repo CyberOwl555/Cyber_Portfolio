@@ -77,7 +77,7 @@ The natural conclusion to the AD attack chain — using the krbtgt hash captured
 
 Key skills: Golden Ticket forgery (Impacket ticketer), Kerberos ticket cache manipulation (KRB5CCNAME/.ccache), offline credential exploitation, post-exploitation access verification, detection gap analysis, understanding of Kerberos TGT signing and PAC structure. MITRE T1558.001 (Golden Ticket).
 
-Recurring Themes Across These Projects
+**Recurring Themes Across These Projects**
 
 -Real incidents, not staged ones. The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
 
@@ -90,16 +90,24 @@ Visibility gaps as a recurring theme.
 
 -Speed of compromise. The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — and the Golden Ticket project extends this to show how persistence can survive most standard remediation attempts.
 
-Next Steps
+**Next Steps**
 
 -PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
+
 -ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to demonstrate multi-hop BloodHound attack paths
+
 -AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse
+
 -SOAR integration — automated response playbooks triggered by existing Wazuh rules (Shuffle or TheHive + Cortex)
+
 -Memory forensics with Volatility
+
 -Memory forensics basics using Volatility against a memory dump from the DC
+
 -PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
+
 -Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
+
 -SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
 
  ## Tools and Approach
