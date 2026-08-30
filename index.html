@@ -348,6 +348,21 @@
       font-size: 13px;
     }
     .chain-detail.show { display: block; }
+    .chain-preview {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      padding: 14px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: none;
+      border-radius: 0 6px 6px 0;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .chain-step-vis:hover .chain-preview { border-color: var(--accent); color: var(--text); }
     .chain-detail-title {
       font-family: var(--mono);
       font-size: 11px;
@@ -995,15 +1010,18 @@
         <div class="chain-step-label" id="lbl-c1">
           <span class="chain-step-num">01</span> Kerberoasting
         </div>
-        <div class="chain-detail" id="c1">
-          <div class="chain-detail-title">jsmith → svc_sql TGS hash → cracked offline</div>
-          <p style="font-size:13px;color:var(--text);">Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account's hash — take it offline and crack it. No lockout, no noise after the initial request.</p>
-          <div class="chain-facts">
-            <span class="chain-fact">Tool: impacket-GetUserSPNs</span>
-            <span class="chain-fact">Crack: john --format=krb5tgs</span>
-            <span class="chain-fact">Result: Summer2024!</span>
-            <span class="chain-fact">Event ID: 4769</span>
-            <span class="chain-fact">Enc type: 0x17 (RC4)</span>
+        <div class="chain-right">
+          <div class="chain-preview" id="prev-c1">jsmith → svc_sql TGS hash → cracked offline</div>
+          <div class="chain-detail" id="c1">
+            <div class="chain-detail-title">jsmith → svc_sql TGS hash → cracked offline</div>
+            <p style="font-size:13px;color:var(--text);">Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account's hash — take it offline and crack it. No lockout, no noise after the initial request.</p>
+            <div class="chain-facts">
+              <span class="chain-fact">Tool: impacket-GetUserSPNs</span>
+              <span class="chain-fact">Crack: john --format=krb5tgs</span>
+              <span class="chain-fact">Result: Summer2024!</span>
+              <span class="chain-fact">Event ID: 4769</span>
+              <span class="chain-fact">Enc type: 0x17 (RC4)</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1013,15 +1031,18 @@
         <div class="chain-step-label" id="lbl-c2">
           <span class="chain-step-num">02</span> Password Spray
         </div>
-        <div class="chain-detail" id="c2">
-          <div class="chain-detail-title">One password × all accounts → sadmin (Pwn3d!)</div>
-          <p style="font-size:13px;color:var(--text);">One password attempt per account stays under lockout thresholds. Welcome2024! hit sadmin — a Domain Admin. One spray, zero lockouts, Domain Admin compromised.</p>
-          <div class="chain-facts">
-            <span class="chain-fact">Tool: nxc smb</span>
-            <span class="chain-fact">Target: sadmin</span>
-            <span class="chain-fact">Result: (Pwn3d!)</span>
-            <span class="chain-fact">Event ID: 4625 + 4624</span>
-            <span class="chain-fact">Wazuh: Rule 92652</span>
+        <div class="chain-right">
+          <div class="chain-preview" id="prev-c2">One password × all accounts → sadmin (Pwn3d!)</div>
+          <div class="chain-detail" id="c2">
+            <div class="chain-detail-title">One password × all accounts → sadmin (Pwn3d!)</div>
+            <p style="font-size:13px;color:var(--text);">One password attempt per account stays under lockout thresholds. Welcome2024! hit sadmin — a Domain Admin. One spray, zero lockouts, Domain Admin compromised.</p>
+            <div class="chain-facts">
+              <span class="chain-fact">Tool: nxc smb</span>
+              <span class="chain-fact">Target: sadmin</span>
+              <span class="chain-fact">Result: (Pwn3d!)</span>
+              <span class="chain-fact">Event ID: 4625 + 4624</span>
+              <span class="chain-fact">Wazuh: Rule 92652</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1031,15 +1052,18 @@
         <div class="chain-step-label" id="lbl-c3">
           <span class="chain-step-num">03</span> DCSync Dump
         </div>
-        <div class="chain-detail" id="c3">
-          <div class="chain-detail-title">sadmin → every NTLM hash in the domain</div>
-          <p style="font-size:13px;color:var(--text);">Domain Admin credentials used to impersonate DC replication and extract all hashes from NTDS.dit. Administrator hash captured. krbtgt hash captured — enabling Golden Ticket persistence.</p>
-          <div class="chain-facts">
-            <span class="chain-fact">Tool: impacket-secretsdump</span>
-            <span class="chain-fact">Protocol: DRSUAPI replication</span>
-            <span class="chain-fact">Captured: all domain hashes</span>
-            <span class="chain-fact">Event ID: 4662</span>
-            <span class="chain-fact">krbtgt: captured</span>
+        <div class="chain-right">
+          <div class="chain-preview" id="prev-c3">sadmin → every NTLM hash in the domain</div>
+          <div class="chain-detail" id="c3">
+            <div class="chain-detail-title">sadmin → every NTLM hash in the domain</div>
+            <p style="font-size:13px;color:var(--text);">Domain Admin credentials used to impersonate DC replication and extract all hashes from NTDS.dit. Administrator hash captured. krbtgt hash captured — enabling Golden Ticket persistence.</p>
+            <div class="chain-facts">
+              <span class="chain-fact">Tool: impacket-secretsdump</span>
+              <span class="chain-fact">Protocol: DRSUAPI replication</span>
+              <span class="chain-fact">Captured: all domain hashes</span>
+              <span class="chain-fact">Event ID: 4662</span>
+              <span class="chain-fact">krbtgt: captured</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1049,15 +1073,18 @@
         <div class="chain-step-label" id="lbl-c4">
           <span class="chain-step-num">04</span> Pass-the-Hash
         </div>
-        <div class="chain-detail" id="c4">
-          <div class="chain-detail-title">Administrator hash → SYSTEM on DC — no password needed</div>
-          <p style="font-size:13px;color:var(--text);">NTLM authentication accepts the hash directly — no cracking needed. psexec authenticated with the hash, uploaded a service binary to ADMIN$, and returned a SYSTEM shell.</p>
-          <div class="chain-facts">
-            <span class="chain-fact">Tool: impacket-psexec -hashes</span>
-            <span class="chain-fact">whoami: nt authority\system</span>
-            <span class="chain-fact">Event ID: 4624 Type 3 NTLM</span>
-            <span class="chain-fact">Wazuh: Rule 92652</span>
-            <span class="chain-fact">Time from start: &lt;10 min</span>
+        <div class="chain-right">
+          <div class="chain-preview" id="prev-c4">Administrator hash → SYSTEM on DC — no password needed</div>
+          <div class="chain-detail" id="c4">
+            <div class="chain-detail-title">Administrator hash → SYSTEM on DC — no password needed</div>
+            <p style="font-size:13px;color:var(--text);">NTLM authentication accepts the hash directly — no cracking needed. psexec authenticated with the hash, uploaded a service binary to ADMIN$, and returned a SYSTEM shell.</p>
+            <div class="chain-facts">
+              <span class="chain-fact">Tool: impacket-psexec -hashes</span>
+              <span class="chain-fact">whoami: nt authority\system</span>
+              <span class="chain-fact">Event ID: 4624 Type 3 NTLM</span>
+              <span class="chain-fact">Wazuh: Rule 92652</span>
+              <span class="chain-fact">Time from start: &lt;10 min</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1819,15 +1846,18 @@
 
   /* ── TOGGLE ATTACK CHAIN ── */
   function toggleChain(id) {
-    const detail = document.getElementById(id);
-    const label  = document.getElementById('lbl-' + id);
-    const isOpen = detail.classList.contains('show');
+    const detail  = document.getElementById(id);
+    const label   = document.getElementById('lbl-' + id);
+    const preview = document.getElementById('prev-' + id);
+    const isOpen  = detail.classList.contains('show');
     // close all
     document.querySelectorAll('.chain-detail').forEach(d => d.classList.remove('show'));
     document.querySelectorAll('.chain-step-label').forEach(l => l.classList.remove('active'));
+    document.querySelectorAll('.chain-preview').forEach(p => p.style.display = '');
     if (!isOpen) {
       detail.classList.add('show');
       label.classList.add('active');
+      preview.style.display = 'none';
     }
   }
 
@@ -1880,8 +1910,10 @@
   document.getElementById('p8').classList.add('open');
   var c1d = document.getElementById('c1');
   var c1l = document.getElementById('lbl-c1');
+  var c1p = document.getElementById('prev-c1');
   if (c1d) c1d.classList.add('show');
   if (c1l) c1l.classList.add('active');
+  if (c1p) c1p.style.display = 'none';
 </script>
 
 <script>
