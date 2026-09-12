@@ -450,6 +450,8 @@
     .chain-step.highlight { border-color: var(--accent); color: var(--accent); }
     .mitre-badge-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
     .mitre-badge { font-family: var(--mono); font-size: 10px; background: rgba(124,106,247,0.1); border: 1px solid rgba(124,106,247,0.25); color: var(--accent2); padding: 3px 8px; border-radius: 3px; }
+    .writeup-link { display: inline-flex; align-items: center; gap: 4px; margin-top: 14px; font-family: var(--mono); font-size: 11px; color: var(--accent); text-decoration: none; border: 1px solid rgba(0,212,170,0.3); padding: 5px 12px; border-radius: 4px; transition: all 0.15s ease; }
+    .writeup-link:hover { background: rgba(0,212,170,0.1); border-color: var(--accent); }
 
     /* ── ARCH ── */
     .arch { background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 28px; font-family: var(--mono); font-size: 12px; line-height: 1.9; color: var(--muted); overflow-x: auto; }
@@ -518,11 +520,11 @@
     }
     .alert-live {
       display: flex; align-items: center; gap: 6px;
-      font-size: 10px; color: var(--danger);
+      font-size: 10px; color: var(--warn);
     }
     .alert-live-dot {
       width: 6px; height: 6px; border-radius: 50%;
-      background: var(--danger);
+      background: var(--warn);
       animation: livePulse 1.2s ease-in-out infinite;
     }
     @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
@@ -571,27 +573,24 @@
     <svg width="82" height="92" viewBox="0 0 82 92" xmlns="http://www.w3.org/2000/svg" style="margin:0 auto 8px;display:block;">
       <defs>
         <style>
-          /* Outer glow ring pulses red */
+          /* Outer glow ring pulses on alert escalation */
           .og{animation:ogA 1.8s ease-in-out infinite}
           .og2{animation:ogA 1.8s ease-in-out infinite .9s}
-          /* Eye socket flickers red during scan */
+          /* Eye socket escalates through alert severity levels (grey → green → amber → red) */
           .es{animation:esA 5s ease-in-out infinite}
           .es2{animation:esA 5s ease-in-out infinite .5s}
-          /* Iris charges up then fires */
+          /* Iris escalates through the same severity levels */
           .ir{animation:irA 5s ease-in-out infinite}
           .ir2{animation:irA 5s ease-in-out infinite .5s}
-          /* Pupil glows bright red */
+          /* Pupil glows through severity levels to critical */
           .pu{animation:puA 5s ease-in-out infinite}
           .pu2{animation:puA 5s ease-in-out infinite .5s}
-          /* Reticle rings spin + fade */
+          /* Scanner rings spin + fade */
           .rt{animation:rtA 3s linear infinite}
           .rt2{animation:rtA 3s linear infinite reverse}
           /* Scan beam sweeps top to bottom */
           .sb{animation:sbA 5s ease-in-out infinite}
           .sb2{animation:sbA 5s ease-in-out infinite .5s}
-          /* Target lock brackets */
-          .tl{animation:tlA 5s ease-in-out infinite}
-          .tl2{animation:tlA 5s ease-in-out infinite .5s}
           /* Data readout flicker */
           .dr{animation:drA 5s ease-in-out infinite}
 
@@ -600,21 +599,30 @@
             50%{opacity:.9;r:19}
           }
           @keyframes esA{
-            0%,15%{stroke:#1e2128;fill:#09090e}
-            30%,70%{stroke:#e05252;fill:#1a0808}
-            85%,100%{stroke:#1e2128;fill:#09090e}
+            0%,10%{stroke:#1e2128;fill:#09090e}
+            20%{stroke:#3ecf8e;fill:#0a1a12}
+            35%{stroke:#f0a500;fill:#1a1206}
+            50%,65%{stroke:#e05252;fill:#1a0808}
+            80%{stroke:#f0a500;fill:#1a1206}
+            90%,100%{stroke:#1e2128;fill:#09090e}
           }
           @keyframes irA{
-            0%,15%{stroke:#7c6af7;fill:#0d0f14}
-            30%,70%{stroke:#e05252;fill:#2a0404}
-            85%,100%{stroke:#7c6af7;fill:#0d0f14}
+            0%,10%{stroke:#7c6af7;fill:#0d0f14}
+            20%{stroke:#3ecf8e;fill:#0d1f16}
+            35%{stroke:#f0a500;fill:#241a06}
+            50%,65%{stroke:#e05252;fill:#2a0404}
+            80%{stroke:#f0a500;fill:#241a06}
+            90%,100%{stroke:#7c6af7;fill:#0d0f14}
           }
           @keyframes puA{
-            0%,15%{fill:#00d4aa}
-            25%{fill:#fff}
-            30%,70%{fill:#e05252}
-            80%{fill:#fff}
-            85%,100%{fill:#00d4aa}
+            0%,10%{fill:#00d4aa}
+            20%{fill:#3ecf8e}
+            30%{fill:#f0a500}
+            40%{fill:#fff}
+            50%,65%{fill:#e05252}
+            75%{fill:#fff}
+            85%{fill:#f0a500}
+            92%,100%{fill:#00d4aa}
           }
           @keyframes rtA{
             0%{transform:rotate(0deg)}
@@ -626,11 +634,6 @@
             50%{transform:translateY(0px);opacity:1}
             80%{opacity:1}
             90%,100%{transform:translateY(14px);opacity:0}
-          }
-          @keyframes tlA{
-            0%,20%{opacity:0;stroke:#00d4aa}
-            35%,65%{opacity:1;stroke:#e05252}
-            80%,100%{opacity:0;stroke:#00d4aa}
           }
           @keyframes drA{
             0%,25%{opacity:0}
@@ -670,17 +673,6 @@
         <circle cx="27" cy="51" r="10" fill="none" stroke="#e05252" stroke-width="0.5" stroke-dasharray="2,6" opacity="0.35"/>
       </g>
 
-      <!-- Target lock brackets - top left -->
-      <g class="tl">
-        <polyline points="17,41 17,44 20,44" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <!-- top right -->
-        <polyline points="37,41 37,44 34,44" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <!-- bottom left -->
-        <polyline points="17,61 17,58 20,58" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <!-- bottom right -->
-        <polyline points="37,61 37,58 34,58" fill="none" stroke="#e05252" stroke-width="1.2"/>
-      </g>
-
       <!-- N/S/E/W tick marks -->
       <line x1="27" y1="37" x2="27" y2="34" stroke="#e05252" stroke-width="1" opacity="0.5"/>
       <line x1="27" y1="65" x2="27" y2="68" stroke="#e05252" stroke-width="1" opacity="0.5"/>
@@ -711,14 +703,6 @@
         <circle cx="55" cy="51" r="10" fill="none" stroke="#e05252" stroke-width="0.5" stroke-dasharray="2,6" opacity="0.35"/>
       </g>
 
-      <!-- Target lock brackets right eye -->
-      <g class="tl2">
-        <polyline points="45,41 45,44 48,44" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <polyline points="65,41 65,44 62,44" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <polyline points="45,61 45,58 48,58" fill="none" stroke="#e05252" stroke-width="1.2"/>
-        <polyline points="65,61 65,58 62,58" fill="none" stroke="#e05252" stroke-width="1.2"/>
-      </g>
-
       <line x1="55" y1="37" x2="55" y2="34" stroke="#e05252" stroke-width="1" opacity="0.5"/>
       <line x1="55" y1="65" x2="55" y2="68" stroke="#e05252" stroke-width="1" opacity="0.5"/>
       <line x1="41" y1="51" x2="38" y2="51" stroke="#e05252" stroke-width="1" opacity="0.5"/>
@@ -736,9 +720,9 @@
       <!-- Beak -->
       <polygon points="41,65 36,60 46,60" fill="#00d4aa" opacity="0.7"/>
 
-      <!-- DATA READOUT - flickers on during scan -->
+      <!-- DATA READOUT - flickers on as the alert escalates -->
       <g class="dr" opacity="0">
-        <text x="41" y="84" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#e05252" opacity="0.8">TARGET LOCKED</text>
+        <text x="41" y="84" text-anchor="middle" font-family="JetBrains Mono,monospace" font-size="6" fill="#e05252" opacity="0.8">ALERT ESCALATED</text>
       </g>
 
       <!-- Circuit traces -->
@@ -781,6 +765,7 @@
   <!-- SKILLS RADAR -->
   <section class="section">
     <div class="section-label">Skills Coverage</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:24px;">Self-assessed, calibrated against the evidence in the project timeline below — not a certification or test score.</p>
     <div class="radar-wrap">
       <svg class="radar-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -1483,7 +1468,7 @@
         <div class="alert-feed">
           <div class="alert-feed-bar">
             <span>docker-host // DC01 // wazuh</span>
-            <span class="alert-live"><span class="alert-live-dot"></span>LIVE</span>
+            <span class="alert-live"><span class="alert-live-dot"></span>SIMULATED REPLAY</span>
           </div>
           <div class="alert-feed-body" id="alert-body"></div>
         </div>
@@ -1519,6 +1504,7 @@
             <div class="evidence-block"><div class="evidence-label">Confirmed Alerts</div><div class="evidence-value">5760 · SSH failure<br>2502 · PAM escalation (lvl 10)<br>554/553 · FIM add/delete</div></div>
           </div>
           <p class="honest-note">Real incident: disk-full cascaded into API failures, SQLite journal corruption, and a self-inflicted dashboard kill via overly broad pkill. Diagnosed layer by layer.</p>
+          <a class="writeup-link" href="./03-Security-Infrastructure/Home-Lab-SIEM-Deployment/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1535,6 +1521,7 @@
         <div class="project-body">
           <p class="project-desc">Deployed Juice Shop in Docker and discovered host-based agents have zero visibility into containerised application traffic. Fixed via nginx reverse proxy with volume-mounted logs.</p>
           <p class="honest-note">False positive investigated: rootcheck flagged /usr/bin/diff as trojaned. Verified with file + dpkg -V before dismissing.</p>
+          <a class="writeup-link" href="./01-Detection-Engineering/Docker-Sim/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1554,6 +1541,7 @@
             <div class="evidence-block"><div class="evidence-label">SQLi Result</div><div class="evidence-value">5 users returned instead of 1<br>Full table dump confirmed</div></div>
             <div class="evidence-block"><div class="evidence-label">Visibility Finding</div><div class="evidence-value">POST payloads invisible in logs<br>GET payloads fully visible</div></div>
           </div>
+          <a class="writeup-link" href="./01-Detection-Engineering/Docker-Sim/dvwa-attack-traffic-analysis.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1573,6 +1561,7 @@
             <div class="evidence-block"><div class="evidence-label">Beacon Signature</div><div class="evidence-value">26 bytes · consistent<br>~13s interval · jitter ±3s</div></div>
             <div class="evidence-block"><div class="evidence-label">Rules</div><div class="evidence-value">100030 · check-in (lvl 3)<br>100031 · 5+ hits/90s (lvl 12)</div></div>
           </div>
+          <a class="writeup-link" href="./01-Detection-Engineering/C2-Detection/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1592,6 +1581,7 @@
             <div class="evidence-block"><div class="evidence-label">Signature</div><div class="evidence-value">53-char subdomains<br>Uppercase alphanumeric<br>High entropy · no word structure</div></div>
             <div class="evidence-block"><div class="evidence-label">Rule Chain</div><div class="evidence-value">100040 · catch-all (lvl 3)<br>100041 · tunnel.local (lvl 10)<br>100042 · volume (lvl 12)</div></div>
           </div>
+          <a class="writeup-link" href="./01-Detection-Engineering/DNS-Tunneling/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1617,6 +1607,7 @@
             <span class="mitre-badge">T1505.003 · Web Shell</span>
             <span class="mitre-badge">T1021 · Remote Services</span>
           </div>
+          <a class="writeup-link" href="./01-Detection-Engineering/Lateral-Movement/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1636,6 +1627,7 @@
             <div class="evidence-block"><div class="evidence-label">First Alert</div><div class="evidence-value">ET INFO Python BaseHTTP<br>Rule 2034635 · ~15s cadence</div></div>
             <div class="evidence-block"><div class="evidence-label">Interfaces</div><div class="evidence-value">docker0 · DVWA + Juice Shop<br>br-c2sim · beacon<br>br-dnstunnel · DNS</div></div>
           </div>
+          <a class="writeup-link" href="./01-Detection-Engineering/Suricata/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1668,6 +1660,7 @@
             <span class="mitre-badge">T1003.002 · Credential Dump</span>
             <span class="mitre-badge">T1550.002 · Pass-the-Hash</span>
           </div>
+          <a class="writeup-link" href="./02-Active-Directory/Active-Directory-Attack/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1692,6 +1685,7 @@
             <span class="mitre-badge">T1069.002 · Domain Groups</span>
           </div>
           <p class="honest-note">SharpHound generates detectable LDAP burst (Event 4662). Modern EDR detects it by signature — documented honestly.</p>
+          <a class="writeup-link" href="./02-Active-Directory/BloodHound-Enumeration/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
@@ -1729,11 +1723,9 @@
             <span class="mitre-badge">T1569.002 · Service Execution</span>
           </div>
           <p class="honest-note">The Golden Ticket itself was undetected by Wazuh — only the psexec consequence fired. Production detection requires Microsoft Defender for Identity or equivalent DC-level Kerberos inspection. Documented honestly as the most important detection gap in the portfolio.</p>
+          <a class="writeup-link" href="./02-Active-Directory/Golden-Ticket/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
-
-    </div>
-
 
       <!-- P11 -->
       <div class="project" id="p11">
@@ -1770,6 +1762,7 @@
             <span class="mitre-badge">T1550.002 · Pass-the-Hash</span>
           </div>
           <p class="honest-note">Re-evaluating the second fine-tune initially looked like total failure — four of five tests scoring zero. Root cause was the evaluation harness, not the model: Ollama returned a fully correct answer in a separate reasoning field the harness never read. Fixed, then confirmed the fine-tune genuinely improved hallucination resistance, decoder generation, and false positive reasoning as designed — though scores swing meaningfully between identical runs, a limitation worth taking seriously rather than smoothing over.</p>
+          <a class="writeup-link" href="./04-Local-AI-SOC-Tooling/README.md" target="_blank">Full writeup →</a>
         </div>
       </div>
 
