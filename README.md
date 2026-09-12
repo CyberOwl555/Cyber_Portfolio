@@ -11,110 +11,124 @@ Currently working in a NOC with responsibility for enterprise patch management (
 - **Hypervisor:** Microsoft Hyper-V
 - **Network:** Segmented Internal virtual switch with Internet Connection Sharing (ICS) for controlled internet egress
 - **Hosts:**
-- Windows 11 (management workstation, VPN client, Wireshark analysis, domain workstation)
-- Ubuntu Server 24.04 — OpenVPN server
-- Ubuntu Server 24.04 — Wazuh SIEM (manager, indexer, dashboard)
-- Ubuntu Server 24.04 Minimal — Docker host (vulnerable application targets)
-- Windows Server 2019 Core — Active Directory Domain Controller (lab.local)
-- Kali Linux — Attack machine (Impacket, NetExec, John the Ripper)
+  - Windows 11 (management workstation, VPN client, Wireshark analysis, domain workstation)
+  - Ubuntu Server 24.04 — OpenVPN server
+  - Ubuntu Server 24.04 — Wazuh SIEM (manager, indexer, dashboard)
+  - Ubuntu Server 24.04 Minimal — Docker host (vulnerable application targets)
+  - Windows Server 2019 Core — Active Directory Domain Controller (lab.local)
+  - Kali Linux — Attack machine (Impacket, NetExec, John the Ripper)
+
+## Repository Structure
+
+Projects are grouped by category rather than listed as a flat sequence, so the organization reflects the type of work rather than the order it was built in:
+
+```
+01-Detection-Engineering/
+├── C2-Detection/
+├── DNS-Tunneling/
+├── Docker-Sim/
+├── Lateral-Movement/
+└── Suricata/
+
+02-Active-Directory/
+├── Active-Directory-Attack/
+├── BloodHound-Enumeration/
+└── Golden-Ticket/
+
+03-Security-Infrastructure/
+└── Home-Lab-SIEM-Deployment/
+
+04-Local-AI-SOC-Tooling/
+└── Screenshots/
+```
+
+A planned IOC enrichment tool (IP/domain/hash → reputation/DNS/WHOIS → structured SOC output) will also live in this category once built.
 
 ## Projects
 
-### 1. [Home Lab SIEM Deployment](./OpenVPN_Wazuh_Project/README.md)
-Deployment of a self-hosted OpenVPN server with ECDH-based encryption and split-tunnel configuration, monitored end-to-end by a Wazuh SIEM. Covers agent management, File Integrity Monitoring, custom detection rule authoring (rule inheritance via `if_sid`), and a real, unplanned infrastructure incident — a disk-full condition that cascaded into API failures and database corruption risk — diagnosed and resolved from first principles.
+### Detection Engineering
 
-**Key skills:** SIEM deployment, custom detection rules, Linux troubleshooting, root cause analysis, incident response.
+Custom Wazuh detection rules, decoder authoring, and network IDS work — closing visibility gaps and correlating multi-stage attack behavior rather than relying on default signatures.
 
-See also: [OpenVPN Server Configuration](./OpenVPN_Wazuh_Project/OpenVPN-Server-Configuration.md) — verified ECDH curve (secp384r1), cipher suite, and split-tunnel design rationale.
+**[Detecting C2 Beaconing: Custom Wazuh Detection Engineering](./01-Detection-Engineering/C2-Detection/README.md)**
+A self-contained beacon simulator (Docker) used to generate realistic C2 check-in traffic, confirmed manually in Wireshark (consistent ~13s intervals, fixed 26-byte request size), then detected automatically via a custom multi-stage Wazuh decoder and frequency/timeframe correlation rule — built entirely from scratch, since no default Wazuh rule covers this behavior.
+**Key skills:** Custom decoder authoring (multi-stage, regex field extraction), Wazuh frequency/timeframe correlation logic, `wazuh-logtest` for isolated rule diagnosis, behavioral pattern detection vs. single-event detection.
 
-### 2. [Simulated Network & Application-Layer Attack Detection](./Docker_Sim_Project/README.md)
-Extension of the lab with a Docker host running OWASP Juice Shop, used to identify and close a real visibility gap — host-based monitoring has no native insight into containerized application traffic. Covers reverse proxy log collection, a custom detection rule for web attack patterns, and investigation of a rootcheck false positive.
+**[Detecting DNS Tunneling: Decoder Engineering and Multi-Tier Alert Escalation](./01-Detection-Engineering/DNS-Tunneling/README.md)**
+Simulation of DNS tunneling — encoding stolen credentials into base32-encoded DNS subdomain labels transmitted as genuine DNS wire-format packets — with a three-tier Wazuh detection rule chain (individual query catch → domain-specific detection → high-volume escalation) and a two-stage custom decoder to extract structured fields.
+**Key skills:** DNS protocol and tunneling mechanics, two-stage decoder design, regex field extraction debugging, three-tier rule escalation, Wireshark analysis on Docker bridge networks.
 
+**[Simulated Network & Application-Layer Attack Detection](./01-Detection-Engineering/Docker-Sim/README.md)**
+Docker host running OWASP Juice Shop, used to identify and close a real visibility gap — host-based monitoring has no native insight into containerized application traffic. Covers reverse proxy log collection, a custom detection rule for web attack patterns, and investigation of a rootcheck false positive.
 **Key skills:** Docker deployment, SIEM visibility gap analysis, nginx reverse proxy logging, alert verification methodology.
 
-### 3. [Attack Traffic Analysis: SQL Injection & File Upload RCE](./Docker_Sim_Project/dvwa-attack-traffic-analysis.md)
-Hands-on offensive testing against DVWA (SQL injection, file upload to remote code execution), with all traffic captured and analyzed in Wireshark. Includes a full root-cause investigation of a TCP anomaly (Duplicate ACKs) that turned out to be a client-side artifact rather than a network or security issue — and honest documentation of a partial exploitation failure (extension handling) alongside the successful RCE chain.
+**[Attack Traffic Analysis: SQL Injection & File Upload RCE](./01-Detection-Engineering/Docker-Sim/dvwa-attack-traffic-analysis.md)**
+Hands-on offensive testing against DVWA (SQL injection, file upload to remote code execution), with all traffic captured and analyzed in Wireshark. Includes a full root-cause investigation of a TCP anomaly (Duplicate ACKs) and honest documentation of a partial exploitation failure alongside the successful RCE chain.
+**Key skills:** Manual web exploitation, packet analysis (Wireshark), SQL injection mechanics, detection-visibility awareness, root-cause investigation.
 
-**Key skills:** Manual web exploitation, packet analysis (Wireshark), SQL injection mechanics, detection-visibility awareness (GET vs. POST logging), root-cause investigation.
+**[Lateral Movement Detection: Web Shell Execution to Persistence](./01-Detection-Engineering/Lateral-Movement/README.md)**
+Full post-exploitation attack chain — initial access via web shell RCE, host/network enumeration, lateral pivot to a second container, and persistence file drop — across a multi-container Docker environment, with Wazuh detection covering each stage, including a frequency/timeframe correlation rule that escalates multiple web shell commands into a confirmed attack chain alert.
+**Key skills:** Attack chain simulation and correlation, container log architecture, built-in rule discovery before custom authoring, FIM-based persistence detection, operating in a noisy multi-alert environment.
 
-### 4. [Detecting C2 Beaconing: Custom Wazuh Detection Engineering](./C2_Detection/README.md)
-A self-contained beacon simulator (Docker) used to generate realistic C2 check-in traffic, confirmed manually in Wireshark (consistent ~13s intervals, fixed 26-byte request size), then detected automatically via a custom multi-stage Wazuh decoder and frequency/timeframe correlation rule — built entirely from scratch, since no default Wazuh rule covers this behavior. Documents four separate, layered issues diagnosed in sequence (pre-decoder timestamp collision, a file that silently refused to save, missing field extraction blocking correlation, and an unrelated Hyper-V host disruption mid-session).
+**[Suricata Network IDS: Closing the Network Visibility Gap](./01-Detection-Engineering/Suricata/README.md)**
+Suricata deployed as a network-based IDS on the Docker host, monitoring all three Docker bridge interfaces simultaneously. The Emerging Threats Open ruleset (52,238 signatures) independently corroborated the C2 beacon activity already caught by Wazuh's log-correlation rules, and eve.json output was unified into the existing Wazuh dashboard.
+**Key skills:** Network IDS deployment, multi-interface packet capture, Emerging Threats ruleset management, host-based vs. network-based detection paradigm comparison, cross-detection corroboration.
 
-**Key skills:** Custom decoder authoring (multi-stage, regex field extraction), Wazuh frequency/timeframe correlation logic, `wazuh-logtest` for isolated rule diagnosis, systematic single-variable debugging, behavioral pattern detection vs. single-event detection.
+### Active Directory
 
-### 5. [Detecting DNS Tunneling: Decoder Engineering and Multi-Tier Alert Escalation](./DNS_Tunnelling/README.md)
+A complete, purpose-built AD attack lab (Windows Server 2019 Core DC, Kali attack machine, domain-joined Windows 11 workstation) demonstrating total domain compromise from a single unprivileged account, detected and analyzed end-to-end.
 
-Simulation of DNS tunneling — encoding stolen credentials into base32-encoded DNS subdomain labels and transmitting them as genuine DNS wire-format packets using dnslib — with a three-tier Wazuh detection rule chain (individual query catch → domain-specific detection → high-volume escalation) and a two-stage custom decoder to extract structured fields. Includes Wireshark analysis confirming the tunneling signature (53-character query names, high-entropy encoded labels, repetitive same-destination query pattern), investigation of a capture artifact caused by tcpdump -i any on a containerised network, and decoder debugging via regex fix (greedy .+ → non-greedy \S+). The level 12 escalation alert surfaces the actual decoded exfiltrated data (credentials) directly in the alert's previous_output field.
+**[Active Directory Attack Lab: Kerberoasting, Password Spraying, Credential Dumping, and Pass-the-Hash](./02-Active-Directory/Active-Directory-Attack/README.md)**
+Full post-exploitation chain relevant to SANS SEC504: Kerberoasting → password spraying → DCSync credential dumping → Pass-the-Hash, monitored end-to-end by Wazuh with Windows audit logging. Total time from first attack to SYSTEM: ~10 minutes from one standard domain user account.
+**Key skills:** Kerberoasting, offline hash cracking, lockout-safe password spraying, DCSync, Pass-the-Hash, Windows Security Event Log analysis (4624/4625/4769), MITRE ATT&CK mapping, PICERL framework application.
 
-Key skills: DNS protocol and tunneling mechanics, two-stage decoder design, regex field extraction debugging, three-tier rule escalation (catch-all → content-specific → volume pattern), Wireshark analysis on Docker bridge networks, capture artifact identification and investigation.
+**[BloodHound AD Enumeration: Attack Path Analysis](./02-Active-Directory/BloodHound-Enumeration/README.md)**
+BloodHound deployed against the lab's AD environment to map every domain relationship as a graph and surface attack paths automatically. SharpHound collected 97 objects in 26 seconds authenticated as an unprivileged standard user, independently corroborating the manual Kerberoasting result through graph analysis.
+**Key skills:** BloodHound/SharpHound deployment, AD graph-based attack path analysis, Kerberoastable account identification, defensive use of attack tooling, SharpHound detection awareness.
 
-### 6. [Lateral Movement Detection: Web Shell Execution to Persistence — Attack Chain Correlation](./Lateral_Movement/README.md)
+**[Golden Ticket Attack: Forging Persistent Domain Admin Access](./02-Active-Directory/Golden-Ticket/README.md)**
+Using the krbtgt hash captured during DCSync to forge a Kerberos Golden Ticket entirely offline, then authenticating with the forged ticket for a SYSTEM shell — with an honest documentation of the detection gap (Wazuh caught the service-installation consequence, not the ticket authentication itself).
+**Key skills:** Golden Ticket forgery (Impacket ticketer), Kerberos ticket cache manipulation, offline credential exploitation, detection gap analysis.
 
-Full post-exploitation attack chain simulation — initial access via web shell RCE, host/network enumeration, lateral pivot to a second container, and persistence file drop — across a multi-container Docker environment, with Wazuh detection covering each stage. Includes resolving a third instance of the recurring container log visibility gap (Apache logs volume-mounted to host filesystem), discovering and building on Wazuh's built-in web shell rule (31514, with full MITRE ATT&CK and compliance mappings) rather than duplicating its logic, and a frequency/timeframe correlation rule (level 14, mail: True) that escalates multiple web shell commands from the same source into a confirmed attack chain alert. The final alert's previous_output field shows the exact command sequence that triggered escalation. All detections fired against a live, noisy background of simultaneously running DNS tunnel and C2 beacon simulators from earlier projects.
+### Security Infrastructure
 
-### 7. [Suricata Network IDS: Closing the Network Visibility Gap](./Suricata/README.md)
+The platform everything above runs on and reports into.
 
-Deployment of Suricata as a network-based IDS on the Docker host, monitoring all three Docker bridge interfaces simultaneously — directly addressing the blind spot identified in project 6 where container-to-container lateral movement generated no Wazuh alert. The Emerging Threats Open ruleset (52,238 signatures) immediately detected the C2 beacon simulator via the Python BaseHTTP server response banner, providing independent network-level corroboration of the same activity already being caught by Wazuh's log-correlation rules — demonstrating the defence-in-depth value of combining host-based and network-based detection. Suricata's structured eve.json output is ingested by the existing Wazuh agent, unifying host and network alerts in a single dashboard. Includes honest documentation of what Suricata still missed (the pivot TCP connection) and why, with a follow-up path to custom rule writing.
+**[Home Lab SIEM Deployment](./03-Security-Infrastructure/Home-Lab-SIEM-Deployment/README.md)**
+Deployment of a self-hosted OpenVPN server with ECDH-based encryption and split-tunnel configuration, monitored end-to-end by a Wazuh SIEM. Covers agent management, File Integrity Monitoring, custom detection rule authoring, and a real, unplanned infrastructure incident — a disk-full condition that cascaded into API failures and database corruption risk — diagnosed and resolved from first principles.
+**Key skills:** SIEM deployment, custom detection rules, Linux troubleshooting, root cause analysis, incident response.
 
-Key skills: Network IDS deployment and configuration, multi-interface packet capture (af-packet), Emerging Threats community ruleset management, eve.json Wazuh integration, host-based vs. network-based detection paradigm comparison, cross-detection corroboration (same attack caught by two independent mechanisms), scalability mapping from lab to enterprise deployment.
+See also: [OpenVPN Server Configuration](./03-Security-Infrastructure/Home-Lab-SIEM-Deployment/OpenVPN-Server-Configuration.md) — verified ECDH curve (secp384r1), cipher suite, and split-tunnel design rationale.
 
-Key skills: Attack chain simulation and correlation, container log architecture (volume mounts for agent visibility), built-in rule discovery before custom authoring, frequency/timeframe correlation with same_source_ip, FIM-based persistence detection, Docker networking diagnostics, operating in a noisy multi-alert environment.
+### AI & Automation
 
-### 8. [Active Directory Attack Lab: Kerberoasting, Password Spraying, Credential Dumping, and Pass-the-Hash](./Active_Directory_Attack/README.md)
+Local, private-by-design AI tooling for SOC work — evaluated the same way the detection rules above are evaluated: systematically, with honest documentation of what didn't work.
 
-A purpose-built Active Directory environment (Windows Server 2019 Core domain controller, Kali Linux attack machine, domain-joined Windows 11 workstation) used to execute and detect a complete post-exploitation attack chain directly relevant to SANS SEC504. Starting with a single unprivileged domain user account, the full chain runs: Kerberoasting (svc_sql TGS hash extracted and cracked offline) → password spraying (Domain Admin sadmin compromised with zero lockouts) → credential dumping (all domain NTLM hashes extracted via DCSync including krbtgt) → Pass-the-Hash (SYSTEM shell on the DC using only the Administrator hash, no password). Every stage monitored by Wazuh with Windows audit logging enabled — Event ID 4769 with RC4 encryption type 0x17 (Kerberoasting), 4625 failures and 4624 success (password spray), 4624 Type 3 NTLM from unexpected source (Pass-the-Hash) — all firing automatically with MITRE ATT&CK tags. Total time from first attack to SYSTEM: approximately 10 minutes from one standard domain user account.
+**[Local AI SOC Analyst — Deploying, Evaluating and Fine-Tuning LLMs for Security Operations](./04-Local-AI-SOC-Tooling/README.md)**
+Systematic evaluation of locally-hosted LLMs as SOC analyst assistants — alert triage, MITRE ATT&CK mapping, multi-alert chain analysis, detection rule generation, false positive analysis — entirely on local hardware, so no alert data ever leaves the security perimeter. Six model configurations tested in progression from a 3.4/10 general-purpose baseline to a 7.2/10 LoRA fine-tuned Foundation-Sec model. A second, hypothesis-driven fine-tuning iteration then targeted the three specific tests the first pass scored weakest on (hallucination resistance, decoder generation, false positive reasoning), raising the average to 8.6/10. Along the way, an apparent total model collapse (four of five tests scoring zero) turned out to be a genuine evaluation-harness bug rather than a model failure — Ollama was returning a fully correct answer in a reasoning field the harness never read — documented as a finding in its own right rather than quietly patched over.
+**Key skills:** LLM deployment (Ollama, Open WebUI), prompt engineering, RAG implementation, LoRA fine-tuning (Unsloth), CUDA environment management, hypothesis-driven dataset iteration targeting specific failure modes, LLM serving pipeline debugging, AI evaluation methodology and variance awareness.
 
-Key skills: Active Directory deployment and administration (Server Core), Kerberoasting and offline hash cracking, password spraying with lockout-safe tooling (NetExec), DCSync credential dumping (Impacket secretsdump), Pass-the-Hash lateral movement (psexec), Windows audit policy configuration, Windows Security Event Log analysis (4624/4625/4769), MITRE ATT&CK mapping (T1558.003/T1110.003/T1003.002/T1550.002), PICERL incident response framework application.
+## Recurring Themes Across These Projects
 
-### 9. [BloodHound AD Enumeration: Attack Path Analysis](./BloodHound_Enumeration/README.md)
-BloodHound deployed against the existing lab.local Active Directory environment to map every domain relationship as a graph and surface attack paths automatically. SharpHound collected 97 objects in 26 seconds authenticated as jsmith (unprivileged standard user) — demonstrating that full domain enumeration requires only one valid credential. Key findings: svc_sql Kerberoastable account identified with 9 reachable high-value targets and Last Logon: Never (corroborating the manual Kerberoasting result from project 8 through independent graph analysis), Domain Admin membership visualised, and shortest attack path from svc_sql to Domain Admins rendered as a graph with the red highlighted route. Covers both offensive application (finding attack paths) and defensive application (eliminating paths before attackers find them).
+- **Real incidents, not staged ones.** The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
+- **Honest limitations, not just wins.** Where something didn't fully work as expected (POST body logging gaps, file extension mitigations, false positives, incomplete cross-technique correlation), that's documented explicitly rather than omitted.
+- **Detection and offense together.** Each offensive test is paired with an assessment of what a defender would (or wouldn't) see — tying attacker technique directly to detection engineering.
+- **Visibility gaps as a recurring theme.** Container log visibility has come up in three separate projects and been resolved three different ways — a pattern that demonstrates genuine depth of understanding of a core SIEM architectural constraint rather than a single lucky fix.
+- **Speed of compromise.** The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — and the Golden Ticket project extends this to show how persistence can survive most standard remediation attempts.
 
-Key skills: BloodHound/SharpHound deployment and operation, AD graph-based attack path analysis, Kerberoastable account identification, graph theory applied to AD security, defensive use of attack tooling, SharpHound detection awareness (Event ID 4662, LDAP query volume).
+## Next Steps
 
-### 10. [Golden Ticket Attack: Forging Persistent Domain Admin Access](./Golden_Ticket/README.md)
+**In progress — SOC Investigation series:** reframing the technical work above into full investigation write-ups (timeline, confirmed vs. suspected findings, containment reasoning) rather than standalone tool builds:
+- Investigation #1 — Phishing: Office macro delivery → PowerShell → C2 → compromised account → lateral movement
+- Investigation #2 — Windows Endpoint Compromise: Sysmon, process trees, persistence, IOC hunting, containment/recovery
+- Investigation #3 — Threat Hunting: hypothesis-driven hunt pivoting across Wazuh/Sysmon/AD/DNS/Suricata
+- SOC automation: a small IOC enrichment tool (IP/domain/hash → reputation/DNS/WHOIS → structured output) supporting the investigations above
 
-The natural conclusion to the AD attack chain — using the krbtgt hash captured during DCSync in project 8 to forge a Kerberos Golden Ticket entirely offline (zero DC contact during forgery), then authenticating to DC01 with the forged ticket and obtaining a SYSTEM shell. Demonstrates the most dangerous AD persistence technique: Golden Tickets survive account password resets, disabled accounts, and most standard IR procedures — the only remediation is resetting the krbtgt password twice. Wazuh caught the psexec service installation consequence (Event 7045, rule 92650, MITRE T1021.002 + T1569.002) but not the Golden Ticket authentication itself — an honest and important detection gap documented in full, with realistic production detection approaches discussed.
-
-Key skills: Golden Ticket forgery (Impacket ticketer), Kerberos ticket cache manipulation (KRB5CCNAME/.ccache), offline credential exploitation, post-exploitation access verification, detection gap analysis, understanding of Kerberos TGT signing and PAC structure. MITRE T1558.001 (Golden Ticket).
-
-**Recurring Themes Across These Projects**
-
--Real incidents, not staged ones. The infrastructure problems documented here happened during genuine testing, not as scripted exercises — and are documented with the same rigor as the intended lab work.
-
--Honest limitations, not just wins. Where something didn't fully work as expected (POST body logging gaps, file extension mitigations, false positives, incomplete cross-technique correlation), that's documented explicitly rather than omitted.
-
--Detection and offense together. Each offensive test is paired with an assessment of what a defender would (or wouldn't) see — tying attacker technique directly to detection engineering.
-Visibility gaps as a recurring theme. 
-
--Container log visibility has come up in three separate projects and been resolved three different ways — a pattern that demonstrates genuine depth of understanding of a core SIEM architectural constraint rather than a single lucky fix.
-
--Speed of compromise. The AD attack chain demonstrates total domain compromise in under 10 minutes from a single unprivileged user account — and the Golden Ticket project extends this to show how persistence can survive most standard remediation attempts.
-
-**Next Steps**
-
--PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
-
--ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to demonstrate multi-hop BloodHound attack paths
-
--AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse
-
--SOAR integration — automated response playbooks triggered by existing Wazuh rules (Shuffle or TheHive + Cortex)
-
--Memory forensics with Volatility
-
--Memory forensics basics using Volatility against a memory dump from the DC
-
--PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from project 1
-
--Custom Suricata rule for container-to-container pivot detection — closing the specific gap identified in project 7
-
--SSH honeypot (Cowrie) to capture real attacker behaviour and feed into Wazuh
-
- ## Tools and Approach
-Lab infrastructure built and managed via Hyper-V, Docker, and Ubuntu Server.
-Detection engineering performed in Wazuh 4.8.2 with Suricata 8.0.6.
-Traffic analysis via Wireshark and tcpdump. AI assistance (Claude) used
-for syntax reference and debugging support during development, with all
-detection logic, troubleshooting methodology, and analysis performed
-and verified manually.
-
+**Backlog:**
+- PICERL incident response documentation — formally applying the incident handling framework to the disk-full cascading failure from the SIEM deployment project
+- ACL abuse misconfigurations — add GenericWrite/WriteDACL relationships to demonstrate multi-hop BloodHound attack paths
+- AD Certificate Services (ADCS) attacks — ESC1/ESC8 certificate template abuse
+- SOAR integration — automated response playbooks triggered by existing Wazuh rules (Shuffle or TheHive + Cortex)
+- Memory forensics basics using Volatility against a memory dump from the DC
+- Custom Suricata rule for container-to-container pivot detection
+- SSH honeypot (Cowrie) to capture real attacker behavior and feed into Wazuh
