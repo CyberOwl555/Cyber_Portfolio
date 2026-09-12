@@ -348,21 +348,6 @@
       font-size: 13px;
     }
     .chain-detail.show { display: block; }
-    .chain-preview {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      font-family: var(--mono);
-      font-size: 11px;
-      color: var(--muted);
-      padding: 14px 16px;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: none;
-      border-radius: 0 6px 6px 0;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .chain-step-vis:hover .chain-preview { border-color: var(--accent); color: var(--text); }
     .chain-detail-title {
       font-family: var(--mono);
       font-size: 11px;
@@ -432,25 +417,9 @@
     }
     .project-header:hover, .project.open .project-header { border-color: var(--line); }
     .project-num { font-family: var(--mono); font-size: 11px; color: var(--muted); padding-top: 3px; min-width: 24px; }
-    /* flex-basis 0% on title-block means it has no size of its own to defend when the
-       row runs out of room -- the auto-basis preview text (unconstrained width) ends up
-       absorbing almost none of the required shrinkage while title-block gets almost all
-       of it, collapsing the title into a 5-6 line sliver. min-width gives title-block an
-       actual claim to defend before the preview (capped below) gives up any more space. */
-    .project-title-block { flex: 1 1 240px; min-width: 200px; }
+    .project-title-block { flex: 1; }
     .project-title { font-size: 15px; font-weight: 500; color: #fff; line-height: 1.3; }
     .project-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
-    .project-preview {
-      flex: 0 1 220px;
-      max-width: 220px;
-      margin-top: 2px;
-      font-size: 10px;
-      color: var(--muted);
-      font-family: var(--mono);
-      line-height: 1.5;
-      letter-spacing: 0.02em;
-    }
-    @media (max-width: 700px) { .project-preview { display: none; } }
     .tag { font-family: var(--mono); font-size: 10px; padding: 2px 8px; border-radius: 3px; letter-spacing: 0.04em; }
     .tag-blue   { background: rgba(124,106,247,0.15); color: var(--accent2); }
     .tag-green  { background: rgba(0,212,170,0.12);   color: var(--accent); }
@@ -530,7 +499,7 @@
       opacity: 0.07; pointer-events: none;
     }
 
-    
+
 
 /* ── ALERT TIMELINE ── */
     .alert-feed {
@@ -800,7 +769,7 @@
 
 <!-- STAT BAR -->
 <div class="stat-bar">
-  <div class="stat"><div class="stat-num" data-target="10">0</div><div class="stat-label">Projects</div></div>
+  <div class="stat"><div class="stat-num" data-target="11">0</div><div class="stat-label">Projects</div></div>
   <div class="stat"><div class="stat-num" data-target="6">0</div><div class="stat-label">Custom Rules</div></div>
   <div class="stat"><div class="stat-num" data-target="5">0</div><div class="stat-label">AD Attacks</div></div>
   <div class="stat"><div class="stat-num" data-suffix="K" data-target="52">0</div><div class="stat-label">Suricata Sigs</div></div>
@@ -1026,18 +995,15 @@
         <div class="chain-step-label" id="lbl-c1">
           <span class="chain-step-num">01</span> Kerberoasting
         </div>
-        <div class="chain-right">
-          <div class="chain-preview" id="prev-c1">jsmith → svc_sql TGS hash → cracked offline</div>
-          <div class="chain-detail" id="c1">
-            <div class="chain-detail-title">jsmith → svc_sql TGS hash → cracked offline</div>
-            <p style="font-size:13px;color:var(--text);">Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account's hash — take it offline and crack it. No lockout, no noise after the initial request.</p>
-            <div class="chain-facts">
-              <span class="chain-fact">Tool: impacket-GetUserSPNs</span>
-              <span class="chain-fact">Crack: john --format=krb5tgs</span>
-              <span class="chain-fact">Result: Summer2024!</span>
-              <span class="chain-fact">Event ID: 4769</span>
-              <span class="chain-fact">Enc type: 0x17 (RC4)</span>
-            </div>
+        <div class="chain-detail" id="c1">
+          <div class="chain-detail-title">jsmith → svc_sql TGS hash → cracked offline</div>
+          <p style="font-size:13px;color:var(--text);">Any domain user can request a Kerberos service ticket for any SPN-registered account. The ticket is encrypted with the service account's hash — take it offline and crack it. No lockout, no noise after the initial request.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-GetUserSPNs</span>
+            <span class="chain-fact">Crack: john --format=krb5tgs</span>
+            <span class="chain-fact">Result: Summer2024!</span>
+            <span class="chain-fact">Event ID: 4769</span>
+            <span class="chain-fact">Enc type: 0x17 (RC4)</span>
           </div>
         </div>
       </div>
@@ -1047,18 +1013,15 @@
         <div class="chain-step-label" id="lbl-c2">
           <span class="chain-step-num">02</span> Password Spray
         </div>
-        <div class="chain-right">
-          <div class="chain-preview" id="prev-c2">One password × all accounts → sadmin (Pwn3d!)</div>
-          <div class="chain-detail" id="c2">
-            <div class="chain-detail-title">One password × all accounts → sadmin (Pwn3d!)</div>
-            <p style="font-size:13px;color:var(--text);">One password attempt per account stays under lockout thresholds. Welcome2024! hit sadmin — a Domain Admin. One spray, zero lockouts, Domain Admin compromised.</p>
-            <div class="chain-facts">
-              <span class="chain-fact">Tool: nxc smb</span>
-              <span class="chain-fact">Target: sadmin</span>
-              <span class="chain-fact">Result: (Pwn3d!)</span>
-              <span class="chain-fact">Event ID: 4625 + 4624</span>
-              <span class="chain-fact">Wazuh: Rule 92652</span>
-            </div>
+        <div class="chain-detail" id="c2">
+          <div class="chain-detail-title">One password × all accounts → sadmin (Pwn3d!)</div>
+          <p style="font-size:13px;color:var(--text);">One password attempt per account stays under lockout thresholds. Welcome2024! hit sadmin — a Domain Admin. One spray, zero lockouts, Domain Admin compromised.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: nxc smb</span>
+            <span class="chain-fact">Target: sadmin</span>
+            <span class="chain-fact">Result: (Pwn3d!)</span>
+            <span class="chain-fact">Event ID: 4625 + 4624</span>
+            <span class="chain-fact">Wazuh: Rule 92652</span>
           </div>
         </div>
       </div>
@@ -1068,18 +1031,15 @@
         <div class="chain-step-label" id="lbl-c3">
           <span class="chain-step-num">03</span> DCSync Dump
         </div>
-        <div class="chain-right">
-          <div class="chain-preview" id="prev-c3">sadmin → every NTLM hash in the domain</div>
-          <div class="chain-detail" id="c3">
-            <div class="chain-detail-title">sadmin → every NTLM hash in the domain</div>
-            <p style="font-size:13px;color:var(--text);">Domain Admin credentials used to impersonate DC replication and extract all hashes from NTDS.dit. Administrator hash captured. krbtgt hash captured — enabling Golden Ticket persistence.</p>
-            <div class="chain-facts">
-              <span class="chain-fact">Tool: impacket-secretsdump</span>
-              <span class="chain-fact">Protocol: DRSUAPI replication</span>
-              <span class="chain-fact">Captured: all domain hashes</span>
-              <span class="chain-fact">Event ID: 4662</span>
-              <span class="chain-fact">krbtgt: captured</span>
-            </div>
+        <div class="chain-detail" id="c3">
+          <div class="chain-detail-title">sadmin → every NTLM hash in the domain</div>
+          <p style="font-size:13px;color:var(--text);">Domain Admin credentials used to impersonate DC replication and extract all hashes from NTDS.dit. Administrator hash captured. krbtgt hash captured — enabling Golden Ticket persistence.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-secretsdump</span>
+            <span class="chain-fact">Protocol: DRSUAPI replication</span>
+            <span class="chain-fact">Captured: all domain hashes</span>
+            <span class="chain-fact">Event ID: 4662</span>
+            <span class="chain-fact">krbtgt: captured</span>
           </div>
         </div>
       </div>
@@ -1089,18 +1049,15 @@
         <div class="chain-step-label" id="lbl-c4">
           <span class="chain-step-num">04</span> Pass-the-Hash
         </div>
-        <div class="chain-right">
-          <div class="chain-preview" id="prev-c4">Administrator hash → SYSTEM on DC — no password needed</div>
-          <div class="chain-detail" id="c4">
-            <div class="chain-detail-title">Administrator hash → SYSTEM on DC — no password needed</div>
-            <p style="font-size:13px;color:var(--text);">NTLM authentication accepts the hash directly — no cracking needed. psexec authenticated with the hash, uploaded a service binary to ADMIN$, and returned a SYSTEM shell.</p>
-            <div class="chain-facts">
-              <span class="chain-fact">Tool: impacket-psexec -hashes</span>
-              <span class="chain-fact">whoami: nt authority\system</span>
-              <span class="chain-fact">Event ID: 4624 Type 3 NTLM</span>
-              <span class="chain-fact">Wazuh: Rule 92652</span>
-              <span class="chain-fact">Time from start: &lt;10 min</span>
-            </div>
+        <div class="chain-detail" id="c4">
+          <div class="chain-detail-title">Administrator hash → SYSTEM on DC — no password needed</div>
+          <p style="font-size:13px;color:var(--text);">NTLM authentication accepts the hash directly — no cracking needed. psexec authenticated with the hash, uploaded a service binary to ADMIN$, and returned a SYSTEM shell.</p>
+          <div class="chain-facts">
+            <span class="chain-fact">Tool: impacket-psexec -hashes</span>
+            <span class="chain-fact">whoami: nt authority\system</span>
+            <span class="chain-fact">Event ID: 4624 Type 3 NTLM</span>
+            <span class="chain-fact">Wazuh: Rule 92652</span>
+            <span class="chain-fact">Time from start: &lt;10 min</span>
           </div>
         </div>
       </div>
@@ -1552,7 +1509,7 @@
               <span class="tag tag-teal">FIM</span>
             </div>
           </div>
-            <div class="project-preview">War story: disk-full → cascading API failures → SQLite corruption → self-inflicted dashboard kill. Diagnosed live.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">War story: disk-full → cascading API failures → SQLite corruption → self-inflicted dashboard kill. Diagnosed live.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1572,7 +1529,7 @@
             <div class="project-title">Simulated Network & App-Layer Detection — Juice Shop</div>
             <div class="project-tags"><span class="tag tag-green">Visibility Gap</span><span class="tag tag-blue">nginx Proxy</span><span class="tag tag-teal">Docker</span></div>
           </div>
-            <div class="project-preview">Found: host agents have zero visibility into containers. Fixed via nginx reverse proxy + volume-mounted logs.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Found: host agents have zero visibility into containers. Fixed via nginx reverse proxy + volume-mounted logs.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1588,7 +1545,7 @@
             <div class="project-title">Attack Traffic Analysis — SQLi & File Upload RCE</div>
             <div class="project-tags"><span class="tag tag-red">Offensive</span><span class="tag tag-orange">Wireshark</span><span class="tag tag-blue">PCAP</span></div>
           </div>
-            <div class="project-preview">Manual SQLi returned full 5-user table dump. PHP shell uploaded → ?cmd=id → uid=33(www-data) confirmed.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Manual SQLi returned full 5-user table dump. PHP shell uploaded → ?cmd=id → uid=33(www-data) confirmed.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1607,7 +1564,7 @@
             <div class="project-title">C2 Beaconing Detection — Custom Decoder Engineering</div>
             <div class="project-tags"><span class="tag tag-red">C2 Simulation</span><span class="tag tag-blue">Custom Decoder</span><span class="tag tag-green">Frequency Rule</span></div>
           </div>
-            <div class="project-preview">4 compounding failures diagnosed in sequence. wazuh-logtest isolated each layer. Rule 100031 fires on pattern, not events.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">4 compounding failures diagnosed in sequence. wazuh-logtest isolated each layer. Rule 100031 fires on pattern, not events.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1626,7 +1583,7 @@
             <div class="project-title">DNS Tunneling Detection — Three-Tier Escalation</div>
             <div class="project-tags"><span class="tag tag-red">DNS Exfil</span><span class="tag tag-blue">Multi-stage Decoder</span><span class="tag tag-orange">Regex Debug</span></div>
           </div>
-            <div class="project-preview">Level 12 alert surfaced decoded credentials (user=admin;pass=SuperSecr) directly in previous_output field.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Level 12 alert surfaced decoded credentials (user=admin;pass=SuperSecr) directly in previous_output field.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1645,7 +1602,7 @@
             <div class="project-title">Lateral Movement Detection — Web Shell to Persistence</div>
             <div class="project-tags"><span class="tag tag-red">Attack Chain</span><span class="tag tag-blue">Correlation</span><span class="tag tag-green">Level 14</span></div>
           </div>
-            <div class="project-preview">Rule 100053 level 14 fired after 3 web shell commands. previous_output showed exact ?cmd= sequence that triggered it.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Rule 100053 level 14 fired after 3 web shell commands. previous_output showed exact ?cmd= sequence that triggered it.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1670,7 +1627,7 @@
             <div class="project-title">Suricata Network IDS — Closing the Network Visibility Gap</div>
             <div class="project-tags"><span class="tag tag-green">Network IDS</span><span class="tag tag-blue">52K Sigs</span><span class="tag tag-teal">Cross-Detection</span></div>
           </div>
-            <div class="project-preview">Suricata immediately caught C2 beacon via Python ServerBanner — same attack, two independent detection mechanisms.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Suricata immediately caught C2 beacon via Python ServerBanner — same attack, two independent detection mechanisms.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1689,7 +1646,7 @@
             <div class="project-title">Active Directory Attack Lab — Full Domain Compromise ⭐</div>
             <div class="project-tags"><span class="tag tag-red">Kerberoasting</span><span class="tag tag-red">PtH</span><span class="tag tag-red">DCSync</span><span class="tag tag-orange">SEC504</span></div>
           </div>
-            <div class="project-preview">jsmith → Kerberoast svc_sql → spray sadmin (Pwn3d!) → DCSync all hashes → psexec SYSTEM. Under 10 minutes.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">jsmith → Kerberoast svc_sql → spray sadmin (Pwn3d!) → DCSync all hashes → psexec SYSTEM. Under 10 minutes.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1721,7 +1678,7 @@
             <div class="project-title">BloodHound AD Enumeration — Attack Path Analysis</div>
             <div class="project-tags"><span class="tag tag-red">BloodHound</span><span class="tag tag-red">SharpHound</span><span class="tag tag-orange">Graph Analysis</span><span class="tag tag-blue">Attack Paths</span></div>
           </div>
-            <div class="project-preview">svc_sql: 9 reachable high-value targets, Last Logon: Never. BloodHound independently confirmed the Kerberoasting target.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">svc_sql: 9 reachable high-value targets, Last Logon: Never. BloodHound independently confirmed the Kerberoasting target.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1751,7 +1708,7 @@
               <span class="tag tag-blue">Detection Gap</span>
             </div>
           </div>
-            <div class="project-preview">Forged offline — zero DC contact. 10-year validity. Wazuh caught psexec service install but NOT the forged ticket itself.</div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;letter-spacing:0.02em;">Forged offline — zero DC contact. 10-year validity. Wazuh caught psexec service install but NOT the forged ticket itself.</div>
           <span class="chevron">›</span>
         </div>
         <div class="project-body">
@@ -1772,6 +1729,47 @@
             <span class="mitre-badge">T1569.002 · Service Execution</span>
           </div>
           <p class="honest-note">The Golden Ticket itself was undetected by Wazuh — only the psexec consequence fired. Production detection requires Microsoft Defender for Identity or equivalent DC-level Kerberos inspection. Documented honestly as the most important detection gap in the portfolio.</p>
+        </div>
+      </div>
+
+    </div>
+
+
+      <!-- P11 -->
+      <div class="project" id="p11">
+        <div class="project-header" onclick="toggle('p11')">
+          <span class="project-num">11</span>
+          <div class="project-title-block">
+            <div class="project-title">Local AI SOC Analyst — LLM Deployment, Evaluation and Fine-Tuning ⭐</div>
+            <div class="project-tags">
+              <span class="tag tag-red">LLM</span>
+              <span class="tag tag-blue">RAG</span>
+              <span class="tag tag-orange">Fine-Tuning</span>
+              <span class="tag tag-teal">Ollama</span>
+              <span class="tag tag-green">Foundation-Sec</span>
+            </div>
+            <div style="margin-top:6px;font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.5;">7 model configs tested across two fine-tuning iterations. Average climbed 3.4/10 → 7.2/10 → 8.6/10 — the second pass targeted the exact weaknesses the first evaluation surfaced.</div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="project-body">
+          <p class="project-desc">Systematic evaluation of locally-hosted LLMs as SOC analyst assistants — data sovereignty motivated (no sensitive alert data to cloud). Seven configurations tested from a DeepSeek R1 14B baseline through prompt engineering, RAG, model comparison, and two rounds of LoRA fine-tuning of Cisco Foundation-Sec-8B-Reasoning on real lab data — the second round built from seven new training pairs targeting the first round's specific weak points. Complete fine-tuning pipeline implemented locally on RTX 5070 Ti.</p>
+          <div class="evidence-grid">
+            <div class="evidence-block">
+              <div class="evidence-label">Best Result</div>
+              <div class="evidence-value">Fine-tuned v2 (Foundation-Sec)<br>8.6/10 average<br>10/10 decoder generation</div>
+            </div>
+            <div class="evidence-block">
+              <div class="evidence-label">Key Finding</div>
+              <div class="evidence-value">Targeted fixes: 3/3 weak tests improved<br>Harness bug found + fixed<br>Human review still essential</div>
+            </div>
+          </div>
+          <div class="mitre-badge-list">
+            <span class="mitre-badge">T1558.003 · Kerberoasting</span>
+            <span class="mitre-badge">T1110.003 · Password Spraying</span>
+            <span class="mitre-badge">T1550.002 · Pass-the-Hash</span>
+          </div>
+          <p class="honest-note">Re-evaluating the second fine-tune initially looked like total failure — four of five tests scoring zero. Root cause was the evaluation harness, not the model: Ollama returned a fully correct answer in a separate reasoning field the harness never read. Fixed, then confirmed the fine-tune genuinely improved hallucination resistance, decoder generation, and false positive reasoning as designed — though scores swing meaningfully between identical runs, a limitation worth taking seriously rather than smoothing over.</p>
         </div>
       </div>
 
@@ -1862,25 +1860,22 @@
 
   /* ── TOGGLE ATTACK CHAIN ── */
   function toggleChain(id) {
-    const detail  = document.getElementById(id);
-    const label   = document.getElementById('lbl-' + id);
-    const preview = document.getElementById('prev-' + id);
-    const isOpen  = detail.classList.contains('show');
+    const detail = document.getElementById(id);
+    const label  = document.getElementById('lbl-' + id);
+    const isOpen = detail.classList.contains('show');
     // close all
     document.querySelectorAll('.chain-detail').forEach(d => d.classList.remove('show'));
     document.querySelectorAll('.chain-step-label').forEach(l => l.classList.remove('active'));
-    document.querySelectorAll('.chain-preview').forEach(p => p.style.display = '');
     if (!isOpen) {
       detail.classList.add('show');
       label.classList.add('active');
-      preview.style.display = 'none';
     }
   }
 
   /* ── TERMINAL ANIMATION ── */
   const lines = [
     { el: 't1', html: '<span class="prompt">❯</span> <span class="output">initialising lab environment...</span>' },
-    { el: 't2', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">10 projects loaded · 6 custom rules active</span>' },
+    { el: 't2', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">11 projects loaded · 6 custom rules active</span>' },
     { el: 't3', html: '<span class="prompt">❯</span> <span class="ok">✓</span> <span class="output">wazuh agents connected · suricata running</span>' },
     { el: 't4', html: '<span class="prompt">❯</span> <span class="warn">!</span> <span class="output">domain compromise in &lt;10m from 1 standard user</span>' },
   ];
@@ -1926,10 +1921,8 @@
   document.getElementById('p8').classList.add('open');
   var c1d = document.getElementById('c1');
   var c1l = document.getElementById('lbl-c1');
-  var c1p = document.getElementById('prev-c1');
   if (c1d) c1d.classList.add('show');
   if (c1l) c1l.classList.add('active');
-  if (c1p) c1p.style.display = 'none';
 </script>
 
 <script>
