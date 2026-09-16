@@ -132,3 +132,7 @@ Systematic evaluation of locally-hosted LLMs as SOC analyst assistants — alert
 - Memory forensics basics using Volatility against a memory dump from the DC
 - Custom Suricata rule for container-to-container pivot detection
 - SSH honeypot (Cowrie) to capture real attacker behavior and feed into Wazuh
+
+
+**AI use:**
+I used AI tools, including Claude, throughout this project as a technical collaborator for debugging live issues, formatting write-ups and thinking through next steps. The lab itself is mine, I built the infrastructure, ran the attacks, wrote the rules and did the troubleshooting when things broke. I believe using AI and being familiar with how it works and how to leverage it is extremely important in this space and I'd rather be honest with using it, as I have been honest throughout the projects when things went wrong.
