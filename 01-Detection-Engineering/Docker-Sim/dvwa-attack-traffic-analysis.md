@@ -84,7 +84,6 @@ GET /hackable/uploads/shell.php?cmd=uname+-a
 GET /hackable/uploads/shell.php?cmd=cat+/etc/passwd
 ```
 
-*[Screenshot: sequence of shell.php?cmd= requests and command output]*
 
 **Why this matters:** A single unauthenticated file upload vulnerability, chained with the ability to execute the uploaded file, grants an attacker code execution equivalent to the web server process's own privileges (`www-data`). From this foothold, an attacker could pursue privilege escalation, lateral movement to other hosts reachable from the web server, or further payload delivery. This is why real-world upload validation must verify file *content* (not just extension), disable script execution in upload directories, and store uploads outside the web root.
 
