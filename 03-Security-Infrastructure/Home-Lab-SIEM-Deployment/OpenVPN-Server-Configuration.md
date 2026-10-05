@@ -46,7 +46,3 @@ Unlike a full-tunnel VPN (where all client traffic routes through the server), t
 - Confirmed successful client connection from Windows 11 host via the OpenVPN client
 - Confirmed traffic routed through the tunnel only for explicitly configured routes, with general internet traffic unaffected
 - Config directory (`/etc/openvpn`) brought under Wazuh File Integrity Monitoring with realtime detection enabled, with a custom high-severity detection rule (rule ID 100010/100011) specifically for changes to this configuration — see the SIEM deployment write-up for full detail
-
-## Notes / Housekeeping
-
-- A stray test artifact (`# test comment`) was left in this config from earlier FIM testing (deliberately triggering a file-change alert) — harmless (a comment line, not active configuration) but should be removed for a clean production-style reference config.
