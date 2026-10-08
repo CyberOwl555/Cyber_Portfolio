@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project extends the existing Wazuh SIEM lab (see companion write-up: *Home Lab SIEM Deployment*) by adding a third monitored host — a Docker container platform running a deliberately vulnerable web application — to simulate application-layer attacks and build detection coverage beyond host-level monitoring (FIM, authentication, rootcheck).
+This project extends the existing Wazuh SIEM lab (see companion write-up: *Home Lab SIEM Deployment*) by adding a third monitored host , a Docker container platform running a deliberately vulnerable web application , to simulate application-layer attacks and build detection coverage beyond host-level monitoring (FIM, authentication, rootcheck).
 
 The goal was to move from "monitoring individual machines" to "monitoring a small simulated network," and to specifically address a real visibility gap: **Wazuh's default configuration has no insight into what happens inside a web application**, only what happens on the host underneath it.
 
@@ -52,13 +52,13 @@ Initial manual attacks against Juice Shop (SQL injection login bypass, reflected
 
 **Remediation:** Deployed nginx as a reverse proxy in front of Juice Shop, running directly on the Docker host (not containerized) so its logs are trivially accessible to the host-based Wazuh agent. Configured Wazuh's log collector to ingest nginx's access and error logs.
 
-This closed the gap — subsequent attack attempts against the login endpoint produced real, parsed alerts (Wazuh's built-in web log decoder correctly identified HTTP 500 responses via rule 31122), confirming the full pipeline: attack → nginx log → Wazuh log collector → decoder → rule match → dashboard alert.
+This closed the gap , subsequent attack attempts against the login endpoint produced real, parsed alerts (Wazuh's built-in web log decoder correctly identified HTTP 500 responses via rule 31122), confirming the full pipeline: attack → nginx log → Wazuh log collector → decoder → rule match → dashboard alert.
 
-**Known limitation identified (and documented rather than silently ignored):** Standard nginx access logs only capture the request URL, not the POST body. This means SQL injection payloads submitted via login forms (e.g., `' OR 1=1--`) are not visible in the raw log — only the resulting HTTP status code is. A production deployment would need either extended logging (capturing request bodies, at a performance/storage cost) or a dedicated WAF to gain payload-level visibility. This trade-off was documented as identified follow-up work rather than solved in this phase.
+**Known limitation identified (and documented rather than silently ignored):** Standard nginx access logs only capture the request URL, not the POST body. This means SQL injection payloads submitted via login forms (e.g., `' OR 1=1--`) are not visible in the raw log , only the resulting HTTP status code is. A production deployment would need either extended logging (capturing request bodies, at a performance/storage cost) or a dedicated WAF to gain payload-level visibility. This trade-off was documented as identified follow-up work rather than solved in this phase.
 
 ### 4. Custom Detection Rule: Application-Layer Attack Pattern
 
-Rather than relying on the generic "web server 500 error" rule, a custom rule was authored to specifically flag repeated failures against the authentication endpoint — a stronger indicator of malicious probing than an isolated error:
+Rather than relying on the generic "web server 500 error" rule, a custom rule was authored to specifically flag repeated failures against the authentication endpoint , a stronger indicator of malicious probing than an isolated error:
 
 ```xml
 <group name="local,web,attack,">
@@ -73,7 +73,7 @@ Rather than relying on the generic "web server 500 error" rule, a custom rule wa
 </group>
 ```
 
-This rule uses `if_matched_sid` to build on Wazuh's existing web-log decoder rather than duplicating decoder logic, and narrows scope specifically to the authentication endpoint — demonstrating targeted, asset-aware detection rather than a blanket rule.
+This rule uses `if_matched_sid` to build on Wazuh's existing web-log decoder rather than duplicating decoder logic, and narrows scope specifically to the authentication endpoint , demonstrating targeted, asset-aware detection rather than a blanket rule.
 
 ### 5. Investigating a Rootcheck False Positive
 
@@ -82,7 +82,7 @@ During testing, Wazuh's rootcheck module flagged `/usr/bin/diff` as a "Trojaned 
 - `file /usr/bin/diff` confirmed the file was a genuine compiled ELF binary, not a shell-script wrapper (the actual threat this signature was designed to catch)
 - `dpkg -V diffutils` confirmed the installed binary matched Ubuntu's official package checksums exactly, with no modification
 
-**Conclusion:** Confirmed false positive, attributable to Wazuh's legacy signature-based rootcheck detection method predating modern binary packaging conventions. Documented as an accepted, verified false positive rather than a suppressed alert — the distinction being that verification occurred before any decision to ignore it.
+**Conclusion:** Confirmed false positive, attributable to Wazuh's legacy signature-based rootcheck detection method predating modern binary packaging conventions. Documented as an accepted, verified false positive rather than a suppressed alert , the distinction being that verification occurred before any decision to ignore it.
 
 ## Skills Demonstrated
 
