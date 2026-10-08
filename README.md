@@ -102,7 +102,7 @@ See also: [OpenVPN Server Configuration](./03-Security-Infrastructure/Home-Lab-S
 
 ### AI & Automation
 
-Local, private-by-design AI tooling for SOC work — evaluated the same way the detection rules above are evaluated: systematically, with honest documentation of what didn't work.
+Local, private-by-design AI tooling for SOC work, evaluated the same way the detection rules above are evaluated: systematically, with honest documentation of what didn't work.
 
 **[Local AI SOC Analyst — Deploying, Evaluating and Fine-Tuning LLMs for Security Operations](./04-Local-AI-SOC-Tooling/README.md)**
 Systematic evaluation of locally-hosted LLMs as SOC analyst assistants. Alert triage, MITRE ATT&CK mapping, multi-alert chain analysis, detection rule generation, false positive analysis, entirely on local hardware, so no alert data ever leaves the security perimeter. Six model configurations tested in progression from a 3.4/10 general-purpose baseline to a 7.2/10 LoRA fine-tuned Foundation-Sec model. A second, hypothesis-driven fine-tuning iteration then targeted the three specific tests the first pass scored weakest on (hallucination resistance, decoder generation, false positive reasoning), raising the average to 8.6/10. Along the way, an apparent total model collapse (four of five tests scoring zero) turned out to be a genuine evaluation-harness bug rather than a model failure. Ollama was returning a fully correct answer in a reasoning field the harness never read, documented as a finding in its own right rather than quietly patched over.
