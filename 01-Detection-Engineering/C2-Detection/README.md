@@ -36,7 +36,6 @@ Before building any automated detection, the traffic was captured (`tcpdump`) an
 
 This consistency , in both size and timing , is the core signature that distinguishes beaconing from normal application traffic, which is characteristically bursty and irregular (multiple requests fire together on page load, then nothing until the next user action). A metronomic, single-request, fixed-size pattern repeating indefinitely has no legitimate equivalent in typical human-driven browsing.
 
-*[Screenshot: Wireshark packet list showing consistent ~13s intervals and 26-byte request size]*
 
 ## Phase 2: Building the Detection , Four Issues, Diagnosed in Sequence
 
