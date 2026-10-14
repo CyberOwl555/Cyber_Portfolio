@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project simulates a realistic post-exploitation attack chain — initial access via a web shell, discovery/enumeration, lateral pivot toward a second container, and a persistence attempt — and builds Wazuh detection covering each stage. Unlike the previous detection projects (which focused on single-technique patterns like beaconing timing or DNS query structure), this project specifically addresses **attack chain correlation**: connecting multiple, individually low-signal events across different detection surfaces into a single high-confidence alert that reflects the attacker's actual intent rather than any isolated action.
+This project simulates a realistic post-exploitation attack chain with initial access via a web shell, discovery/enumeration, lateral pivot toward a second container, and a persistence attempt and builds Wazuh detection covering each stage. Unlike the previous detection projects (which focused on single-technique patterns like beaconing timing or DNS query structure), this project specifically addresses **attack chain correlation**: connecting multiple, individually low-signal events across different detection surfaces into a single high-confidence alert that reflects the attacker's actual intent rather than any isolated action.
 
 This represents the most operationally realistic scenario in the lab — web shell exploitation followed by discovery and persistence is a well-documented, commonly observed attack pattern in real incident response engagements, and detecting it requires exactly the kind of multi-event, time-windowed correlation that distinguishes mature SOC detection engineering from simple log monitoring.
 
