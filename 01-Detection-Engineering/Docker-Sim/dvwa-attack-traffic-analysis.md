@@ -55,8 +55,6 @@ Since `'1'='1'` evaluates true for every row, the `WHERE` clause matched the ent
 
 **Additional observation:** The response HTML explicitly stated `PHPIDS: disabled` , DVWA's optional intrusion detection layer was inactive at this security level, meaning no detection mechanism was present to flag the anomalous query pattern. This directly motivated the earlier decision to build Wazuh detection coverage for this environment (see custom rule 100020, which flags repeated failures on authentication endpoints , a complementary detection to this specific finding).
 
-*[Screenshot: DVWA SQLi response showing full table dump]*
-
 ## Finding 3: File Upload to Remote Code Execution
 
 **Objective:** Upload a malicious file to DVWA's File Upload module and achieve command execution.
