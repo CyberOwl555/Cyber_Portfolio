@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project simulates a core technique used by real command-and-control (C2) malware , periodic "beaconing" check-ins to a remote server , and builds a working Wazuh detection for it from scratch. Unlike the earlier projects in this lab, which largely relied on Wazuh's built-in rules or straightforward extensions of them, this project required writing a custom decoder, extracting structured fields from raw log text, and using Wazuh's frequency/correlation logic to distinguish a *behavioral pattern* (repeated beaconing) from a single low-signal event.
+This project simulates a core technique used by real command-and-control (C2) malware using periodic "beaconing" check-ins to a remote server , and builds a working Wazuh detection for it from scratch. Unlike the earlier projects in this lab, which largely relied on Wazuh's built-in rules or straightforward extensions of them, this project required writing a custom decoder, extracting structured fields from raw log text, and using Wazuh's frequency/correlation logic to distinguish a *behavioral pattern* (repeated beaconing) from a single low-signal event.
 
 The exercise also served as a genuine, unplanned lesson in layered troubleshooting , four separate, independent problems had to be diagnosed and resolved in sequence before the detection worked, each requiring a different diagnostic approach.
 
